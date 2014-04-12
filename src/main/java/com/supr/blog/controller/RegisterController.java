@@ -69,7 +69,7 @@ public class RegisterController {
 	 */
 	@RequestMapping(value="/submit",method=RequestMethod.POST)
 	public @ResponseBody
-	Result register(String username,String password){
+	Result register(String username,String password,String email){
 		// 校验用户名 
 		if (StringUtils.isEmpty(username) || username.length() < 10) {
 			return new Result("error","用户名输入错误!");
@@ -78,8 +78,12 @@ public class RegisterController {
 		if (StringUtils.isEmpty(password) || password.length() < 10) {
 			return new Result("error","密码输入错误!");
 		}
+		// 校验邮箱
+		if (StringUtils.isEmpty(email) || email.length() < 10) {
+			return new Result("error","邮箱输入错误!");
+		}
 		
-		Admin admin = new Admin(username,password);
+		Admin admin = new Admin(username,password,email);
 		adminService.register(admin);
 		return new Result("success",null);
 	}
