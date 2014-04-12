@@ -1,0 +1,3 @@
+1、架构初步定为springMVC+spring+mybatis
+2、编写spring的核心配置文件spring-core.xml，主要是【自动注入bean配置】、【datasource Bean定义】、【事务定义】
+3、编写一个jdbc.properties，里面用来存放数据库的相关信息
