@@ -44,12 +44,15 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
+	<!-- 注解的方式 配置事务 -->	
+	<tx:annotation-driven transaction-manager="transactionManager" />
 
 	<!-- Mybatis所有操作基于sqlSession，而下面这个就是它的工厂Bean -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<!-- mapper.xml文件存放的位置 -->
-		<property name="mapperLocations" value="classpath:com/supr/blog/mapper/*Mapper.xml"/>
+		<property name="mapperLocations" value="classpath:mybatis/*Mapper.xml"/>
 		<!-- mapper.xml配置文件的别名去哪个包查找 -->
 		<property name="typeAliasesPackage" value="com.supr.blog.model"/>
 	</bean>
