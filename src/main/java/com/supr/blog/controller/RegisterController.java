@@ -67,7 +67,7 @@ public class RegisterController {
 	/**
 	 * 注册
 	 */
-	@RequestMapping(value="/submit",method=RequestMethod.POST)
+	@RequestMapping(method=RequestMethod.POST)
 	public @ResponseBody
 	Result register(String username,String password,String email){
 		// 校验用户名 

@@ -18,9 +18,9 @@
 		where USERNAME = #{username} and PASSWORD = #{password}
 	</select>
 	
-	<delete id="getAdminByName" resultType="Admin" parameterType="String">
+	<select id="getAdminByName" resultType="Admin" parameterType="String">
 		select * from ADMIN  
 		where USERNAME = #{username}
-	</delete>
+	</select>
 	
 </mapper>
