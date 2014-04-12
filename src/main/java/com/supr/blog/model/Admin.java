@@ -20,6 +20,14 @@ public class Admin {
 	public Admin() {
 		super();
 	}
+	
+	public Admin(String username, String password) {
+		super();
+		this.username = username;
+		this.password = password;
+	}
+
+
 
 	public Admin(String username, String password,String email) {
 		super();

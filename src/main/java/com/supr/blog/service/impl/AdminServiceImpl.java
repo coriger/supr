@@ -30,6 +30,12 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public Boolean adminExists(Admin admin) {
+		admin = adminMapper.adminExists(admin);
+		return (null == admin ? false : true);
+	}
+	
+	@Override
 	public Boolean usernameDisabled(String username) {
 		Admin admin = adminMapper.getAdminByName(username);
 		if(null != admin && admin.getIsEnabled()){

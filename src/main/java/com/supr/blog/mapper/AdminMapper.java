@@ -9,5 +9,7 @@ public interface AdminMapper {
 	Admin getAdminByEmail(String email);
 
 	Admin getAdminByName(String username);
+
+	Admin adminExists(Admin admin);
 	
 }

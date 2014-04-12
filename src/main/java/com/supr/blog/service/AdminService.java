@@ -30,10 +30,19 @@ public interface AdminService {
 	Boolean usernameExists(String username);
 	
 	/**
+	 * 用户是否存在
+	 * @param username
+	 * @return
+	 */
+	Boolean adminExists(Admin admin);
+	
+	/**
 	 * 用户名是否被禁用
 	 * @param username
 	 * @return
 	 */
 	Boolean usernameDisabled(String username);
+	
+	
 	
 }

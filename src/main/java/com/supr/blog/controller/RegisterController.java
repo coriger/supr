@@ -85,7 +85,7 @@ public class RegisterController {
 		
 		Admin admin = new Admin(username,password,email);
 		adminService.register(admin);
-		return new Result("success",null);
+		return new Result("success","注册成功！");
 	}
 	
 }
