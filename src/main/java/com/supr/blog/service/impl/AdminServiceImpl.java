@@ -19,8 +19,18 @@ public class AdminServiceImpl implements AdminService {
 	private AdminMapper adminMapper;
 	
 	@Override
-	public void register(Admin admin) {
+	public Boolean register(Admin admin) {
+		// 判断用户名是否存在
+		if(usernameExists(admin.getUsername())){
+			return false;
+		}
+		// 判断邮箱是否存在
+		if(emailExists(admin.getEmail())){
+			return false;
+		}
+		
 		adminMapper.addAdmin(admin);
+		return true;
 	}
 	
 	@Override

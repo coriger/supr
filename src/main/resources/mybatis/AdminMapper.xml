@@ -5,7 +5,7 @@
 <mapper namespace="com.supr.blog.mapper.AdminMapper">
 	
 	<select id="addAdmin" parameterType="Admin">
-		insert into ADMIN(USERNAME,PASSWORD,IS_ENABLE) values(#{username},#{password},#{isEnabled})
+		insert into ADMIN(USERNAME,PASSWORD,IS_ENABLE,EMAIL) values(#{username},#{password},#{isEnabled},#{email})
 	</select>
 	
 	<select id="getAdminByEmail" resultType="Admin" parameterType="String">
@@ -18,9 +18,9 @@
 		where USERNAME = #{username} and PASSWORD = #{password}
 	</select>
 	
-	<delete id="getAdminByName" resultType="Admin" parameterType="String">
+	<select id="getAdminByName" resultType="Admin" parameterType="String">
 		select * from ADMIN  
 		where USERNAME = #{username}
-	</delete>
+	</select>
 	
 </mapper>

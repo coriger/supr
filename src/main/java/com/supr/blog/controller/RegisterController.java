@@ -3,8 +3,10 @@ package com.supr.blog.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.supr.blog.model.Admin;
@@ -67,25 +69,29 @@ public class RegisterController {
 	/**
 	 * 注册
 	 */
-	@RequestMapping(value="/submit",method=RequestMethod.POST)
+	@RequestMapping(method=RequestMethod.POST)
 	public @ResponseBody
-	Result register(String username,String password,String email){
+	Result register(@RequestBody Admin admin){
 		// 校验用户名 
-		if (StringUtils.isEmpty(username) || username.length() < 10) {
+		if (StringUtils.isEmpty(admin.getUsername())) {
 			return new Result("error","用户名输入错误!");
 		}
 		// 校验密码
-		if (StringUtils.isEmpty(password) || password.length() < 10) {
+		if (StringUtils.isEmpty(admin.getPassword())) {
 			return new Result("error","密码输入错误!");
 		}
 		// 校验邮箱
-		if (StringUtils.isEmpty(email) || email.length() < 10) {
+		if (StringUtils.isEmpty(admin.getEmail())) {
 			return new Result("error","邮箱输入错误!");
 		}
 		
-		Admin admin = new Admin(username,password,email);
-		adminService.register(admin);
-		return new Result("success","注册成功！");
+		admin = new Admin(admin.getUsername(),admin.getPassword(),admin.getEmail());
+		Boolean result = adminService.register(admin);
+		if(result){
+			return new Result("success","注册成功！");
+		}else{
+			return new Result("error","注册失败！");
+		}
 	}
 	
 }

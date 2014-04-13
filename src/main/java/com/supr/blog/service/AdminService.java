@@ -13,7 +13,7 @@ public interface AdminService {
 	 * 注册账号
 	 * @param admin
 	 */
-	void register(Admin admin);
+	Boolean register(Admin admin);
 	
 	/**
 	 * email是否已存在
