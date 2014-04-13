@@ -28,8 +28,11 @@ public class AdminController {
 	 * 用户登出系统
 	 */
 	@RequestMapping("/loginOut")
-	public void loginOut(){
+	public String loginOut(){
+		// 清除session 等等操作
 		
+		// 跳转登陆页
+		return "redirect:/home/login";
 	}
 	
 }
