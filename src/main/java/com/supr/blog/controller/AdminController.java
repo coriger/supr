@@ -1,7 +1,10 @@
 package com.supr.blog.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -27,9 +30,12 @@ public class AdminController {
 	/**
 	 * 用户登出系统
 	 */
-	@RequestMapping("/loginOut")
-	public void loginOut(){
-		
+	@RequestMapping(value = "/loginout",method = RequestMethod.GET)
+	public String loginOut(HttpSession session){
+		// 清除session cookie
+		session.removeAttribute("currentUser");
+		// 跳转登陆页
+		return "/home/login";
 	}
 	
 }
