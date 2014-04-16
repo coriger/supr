@@ -1,1 +1,3 @@
 ﻿.gitignore
+/AdminController.java
+/RegisterController.java
