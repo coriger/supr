@@ -5,8 +5,8 @@
 <mapper namespace="com.supr.blog.mapper.AlbumMapper">
 	
 	<!-- 获取所有相册信息 -->
-	<select id="Category" resultType="com.supr.blog.model.Album">
-		select * from category  
+	<select id=getAllAlbum resultType="com.supr.blog.model.Album">
+		select * from album  
 	</select>
 	
 </mapper>
