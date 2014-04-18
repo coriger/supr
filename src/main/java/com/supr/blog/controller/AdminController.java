@@ -16,9 +16,9 @@ public class AdminController {
 	/**
 	 * 用户登录后台首页
 	 */
-	@RequestMapping("/index")
+	@RequestMapping("/home")
 	public ModelAndView index(){
-		ModelAndView modelAndView = new ModelAndView("/admin/index");
+		ModelAndView modelAndView = new ModelAndView("/admin/home");
 		// 初始化用户信息  角色 权限
 		
 		return modelAndView;
