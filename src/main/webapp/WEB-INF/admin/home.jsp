@@ -8,6 +8,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html class=" hasFontSmoothing-true">
 <head>
+<base href="<%=basePath%>">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="http://s.srcdd.com/js/lib/frameupload.$7176.js" async="" charset="utf-8"></script>
 <script src="http://s.srcdd.com/js/kissy/1.2/datalazyload.js?t=20120703155558" async="" charset="utf-8"></script>
 <script src="http://s.srcdd.com/js/kissy/1.2/switchable.js?t=20120703155558" async="" charset="utf-8"></script>
@@ -27,6 +29,8 @@
 <script src="http://s.srcdd.com/js/lib/autoSaveTip.$7227.js" async="" charset="utf-8"></script>
 <script src="http://s.srcdd.com/js/lib/header.$7202.js" async="" charset="utf-8"></script>
 <script src="http://s.srcdd.com/js/app/home.$7251.js" async="" charset="utf-8"></script>
+<script type="text/javascript" src="js/supr.js"></script>
+<script type="text/javascript" src="js/jquery-json-2.4.js"></script>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=100">
 <link rel="shortcut icon" type="image/x-icon" href="http://s.srcdd.com/img/icon/favicon.$5106.ico">

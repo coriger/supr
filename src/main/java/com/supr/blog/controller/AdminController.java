@@ -19,7 +19,15 @@ public class AdminController {
 	@RequestMapping("/home")
 	public ModelAndView index(){
 		ModelAndView modelAndView = new ModelAndView("/admin/home");
-		// 初始化用户信息  角色 权限
+		// 分类
+		
+		// 相册
+		
+		// 文章
+		
+		// 站点信息
+		
+		// 专题  暂时不考虑
 		
 		return modelAndView;
 	}
