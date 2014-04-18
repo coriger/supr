@@ -2,6 +2,11 @@ package com.supr.blog.controller;
 
 import com.supr.blog.util.pager.Pager;
 
+/**
+ * @功能：基类控制器
+ * @作者： ljt
+ * @时间： 2014-4-18 下午6:03:49
+ */
 public class BaseController {
 	
 	/**

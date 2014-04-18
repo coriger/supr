@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.supr.blog.model.Album;
 import com.supr.blog.model.Category;
 import com.supr.blog.service.AlbumService;
 import com.supr.blog.service.BlogService;
@@ -44,11 +45,12 @@ public class HomeController extends BaseController{
 		map.put("pager", pager);
 		
 		// 分类
-		List<Category> categories = categoryService.getAllCategory();
-		map.put("categoryList", null);
+		List<Category> categoryList = categoryService.getAllCategory();
+		map.put("categoryList", categoryList);
 		
 		// 相册
-		map.put("albumList", null);
+		List<Album> albumList = albumService.getAllAlbum();
+		map.put("albumList", albumList);
 		
 		// 站点信息
 		map.put("siteInfo", null);
