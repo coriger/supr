@@ -110,7 +110,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		// 登录校验
 		function checkLogin(){
 			var params = $.toJSON($("#login-form").serializeObject());
-			alert(params);
 			$.ajax({
 				type:"POST",
 				url:"./login/submit",
@@ -123,8 +122,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                	// 这里可以考虑记住标签id 然后自动选择出错字段
 		                alert(data.errorInfo);
 	                }else if(data.resultCode == 'success'){
-	                	alert("登录成功!");
-	                	$("#login-form").attr("action","./admin/home");
+	                	$("#login-form").attr("action","./home");
 	                	$("#login-form").submit();
 	                }
 				}

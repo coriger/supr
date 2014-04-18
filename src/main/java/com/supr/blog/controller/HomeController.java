@@ -3,14 +3,18 @@ package com.supr.blog.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.supr.blog.model.Admin;
 import com.supr.blog.model.Album;
 import com.supr.blog.model.Category;
+import com.supr.blog.model.SiteInfo;
 import com.supr.blog.service.AlbumService;
 import com.supr.blog.service.BlogService;
 import com.supr.blog.service.CategoryService;
@@ -36,8 +40,12 @@ public class HomeController extends BaseController{
 	@Autowired
 	private SiteService siteService;
 	
-	@RequestMapping(value = "/home",method = RequestMethod.POST)
-	public ModelAndView home(){
+	@RequestMapping(value = "/home")
+	public ModelAndView home(HttpSession session){
+		Admin admin = (Admin)session.getAttribute("userInfo");
+		if(null == admin){
+			return null;
+		}
 		ModelAndView modelAndView = new ModelAndView("/admin/home");
 		HashMap<String, Object> map = new HashMap<String,Object>();
 		// 文章
@@ -53,7 +61,8 @@ public class HomeController extends BaseController{
 		map.put("albumList", albumList);
 		
 		// 站点信息
-		map.put("siteInfo", null);
+		SiteInfo siteInfo = siteService.getSiteInfo();
+		map.put("siteInfo", siteInfo);
 
 		modelAndView.addAllObjects(map);
 		return modelAndView;

@@ -17,7 +17,7 @@ public class BaseController {
 	/**
 	 * 分页 当前页数
 	 */
-	public int pageNum;
+	public int pageNum = Pager.PAGE_SIZE;
 	
 	/**
 	 * 分页类

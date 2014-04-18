@@ -1,5 +1,7 @@
 package com.supr.blog.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -31,7 +33,7 @@ public class LoginController {
 	
 	@RequestMapping(value="/submit",method=RequestMethod.POST)
 	public @ResponseBody 
-	Result login(@RequestBody Admin admin){
+	Result login(@RequestBody Admin admin,HttpSession session){
 		Result result = null;
 		// 校验用户名 
 		if (StringUtils.isEmpty(admin.getUsername())) {
@@ -45,6 +47,9 @@ public class LoginController {
 		}
 		admin = new Admin(admin.getUsername(),admin.getPassword());
 		if(adminService.adminExists(admin)){
+			// 存放用户信息在session中  有效时间60分钟
+			session.setAttribute("userInfo", admin);
+			session.setMaxInactiveInterval(60*60);
 			result = new Result("success","登录成功!");
 			return result;
 		}else{

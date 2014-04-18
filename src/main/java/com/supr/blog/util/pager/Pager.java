@@ -69,7 +69,11 @@ public class Pager {
 			pageNum = totalPageNum;
 		}
 		// 分页开始值 关键
-		startIndex = (pageNum - 1) * pageSize;
+		if(pageNum == 0){
+			startIndex = 0;
+		}else{
+			startIndex = (pageNum - 1) * pageSize;
+		}
 		this.pageNum = pageNum;
 	}
 

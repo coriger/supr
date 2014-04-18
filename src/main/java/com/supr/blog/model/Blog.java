@@ -24,7 +24,14 @@ public class Blog {
 	
 	private String content;
 	
-	private List<String> tag;
+	// 标签
+	private List<Tag> tag;
+	
+	// 浏览数
+	private Integer hits;
+	
+	// 评论数
+	private Integer commentSum;
 
 	public Integer getBlogId() {
 		return blogId;
@@ -82,11 +89,27 @@ public class Blog {
 		this.content = content;
 	}
 
-	public List<String> getTag() {
+	public List<Tag> getTag() {
 		return tag;
 	}
 
-	public void setTag(List<String> tag) {
+	public void setTag(List<Tag> tag) {
 		this.tag = tag;
+	}
+
+	public Integer getHits() {
+		return hits;
+	}
+
+	public void setHits(Integer hits) {
+		this.hits = hits;
+	}
+
+	public Integer getCommentSum() {
+		return commentSum;
+	}
+
+	public void setCommentSum(Integer commentSum) {
+		this.commentSum = commentSum;
 	}
 }
