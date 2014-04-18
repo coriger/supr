@@ -1,5 +1,6 @@
 package com.supr.blog.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class Blog {
 	private Integer userId;
 	
 	private String content;
+	
+	// 标签Id串
+	private String tagIds;
 	
 	// 标签
 	private List<Tag> tag;
@@ -96,6 +100,13 @@ public class Blog {
 	public void setTag(List<Tag> tag) {
 		this.tag = tag;
 	}
+	
+	public void setTag(Tag tag) {
+		if(null == this.tag){
+			this.tag = new ArrayList<Tag>();
+		}
+		this.tag.add(tag);
+	}
 
 	public Integer getHits() {
 		return hits;
@@ -111,5 +122,13 @@ public class Blog {
 
 	public void setCommentSum(Integer commentSum) {
 		this.commentSum = commentSum;
+	}
+
+	public String getTagIds() {
+		return tagIds;
+	}
+
+	public void setTagIds(String tagIds) {
+		this.tagIds = tagIds;
 	}
 }

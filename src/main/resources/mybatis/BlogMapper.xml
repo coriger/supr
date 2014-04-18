@@ -15,4 +15,9 @@
 		limit  #{startIndex},#{pageSize}
 	</select>
 	
+	<!-- 根据分类Id获取分了下文章数 -->
+	<select id="getBlogCountByCategoryId" parameterType="int" resultType="int">
+		select count(1) from blog where categoryId = #{categoryId}
+	</select>
+	
 </mapper>

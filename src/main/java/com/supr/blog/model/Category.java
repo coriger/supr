@@ -14,6 +14,9 @@ public class Category {
 	private String categoryName;
 	
 	private Date createTime;
+	
+	// 分类文章数
+	private Integer blogCount;
 
 	public Integer getCategoryId() {
 		return categoryId;
@@ -38,4 +41,13 @@ public class Category {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
+
+	public Integer getBlogCount() {
+		return blogCount;
+	}
+
+	public void setBlogCount(Integer blogCount) {
+		this.blogCount = blogCount;
+	}
+	
 }

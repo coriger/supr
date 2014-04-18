@@ -6,7 +6,7 @@
 	
 	<!-- 获取所有分类信息 -->
 	<select id="getAllCategory" resultType="com.supr.blog.model.Category">
-		select * from category  
+		select * from category
 	</select>
 	
 </mapper>

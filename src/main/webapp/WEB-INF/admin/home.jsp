@@ -1,4 +1,4 @@
-<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ page language="java" import="java.util.*"  pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 	String path = request.getContextPath();
@@ -10,26 +10,26 @@
 <html class=" hasFontSmoothing-true">
 <head>
 <base href="<%=basePath%>">
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="http://s.srcdd.com/js/lib/frameupload.$7176.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/kissy/1.2/datalazyload.js?t=20120703155558" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/kissy/1.2/switchable.js?t=20120703155558" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/lib/photo-reply.$7176.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/lib/feedslide.$7116.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/sky/build/sky/Dialog.$7202.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/lib/radar.$7202.js" async="" charset="utf-8"></script>
-<script type="text/javascript" async="" src="http://s.srcdd.com/js/base/ga.$5928.js"></script>
-<script src="http://s.srcdd.com/js/kissy/1.2/template.js?t=20120703155558" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/lib/tracker.$6736.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/lib/feed.$7227.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/lib/aside.$7202.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/util.$7202.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/app/rec-list.$7202.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/kissy/1.2/core.js?t=20120703155558" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/sky/build/sky.$6939.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/lib/autoSaveTip.$7227.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/lib/header.$7202.js" async="" charset="utf-8"></script>
-<script src="http://s.srcdd.com/js/app/home.$7251.js" async="" charset="utf-8"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/frameupload.$7176.js" async="" charset="utf-8"></script>
+<script src="js/datalazyload.js" async="" charset="utf-8"></script>
+<script src="js/switchable.js" async="" charset="utf-8"></script>
+<script src="js/photo-reply.$7176.js" async="" charset="utf-8"></script>
+<script src="js/feedslide.$7116.js" async="" charset="utf-8"></script>
+<script src="js/Dialog.$7202.js" async="" charset="utf-8"></script>
+<script src="js/radar.$7202.js" async="" charset="utf-8"></script>
+<script src="js/ga.$5928.js"></script>
+<script src="js/template.js" async="" charset="utf-8"></script>
+<script src="js/tracker.$6736.js" async="" charset="utf-8"></script>
+<script src="js/feed.$7227.js" async="" charset="utf-8"></script>
+<script src="js/aside.$7202.js" async="" charset="utf-8"></script>
+<script src="js/util.$7202.js" async="" charset="utf-8"></script>
+<script src="js/rec-list.$7202.js" async="" charset="utf-8"></script>
+<script src="js/core.js" async="" charset="utf-8"></script>
+<script src="js/sky.$6939.js" async="" charset="utf-8"></script>
+<script src="js/autoSaveTip.$7227.js" async="" charset="utf-8"></script>
+<script src="js/header.$7202.js" async="" charset="utf-8"></script>
+<script src="js/home.$7251.js" async="" charset="utf-8"></script>
 <script type="text/javascript" src="js/supr.js"></script>
 <script type="text/javascript" src="js/jquery-json-2.4.js"></script>
 <meta charset="utf-8">
@@ -429,9 +429,9 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 										</div>
 
 										<div class="feed-tag clearfix">
-											<a href="http://www.diandian.com/tag/springMVC" class=" last">#springMVC</a>
-											<a href="http://www.diandian.com/tag/springMVC" class=" last">#springMVC</a>
-											<a href="http://www.diandian.com/tag/springMVC" class=" last">#springMVC</a>
+											<c:forEach items="${blog.tag}" var="tag">
+												<a href="http://www.diandian.com/tag/${tag.tagName}" class=" last">#${tag.tagName}</a>
+											</c:forEach>
 										</div>
 										<div class="feed-act">
 											<a class="feed-del">删除</a> <a href="http://www.diandian.com/edit/165ebd20-c2ba-11e3-b787-90b11c0ed01e" class="feed-edit">编辑</a> <a class="feed-cmt" data-nid="165ebd20-c2ba-11e3-b787-90b11c0ed01e">回应(${blog.commentSum})</a><a data-type="text" data-id="165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-nid="165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-url="coriger" class="feed-nt">热度(${blog.hits})</a>
@@ -463,42 +463,6 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 																</div>
 															</div>
 														</div>
-													</li>
-													<li class="notes-list-item nt-cmt clearfix"><div class="notes-item-hd clearfix">
-															<a href="http://coriger.diandian.com" target="_blank"><img width="20" height="20" alt="coriger" class="notes-avatar" src="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG">
-															</a><span class="notes-info"><a href="http://coriger.diandian.com" target="_blank" class="notes-user">coriger</a>在&nbsp;<a target="_blank" href="http://coriger.diandian.com/post/165ebd20-c2ba-11e3-b787-90b11c0ed01e">coriger</a>&nbsp;回应了此文字</span><s class="notes-icon"></s>
-														</div>
-														<div class="notes-comment">123213</div>
-													</li>
-													<li class="notes-list-item nt-cmt clearfix"><div class="notes-item-hd clearfix">
-															<a href="http://coriger.diandian.com" target="_blank"><img width="20" height="20" alt="coriger" class="notes-avatar" src="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG">
-															</a><span class="notes-info"><a href="http://coriger.diandian.com" target="_blank" class="notes-user">coriger</a>在&nbsp;<a target="_blank" href="http://coriger.diandian.com/post/165ebd20-c2ba-11e3-b787-90b11c0ed01e">coriger</a>&nbsp;回应了此文字</span><s class="notes-icon"></s>
-														</div>
-														<div class="notes-comment">123213</div>
-													</li>
-													<li class="notes-list-item nt-cmt clearfix"><div class="notes-item-hd clearfix">
-															<a href="http://coriger.diandian.com" target="_blank"><img width="20" height="20" alt="coriger" class="notes-avatar" src="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG">
-															</a><span class="notes-info"><a href="http://coriger.diandian.com" target="_blank" class="notes-user">coriger</a>在&nbsp;<a target="_blank" href="http://coriger.diandian.com/post/165ebd20-c2ba-11e3-b787-90b11c0ed01e">coriger</a>&nbsp;回应了此文字</span><s class="notes-icon"></s>
-														</div>
-														<div class="notes-comment">1123123</div>
-													</li>
-													<li class="notes-list-item nt-cmt clearfix"><div class="notes-item-hd clearfix">
-															<a href="http://coriger.diandian.com" target="_blank"><img width="20" height="20" alt="coriger" class="notes-avatar" src="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG">
-															</a><span class="notes-info"><a href="http://coriger.diandian.com" target="_blank" class="notes-user">coriger</a>在&nbsp;<a target="_blank" href="http://coriger.diandian.com/post/165ebd20-c2ba-11e3-b787-90b11c0ed01e">coriger</a>&nbsp;回应了此文字</span><s class="notes-icon"></s>
-														</div>
-														<div class="notes-comment">fsdfsdfsd</div>
-													</li>
-													<li class="notes-list-item nt-cmt clearfix"><div class="notes-item-hd clearfix">
-															<a href="http://coriger.diandian.com" target="_blank"><img width="20" height="20" alt="coriger" class="notes-avatar" src="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG">
-															</a><span class="notes-info"><a href="http://coriger.diandian.com" target="_blank" class="notes-user">coriger</a>在&nbsp;<a target="_blank" href="http://coriger.diandian.com/post/165ebd20-c2ba-11e3-b787-90b11c0ed01e">coriger</a>&nbsp;回应了此文字</span><s class="notes-icon"></s>
-														</div>
-														<div class="notes-comment">sdfsdfsd</div>
-													</li>
-													<li class="notes-list-item nt-cmt clearfix last"><div class="notes-item-hd clearfix">
-															<a href="http://coriger.diandian.com" target="_blank"><img width="20" height="20" alt="coriger" class="notes-avatar" src="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG">
-															</a><span class="notes-info"><a href="http://coriger.diandian.com" target="_blank" class="notes-user">coriger</a>在&nbsp;<a target="_blank" href="http://coriger.diandian.com/post/165ebd20-c2ba-11e3-b787-90b11c0ed01e">coriger</a>&nbsp;回应了此文字</span><s class="notes-icon"></s>
-														</div>
-														<div class="notes-comment">sssssssss</div>
 													</li>
 												</ul>
 											</div>
@@ -646,18 +610,15 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 				
 				<!-- 分类开始 -->
 				<ul id="asideSideTrackedTag" class="sidemenu sidebox js-hook-track-tag side-tracked-tag">
-					<li class="aside-hot-tag first  " tag="java"><a class="followed-tag clearfix" href="http://www.diandian.com/tag/java"><span class="aside-icon"></span> <span class="sidemenu-item-extra sidemenu-item-notify"> 6 </span><span class=""> java </span> </a>
-					</li>
-					<li class="aside-hot-tag   " tag="jms"><a class="followed-tag clearfix" href="http://www.diandian.com/tag/jms"><span class="aside-icon"></span><span class=""> jms </span> </a>
-					</li>
-					<li class="aside-hot-tag   " tag="jvm"><a class="followed-tag clearfix" href="http://www.diandian.com/tag/jvm"><span class="aside-icon"></span><span class=""> jvm </span> </a>
-					</li>
-					<li class="aside-hot-tag   " tag="memcache"><a class="followed-tag clearfix" href="http://www.diandian.com/tag/memcache"><span class="aside-icon"></span><span class=""> memcache </span> </a>
-					</li>
-					<li class="aside-hot-tag   " tag="%E6%89%8B%E7%BB%98"><a class="followed-tag clearfix" href="http://www.diandian.com/tag/%E6%89%8B%E7%BB%98"><span class="aside-icon"></span> <span class="sidemenu-item-extra sidemenu-item-notify"> 10+ </span><span class=""> 手绘 </span> </a>
-					</li>
-					<li class="aside-hot-tag   " tag="%E9%9F%B3%E4%B9%90"><a class="followed-tag clearfix" href="http://www.diandian.com/tag/%E9%9F%B3%E4%B9%90"><span class="aside-icon"></span> <span class="sidemenu-item-extra sidemenu-item-notify"> 10+ </span><span class=""> 音乐 </span> </a>
-					</li>
+					<c:forEach items="${requestScope.categoryList}" var="category">
+						<li class="aside-hot-tag" tag="${category.categoryName}">
+							<a class="followed-tag clearfix" href="">
+								<span class="aside-icon"></span>
+								<span class="sidemenu-item-extra sidemenu-item-notify">${category.blogCount}</span>
+								<span class=""> ${category.categoryName} </span>
+							</a>
+						</li>
+					</c:forEach>
 				</ul>
 				<!-- 分类结束 -->
 				

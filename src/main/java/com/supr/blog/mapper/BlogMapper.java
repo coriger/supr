@@ -11,4 +11,6 @@ public interface BlogMapper {
 
 	List<Blog> getBlogByPager(Pager pager);
 
+	int getBlogCountByCategoryId(Integer categoryId);
+
 }
