@@ -1298,20 +1298,15 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 							<div class="pb-action-shadow-bottom"></div>
 						</div>
 					</div>
+					
+					<!-- 提示栏开始 -->
 					<div id="J_PublisherTipWrap" class="publisher-tip clearfix">
 						<span class="tip-text">你还有8篇自动保存的文章未发布哦！</span> <a class="tip-link" href="http://www.diandian.com/autosave/list">立即恢复</a><span id="J_AutoSaveTipClose" class="tip-action" title="删除自动保存文章">删除</span>
 					</div>
-					<script type="text/javascript">
-						KISSY.use("lib/autoSaveTip.$7227",
-								function(S, autoSave) {
-									S.ready(function() {
-										autoSave.init();
-									});
-								});
-					</script>
-
+					<!-- 提示栏结束 -->
+					
+					<!-- 文章列表开始 -->
 					<div class="feed-list" id="feed-list">
-
 						<div class="feed  feed-text feed-expand" id="feed-165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-comment="1">
 							<div class="feed-avatar">
 								<a target="_blank" avatar="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG" title="coriger" href="http://coriger.diandian.com?ref=avatar" class="blog-avatar" style="background-image: url(http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG);">coriger</a>
@@ -1518,17 +1513,30 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 								<div class="post-flag-panel"></div>
 							</div>
 						</div>
-
-					<div class="paging-feed clearfix" id="paging-feed">
-						<div class="page-nav">
-							<div class="ui-button skin-button-willsilver-lite" cloud="" href="?page=2" id="ctrlbuttonpaging-feed-next" data-control="paging-feed-next" style="width: 80px;">
-								<span class="ui-button-bg-left skin-button-willsilver-lite-bg-left"></span>
-								<div id="ctrlbuttonpaging-feed-nextlabel" class="ui-button-label skin-button-willsilver-lite-label">
-									<span id="ctrlbuttonpaging-feed-nexttext" class="ui-button-text skin-button-willsilver-lite-text">下一页</span>
+					<!-- 文章列表结束 -->
+					
+					<!-- 分页开始 -->
+						<div class="paging-feed clearfix" id="paging-feed">
+							<a href="?" class="paging-feed-back">返回第一页</a>
+							<div class="page-nav">
+								<div class="ui-button skin-button-willsilver-lite" cloud="" href="?page=3" id="ctrlbuttonpaging-feed-next" data-control="paging-feed-next" style="width: 80px;">
+									<span class="ui-button-bg-left skin-button-willsilver-lite-bg-left"></span>
+									<div id="ctrlbuttonpaging-feed-nextlabel" class="ui-button-label skin-button-willsilver-lite-label">
+										<span id="ctrlbuttonpaging-feed-nexttext" class="ui-button-text skin-button-willsilver-lite-text">下一页</span>
+									</div>
+								</div>
+							</div>
+							<div class="page-nav">
+								<div class="ui-button skin-button-willsilver-lite" cloud="" href="?" id="ctrlbuttonpaging-feed-next" data-control="paging-feed-next" style="width: 80px;">
+									<span class="ui-button-bg-left skin-button-willsilver-lite-bg-left"></span>
+									<div id="ctrlbuttonpaging-feed-nextlabel" class="ui-button-label skin-button-willsilver-lite-label">
+										<span id="ctrlbuttonpaging-feed-nexttext" class="ui-button-text skin-button-willsilver-lite-text">上一页</span>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+						<!-- 分页结束 -->
+					
 					<script type="text/javascript">
 						KISSY.use("sky.$6939,dom,event", function(S, sky, DOM,
 								Event) {
@@ -1670,7 +1678,7 @@ aside.init();
 			</div>
 		</div>
 	</div>
-	<a class="scroll-to-top" style="display:none">Top</a>
+	<a class="scroll-to-top" style="opacity: 1;">Top</a>
 	<span id="_dd_shortcut_tip" style="display: none;"></span>
 	</div>
 	<iframe src="http://acl.a.srcdd.com/acl.html?2" width="0" height="0" frameborder="0"></iframe>
