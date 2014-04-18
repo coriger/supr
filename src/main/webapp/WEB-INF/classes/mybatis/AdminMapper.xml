@@ -5,22 +5,22 @@
 <mapper namespace="com.supr.blog.mapper.AdminMapper">
 	
 	<select id="addAdmin" parameterType="Admin">
-		insert into ADMIN(USERNAME,PASSWORD,IS_ENABLE,EMAIL) values(#{username},#{password},#{isEnabled},#{email})
+		insert into admin(username,password,isEnabled,email) values(#{username},#{password},#{isEnabled},#{email})
 	</select>
 	
 	<select id="getAdminByEmail" resultType="Admin" parameterType="String">
-		select * from ADMIN  
-		where EMAIL = #{email}
+		select * from admin  
+		where email = #{email}
 	</select>
 	
 	<select id="adminExists" resultType="Admin" parameterType="Admin">
-		select * from ADMIN  
-		where USERNAME = #{username} and PASSWORD = #{password}
+		select * from admin  
+		where username = #{username} and password = #{password}
 	</select>
 	
 	<select id="getAdminByName" resultType="Admin" parameterType="String">
-		select * from ADMIN  
-		where USERNAME = #{username}
+		select * from admin  
+		where username = #{username}
 	</select>
 	
 </mapper>
