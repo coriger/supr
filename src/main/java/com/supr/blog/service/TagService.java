@@ -8,4 +8,8 @@ public interface TagService {
 
 	List<Tag> getAllTag();
 
+	boolean existTag(String tagName);
+
+	int addTag(String tagName);
+
 }

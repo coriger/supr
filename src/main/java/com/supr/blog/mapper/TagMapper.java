@@ -10,4 +10,8 @@ public interface TagMapper {
 
 	List<Tag> getAllTag();
 
+	Tag getTagByName(String tagName);
+
+	int addTag(String tagName);
+
 }

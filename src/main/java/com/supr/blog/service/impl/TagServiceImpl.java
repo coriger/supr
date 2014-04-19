@@ -19,4 +19,15 @@ public class TagServiceImpl implements TagService{
 	public List<Tag> getAllTag() {
 		return tagMapper.getAllTag();
 	}
+	
+	@Override
+	public boolean existTag(String tagName) {
+		Tag tag = tagMapper.getTagByName(tagName);
+		return (null == tag) ? false : true;
+	}
+	
+	@Override
+	public int addTag(String tagName) {
+		return tagMapper.addTag(tagName);
+	}
 }

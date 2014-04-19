@@ -14,4 +14,14 @@
 		select * from tag
 	</select>
 	
+	<!-- 根据名字获取标签 -->
+	<select id="getTagByName" parameterType="String" resultType="com.supr.blog.model.Tag">
+		select * from tag where tagName = #{tagName}
+	</select>
+	
+	<!-- 根据名字获取标签 -->
+	<insert id="addTag" parameterType="String">
+		insert into tag(tagName) values(#{tagName})
+	</insert>
+	
 </mapper>

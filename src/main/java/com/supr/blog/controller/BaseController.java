@@ -1,5 +1,6 @@
 package com.supr.blog.controller;
 
+import com.supr.blog.model.vo.Result;
 import com.supr.blog.util.pager.Pager;
 
 /**
@@ -24,4 +25,40 @@ public class BaseController {
 	 */
 	public Pager pager;
 	
+	/**
+	 * json返回值
+	 */
+	public Result result;
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public int getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public Pager getPager() {
+		return pager;
+	}
+
+	public void setPager(Pager pager) {
+		this.pager = pager;
+	}
+
+	public Result getResult() {
+		return result;
+	}
+
+	public void setResult(Result result) {
+		this.result = result;
+	}
 }

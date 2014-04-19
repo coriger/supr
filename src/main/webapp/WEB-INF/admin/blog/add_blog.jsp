@@ -45,9 +45,6 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 <script src="http://s.srcdd.com/js/kissy/1.2/seed.$6804.js"></script>
 <link rel="stylesheet" href="http://s.srcdd.com/css/base/dd.$7250.css">
 <script>
-	KISSY.Config.debug = '';
-</script>
-<script>
 	ENV.serverTimestamp = 1397878592309;
 	ENV.clientTimestamp = new Date().getTime();
 	KISSY.ready(function(S) {
@@ -292,8 +289,7 @@ pintab.init();
 											<!-- 标签添加位置 -->
 										</ul>
 										<div id="post-tag-input-holder">
-											<input type="text" name="post-tag-input" id="post-tag-input"
-												tip='{"class":"pb-tag-tip","text":"添加标签..."}'>
+											
 										</div>
 									</div>
 								</div>
@@ -304,7 +300,10 @@ pintab.init();
 												<span onclick="addTag('${tag.tagName}')">${tag.tagName}</span>
 											</li>
 										</c:forEach>
+										<input type="hidden" id="tags" name="tags"/>
 									</ul>
+									<input type = "text" id="tagName" name="tagName" style="width:130px"/>
+									<input type = "button" value="新增标签" onclick="insertTag()"/>
 								</div>
 							</div>
 							<div id="permalink-holder">
@@ -316,6 +315,7 @@ pintab.init();
 									<div class="permallink" id="permallink">
 										<font style="color:black;font-weight: bold;font-size: 15px">
 											/blog/${publishTime}/${postFix}
+											<input type="hidden" name="postFix" value="/blog/${publishTime}/${postFix}"/>
 										</font>
 									</div>
 								</div>
@@ -454,10 +454,57 @@ pintab.init();
 			$("#post-tag-input").val("");
 			var tag = $("#"+tagName).html();
 			if(tag == null || tag == '' || tag == undefined){
-				$("#post-tag-list").append("<li id='"+tagName+"' tag='"+tagName+"'><span>"+tagName+"</span><a title='删除' class='delete-tag-btn'>x</a></li>");
+				$("#post-tag-list").append("<li id='"+tagName+"' tag='"+tagName+"'><span>"+tagName+"</span><a onclick=deleteTag('"+tagName+"') title='删除' class='delete-tag-btn'>x</a></li>");
+				var tags = $("#tags").val();
+				if(tags == null || tags == '' || tags == undefined){
+					tags = ""+tagName+",";
+				}else{
+					tags = tags + tagName + ",";
+				}
+				$("#tags").val(tags);
 			}else{
 				// 重复添加
 			}
+		}
+		
+		// 后台新增标签
+		function insertTag(){
+			var name = $("#tagName").val();
+			if(name == null || name == '' || name == undefined){
+				alert("请输入标签名!");
+			}else{
+				// 防止中文乱码  二次编码
+				var tagName = encodeURI(encodeURI(name));
+				
+				$.ajax({
+					url:"./tag/add",
+					data:"tagName="+tagName,
+					contentType:"application/json", 
+					method:"POST",
+					success:function(data){
+						if(data.resultCode == 'error'){
+		                	alert(data.errorInfo);
+		                }else if(data.resultCode == 'success'){
+		                	// 新增成功  刷新标签块列表(可以直接追加  就不需要再次查询了)
+		                	$("#recommand-tag-list").append("<li tag="+name+">"+
+												"<span onclick=addTag('"+name+"')>"+name+"</span>"+
+												"</li>");
+							// 清空输入框
+							$("#tagName").val("");
+		                }
+					}
+				})
+			}
+		}
+		
+		// 删除标签
+		function deleteTag(tagName){
+			// 从tags里面把这个标签名除去
+			var tagStr = $("#tags").val();
+			tagStr = tagStr.replace(tagName+",","");
+			$("#tags").val(tagStr);
+			// 移除标签
+			$("#"+tagName).remove();
 		}
 		
 		// 添加文章

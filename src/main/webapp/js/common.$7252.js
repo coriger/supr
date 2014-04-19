@@ -534,6 +534,7 @@ KISSY.add("lib/editor", function(a) {
 				}))
 			},
 			initRecommandTag: function(c) {
+				alert("init");
 				function j(a) {
 					var c = a.target,
 						d;
