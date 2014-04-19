@@ -121,7 +121,7 @@ pintab.init();
 </script>
 <title>发布文字 | 点点</title>
 </head>
-<body id="new-text">
+<body>
 	<div id="PopElementContainer"></div>
 	<div id="PopMenuContainer">
 		<div id="pop-blog-list-holder" class="pop-menu-list-holder"
@@ -213,6 +213,7 @@ pintab.init();
 								<a id="pb-share-tip-close" href="#" title="不再提示">关闭</a>
 							</div>
 						</h2>
+						<form action="./blog/add" method="post" id="form">
 						<div id="pb-post-area">
 							<div id="pb-text-title-holder" class="pb-post-section">
 								<h3 class="pb-section-title">
@@ -223,12 +224,15 @@ pintab.init();
 							</div>
 							<div id="pb-text-post-holder" class="pb-post-section">
 								<h3 class="pb-section-title">内容</h3>
+								
 								<!-- 这里面存放正文 -->
 								<script id="container" name="content" type="text/plain">
+										这里是正文
 								</script>
 								<script type="text/javascript">
 								    var editor = UE.getEditor('container')
 								</script>
+								
 							</div>
 						</div>
 						
@@ -250,8 +254,9 @@ pintab.init();
 								<span id="pb-submiting-tip" style="display:none;">正在保存...</span>
 							-->
 						</div>
+						<input type="hidden" id="tags" name="tagIds"/>
 						<!-- 按钮结束 -->
-						
+						</form>
 					</div>
 					<div id="pb-aside">
 						<div class="pb-aside-i">
@@ -296,11 +301,10 @@ pintab.init();
 								<div id="recommand-tag-holder" class="aside-item" style="">
 									<ul id="recommand-tag-list" class="clearfix">
 										<c:forEach items="${requestScope.tagList}" var="tag">
-											<li tag="${tag.tagName}">
-												<span onclick="addTag('${tag.tagName}')">${tag.tagName}</span>
+											<li onclick="addTag('${tag.tagName}','${tag.tagId}')" tag="${tag.tagName}">
+												<span>${tag.tagName}</span>
 											</li>
 										</c:forEach>
-										<input type="hidden" id="tags" name="tags"/>
 									</ul>
 									<input type = "text" id="tagName" name="tagName" style="width:130px"/>
 									<input type = "button" value="新增标签" onclick="insertTag()"/>
@@ -450,16 +454,16 @@ pintab.init();
 	<script src="js/jquery.min.js"></script>
 	<script type="text/javascript">
 		// 添加标签
-		function addTag(tagName){
+		function addTag(tagName,tagId){
 			$("#post-tag-input").val("");
-			var tag = $("#"+tagName).html();
+			var tag = $("#"+tagId).html();
 			if(tag == null || tag == '' || tag == undefined){
-				$("#post-tag-list").append("<li id='"+tagName+"' tag='"+tagName+"'><span>"+tagName+"</span><a onclick=deleteTag('"+tagName+"') title='删除' class='delete-tag-btn'>x</a></li>");
+				$("#post-tag-list").append("<li id='"+tagId+"' tag='"+tagName+"'><span>"+tagName+"</span><a onclick=deleteTag('"+tagId+"') title='删除' class='delete-tag-btn'>x</a></li>");
 				var tags = $("#tags").val();
 				if(tags == null || tags == '' || tags == undefined){
-					tags = ""+tagName+",";
+					tags = ""+tagId+",";
 				}else{
-					tags = tags + tagName + ",";
+					tags = tags + tagId + ",";
 				}
 				$("#tags").val(tags);
 			}else{
@@ -485,9 +489,10 @@ pintab.init();
 						if(data.resultCode == 'error'){
 		                	alert(data.errorInfo);
 		                }else if(data.resultCode == 'success'){
+		                	alert(data.object);
 		                	// 新增成功  刷新标签块列表(可以直接追加  就不需要再次查询了)
-		                	$("#recommand-tag-list").append("<li tag="+name+">"+
-												"<span onclick=addTag('"+name+"')>"+name+"</span>"+
+		                	$("#recommand-tag-list").append("<li onclick=addTag('"+name+"','"+data.object+"') tag="+name+">"+
+												"<span>"+name+"</span>"+
 												"</li>");
 							// 清空输入框
 							$("#tagName").val("");
@@ -498,18 +503,19 @@ pintab.init();
 		}
 		
 		// 删除标签
-		function deleteTag(tagName){
+		function deleteTag(tagId){
 			// 从tags里面把这个标签名除去
 			var tagStr = $("#tags").val();
-			tagStr = tagStr.replace(tagName+",","");
+			tagStr = tagStr.replace(tagId+",","");
 			$("#tags").val(tagStr);
 			// 移除标签
-			$("#"+tagName).remove();
+			$("#"+tagId).remove();
 		}
 		
 		// 添加文章
 		function addBlog(){
 			alert("添加文章");
+			$("#form").submit();
 		}
 		
 		// 预览文章
@@ -527,6 +533,5 @@ pintab.init();
 			alert("取消发布");
 		}
 	</script>
-
 </body>
 </html>

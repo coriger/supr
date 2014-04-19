@@ -12,6 +12,6 @@ public interface TagMapper {
 
 	Tag getTagByName(String tagName);
 
-	int addTag(String tagName);
+	int addTag(Tag tag);
 
 }

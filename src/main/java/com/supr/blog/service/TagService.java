@@ -10,6 +10,6 @@ public interface TagService {
 
 	boolean existTag(String tagName);
 
-	int addTag(String tagName);
+	int addTag(Tag tag);
 
 }

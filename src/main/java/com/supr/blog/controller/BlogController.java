@@ -58,7 +58,7 @@ public class BlogController extends BaseController {
 	@RequestMapping("/add")
 	public String addBlog(Blog blog){
 		
-		return "/home/blog/add_blog";
+		return "redirect:/home";
 	}
 	
 }

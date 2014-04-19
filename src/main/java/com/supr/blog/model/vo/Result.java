@@ -13,10 +13,20 @@ public class Result {
 	// 错误信息
 	private String errorInfo;
 	
+	// 附属对象
+	private Object object;
+	
 	public Result(String resultCode, String errorInfo) {
 		super();
 		this.resultCode = resultCode;
 		this.errorInfo = errorInfo;
+	}
+	
+	public Result(String resultCode, String errorInfo, Object object) {
+		super();
+		this.resultCode = resultCode;
+		this.errorInfo = errorInfo;
+		this.object = object;
 	}
 
 	public String getResultCode() {
@@ -34,4 +44,13 @@ public class Result {
 	public void setErrorInfo(String errorInfo) {
 		this.errorInfo = errorInfo;
 	}
+
+	public Object getObject() {
+		return object;
+	}
+
+	public void setObject(Object object) {
+		this.object = object;
+	}
+	
 }

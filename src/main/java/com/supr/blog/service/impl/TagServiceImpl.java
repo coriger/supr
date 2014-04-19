@@ -27,7 +27,7 @@ public class TagServiceImpl implements TagService{
 	}
 	
 	@Override
-	public int addTag(String tagName) {
-		return tagMapper.addTag(tagName);
+	public int addTag(Tag tag) {
+		return tagMapper.addTag(tag);
 	}
 }

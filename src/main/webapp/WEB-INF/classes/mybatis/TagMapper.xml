@@ -20,8 +20,11 @@
 	</select>
 	
 	<!-- 根据名字获取标签 -->
-	<insert id="addTag" parameterType="String">
+	<insert id="addTag" parameterType="com.supr.blog.model.Tag" useGeneratedKeys="true" keyProperty="tagId">  
 		insert into tag(tagName) values(#{tagName})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="tagId" >  
+	          SELECT LAST_INSERT_ID()
+        </selectKey> 
 	</insert>
 	
 </mapper>
