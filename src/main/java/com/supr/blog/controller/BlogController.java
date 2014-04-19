@@ -1,5 +1,7 @@
 package com.supr.blog.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,9 @@ public class BlogController extends BaseController {
 		
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("tagList", tagList);
-		return "/home/blog/add_blog";
+		model.addAttribute("publishTime", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+		model.addAttribute("postFix", 1);
+		return "/admin/blog/add_blog";
 	}
 	
 	/**

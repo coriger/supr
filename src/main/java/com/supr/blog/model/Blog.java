@@ -36,6 +36,9 @@ public class Blog {
 	
 	// 评论数
 	private Integer commentSum;
+	
+	// 文章静态页面地址   静态地址格式暂定为 /blog/2014-10-12/后缀
+	private String postFix;
 
 	public Integer getBlogId() {
 		return blogId;
@@ -130,5 +133,13 @@ public class Blog {
 
 	public void setTagIds(String tagIds) {
 		this.tagIds = tagIds;
+	}
+
+	public String getPostFix() {
+		return postFix;
+	}
+
+	public void setPostFix(String postFix) {
+		this.postFix = postFix;
 	}
 }

@@ -1,16 +1,24 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html>
 <head>
 <base href="<%=basePath%>">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=100" />
+<!-- 配置文件 -->
+<script type="text/javascript" src="js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="js/ueditor/ueditor.all.js"></script>
+<!-- 语言包文件(建议手动加载语言包，避免在ie下，因为加载语言失败导致编辑器加载失败) -->
+<script type="text/javascript" src="js/ueditor/lang/zh-cn/zh-cn.js"></script>
 <!--[if IE 9]>
 <meta name="application-name" content="点点网" />
 <meta name="msapplication-starturl" content="http://www.diandian.com/home" />
@@ -31,16 +39,16 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 	window.DDformKey = '88301c81136549d9f220b5815b0c837d';
 	window.DDHostName = 'db13.dd.hn';
 	window.DDrev = '23257 376e6ae12b57 2014032016 built by vela';
-	window.DDrequestStart = '1397868548341';
-	window.DDrequestEnd = '1397868548378';
+	window.DDrequestStart = '1397878592309';
+	window.DDrequestEnd = '1397878592345';
 </script>
-<script src="js/seed.$6804.js"></script>
+<script src="http://s.srcdd.com/js/kissy/1.2/seed.$6804.js"></script>
 <link rel="stylesheet" href="http://s.srcdd.com/css/base/dd.$7250.css">
 <script>
 	KISSY.Config.debug = '';
 </script>
 <script>
-	ENV.serverTimestamp = 1397868548341;
+	ENV.serverTimestamp = 1397878592309;
 	ENV.clientTimestamp = new Date().getTime();
 	KISSY.ready(function(S) {
 		ENV.domReadyTimestamp = new Date().getTime();
@@ -111,9 +119,6 @@ pintab.init();
 						} ];
 						S.ready(function() {
 							publisher.init(dataSource, privacySource);
-							publisher.text.init();
-							// 0 stand for new post
-							autosave.init('text', 0);
 						});
 					});
 </script>
@@ -130,9 +135,11 @@ pintab.init();
 					<li class="first" id="pop-blog-630544"><a
 						href="http://www.diandian.com/dianlog/coriger"><span
 							class="pop-menu-extra blog-move-icon"></span><span
-							class="nav-blog-name">coriger</span> </a></li>
+							class="nav-blog-name">coriger</span> </a>
+					</li>
 					<li class="sub"><a href="http://www.diandian.com/new/blog"
-						title="再创建一个博客"> <span class="aside-icon"></span> +再创建一个博客 </a></li>
+						title="再创建一个博客"> <span class="aside-icon"></span> +再创建一个博客 </a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -149,7 +156,8 @@ pintab.init();
 				</div>
 				<ul id="nav">
 					<li id="nav-index" class=""><a class="nav-item"
-						href="http://www.diandian.com/home">首页</a></li>
+						href="http://www.diandian.com/home">首页</a>
+					</li>
 				</ul>
 				<div id="J_HeaderMiscAction" class="misc-action">
 					<ul class="action-list">
@@ -157,21 +165,19 @@ pintab.init();
 							href="http://www.diandian.com/wall?ref=topnav" title="发现">发现</a>
 						</li>
 						<li class="action-item"><a class="action-link themegarden"
-							href="http://www.diandian.com/themes" title="模板公园">模板公园</a>
-						</li>
+							href="http://www.diandian.com/themes" title="模板公园">模板公园</a></li>
 						<li class="action-item"><a class="action-link settings"
-							href="http://www.diandian.com/settings" title="帐户">帐户</a>
-						</li>
+							href="http://www.diandian.com/settings" title="帐户">帐户</a></li>
 						<li class="action-item"><a class="action-link logout"
 							href="http://www.diandian.com/logout?formKey=88301c81136549d9f220b5815b0c837d"
-							title="退出">退出</a>
-						</li>
+							title="退出">退出</a></li>
 					</ul>
 				</div>
 				<ul id="nav-blog-list" style="position:absolute;top:-500px;">
 					<li id="nav-blog-630544" class="blog-item" notify="" url="coriger"><a
 						class="blog-url" href="http://www.diandian.com/dianlog/coriger">
-							<span class="nav-blog-name"> coriger</span> </a></li>
+							<span class="nav-blog-name"> coriger</span> </a>
+					</li>
 				</ul>
 				<div id="nav-blog-action">
 					<a id="nav-more-blog" class="nav-more-blog">更多</a> <a
@@ -181,74 +187,6 @@ pintab.init();
 						class="header-pop-notice large-pop-notice blog-pop-notice"
 						style="display:none;">New</span>
 				</div>
-				<script>
-					(function() {
-						function $(el) {
-							return document.getElementById(el);
-						}
-						var header = $('header'), logo = $('logo-holder'), nav = $('nav'), action = $('nav-blog-action'), misc = $('J_HeaderMiscAction');
-						function getBlogListWidth() {
-							var actionWidth = 50;
-							return (header.offsetWidth - (logo.offsetWidth
-									+ nav.offsetWidth + misc.offsetWidth + actionWidth));
-						}
-						function renderNavBlogList() {
-							var MAX_BLOG_LIST_WIDTH = getBlogListWidth(), ret = [], attr, hideblog = false, ul = $('nav-blog-list'), lis = ul
-									.getElementsByTagName('li'), moreNotice = false, noticeName = '', noticeMap = {};
-							for ( var i = 0; i < lis.length; i++) {
-								lis[i].style.display = '';
-							}
-							for ( var i = lis.length - 1; i >= 0; i--) {
-								if (ul.offsetWidth > MAX_BLOG_LIST_WIDTH) {
-									if (lis[i].className.indexOf('active') > -1)
-										continue;
-									lis[i].style.display = 'none';
-									if (lis[i].className.indexOf('J_HasNotice') > -1) {
-										noticeName = lis[i]
-												.getAttribute('notify');
-										noticeMap[noticeName] = 1;
-										moreNotice = true;
-									}
-									hideblog = true;
-								} else {
-									break;
-								}
-							}
-							if (!hideblog) {
-								$('nav-more-blog').style.display = 'none';
-							} else {
-								$('nav-more-blog').style.display = '';
-							}
-							if (lis.length > 1 && !!hideblog) {
-								$('nav-new-blog').style.display = 'none';
-							} else {
-								$('nav-new-blog').style.display = '';
-							}
-							if (!!moreNotice) {
-								if (!!noticeMap['投稿']) {
-									$('nav-more-blog-notice').innerHTML = '投稿';
-								} else if (!!noticeMap['退稿']) {
-									$('nav-more-blog-notice').innerHTML = '退稿';
-								} else if (!!noticeMap['私信']) {
-									$('nav-more-blog-notice').innerHTML = '私信';
-								}
-								$('nav-more-blog-notice').style.display = '';
-							} else {
-								$('nav-more-blog-notice').style.display = 'none';
-							}
-							ul.style.position = '';
-							ul.style.top = '';
-						}
-						setTimeout(function() {
-							renderNavBlogList();
-						}, 1);
-						ENV.__renderNavBlogList = renderNavBlogList;
-					})();
-					KISSY.use("lib/header.$7202", function(S, header) {
-						header.init();
-					});
-					ENV.labsFullScreenSlide = false;
-				</script>
 			</div>
 		</div>
 		<div id="content-holder">
@@ -281,32 +219,42 @@ pintab.init();
 						<div id="pb-post-area">
 							<div id="pb-text-title-holder" class="pb-post-section">
 								<h3 class="pb-section-title">
-									标题 <span>(可不填)</span>
+									标题 
 								</h3>
-								<input tabindex="1" type="text" name="pb-text-title"
+								<input tabindex="1" type="text" name="title"
 									class="pb-input-text" id="pb-text-title">
 							</div>
 							<div id="pb-text-post-holder" class="pb-post-section">
 								<h3 class="pb-section-title">内容</h3>
-								<textarea id="pb-text-textarea" name="pb-text-textarea"
-									class="pb-input-text"></textarea>
+								<!-- 这里面存放正文 -->
+								<script id="container" name="content" type="text/plain">
+								</script>
+								<script type="text/javascript">
+								    var editor = UE.getEditor('container')
+								</script>
 							</div>
 						</div>
+						
+						<!-- 按钮开始 -->
 						<div id="pb-action-holder" class="clearfix">
-							<div class="pb-submit">
-								<div cloud="type:Button;id:pb-submit;width:70;skin:willblue">发布</div>
+							<div class="pb-submit" onclick="addBlog()">
+								<div cloud="type:Button;id:pb-submit;width:70;skin:willblue"><span>发布</span></div>
 							</div>
-							<div class="pb-preview">
+							<div class="pb-preview" onclick="previewBlog()">
 								<div cloud="type:Button;id:pb-preview;width:70;skin:willlight">预览</div>
 							</div>
-							<div class="pb-draft">
+							<div class="pb-draft" onclick="addDraft()">
 								<div cloud="type:Button;id:pb-draft;width:94;skin:willlight">保存到草稿</div>
 							</div>
-							<div class="pb-cancel">
+							<div class="pb-cancel" onclick="cancleBlog()">
 								<div cloud="type:Button;id:pb-cancel;width:70;skin:willlight">取消</div>
 							</div>
-							<span id="pb-submiting-tip" style="display:none;">正在保存...</span>
+							<!-- 
+								<span id="pb-submiting-tip" style="display:none;">正在保存...</span>
+							-->
 						</div>
+						<!-- 按钮结束 -->
+						
 					</div>
 					<div id="pb-aside">
 						<div class="pb-aside-i">
@@ -341,6 +289,7 @@ pintab.init();
 								<div id="post-tag-holder" class="aside-item">
 									<div id="post-tag">
 										<ul id="post-tag-list" class="clearfix">
+											<!-- 标签添加位置 -->
 										</ul>
 										<div id="post-tag-input-holder">
 											<input type="text" name="post-tag-input" id="post-tag-input"
@@ -348,24 +297,29 @@ pintab.init();
 										</div>
 									</div>
 								</div>
-								<div id="recommand-tag-holder" class="aside-item"
-									style="display:none;">
-									<ul id="recommand-tag-list" class="clearfix"></ul>
+								<div id="recommand-tag-holder" class="aside-item" style="">
+									<ul id="recommand-tag-list" class="clearfix">
+										<c:forEach items="${requestScope.tagList}" var="tag">
+											<li tag="${tag.tagName}">
+												<span onclick="addTag('${tag.tagName}')">${tag.tagName}</span>
+											</li>
+										</c:forEach>
+									</ul>
 								</div>
 							</div>
 							<div id="permalink-holder">
 								<div class="separator"></div>
 								<div class="pb-mod aside-item pb-side-opt">
 									<div class="permalink-check">
-										<label>自定义链接</label>
+										<label>文章链接</label>
 									</div>
 									<div class="permallink" id="permallink">
-										/<input cloud="type:TextInput;id:permallink;width:180"
-											name="permallink" type="text" />
+										<font style="color:black;font-weight: bold;font-size: 15px">
+											/blog/${publishTime}/${postFix}
+										</font>
 									</div>
 								</div>
 							</div>
-							<div class="separator"></div>
 							<div class="pb-mod aside-item pb-side-opt no-padding-right">
 								<label id="pb-set-private-holder" class="first"> <input
 									id="pb-set-private" type="checkbox" />仅自己可见 </label>
@@ -401,21 +355,24 @@ pintab.init();
 													value="by_nc" id="postCcType2" type="radio" /> <label
 													for="postCcType2"> <span class="cc-1"></span> <span
 														class="cc-2"></span> </label> <label for="postCcType2"
-													class="post-cc-h post-cc-text-12">署名-非商业使用</label></li>
+													class="post-cc-h post-cc-text-12">署名-非商业使用</label>
+												</li>
 												<li class="clearfix"><input name="creativeCommonsType"
 													value="by_nd" id="postCcType3" type="radio" /> <label
 													for="postCcType3"> <span class="cc-1"></span> <span
 														class="cc-3"></span> </label> <label for="postCcType3"
-													class="post-cc-h post-cc-text-13">署名-禁止演绎</label></li>
+													class="post-cc-h post-cc-text-13">署名-禁止演绎</label>
+												</li>
 												<li class="clearfix"><input name="creativeCommonsType"
 													value="by_sa" id="postCcType4" type="radio" /> <label
 													for="postCcType4"> <span class="cc-1"></span> <span
 														class="cc-4"></span> </label> <label for="postCcType4"
-													class="post-cc-h post-cc-text-14">署名-相同方式共享</label></li>
+													class="post-cc-h post-cc-text-14">署名-相同方式共享</label>
+												</li>
 												<li class="clearfix"><input name="creativeCommonsType"
 													value="by" id="postCcType5" type="radio" /> <label
-													for="postCcType5"><span class="cc-1"></span>
-												</label> <label for="postCcType5" class="post-cc-h post-cc-text-1">署名</label>
+													for="postCcType5"><span class="cc-1"></span> </label> <label
+													for="postCcType5" class="post-cc-h post-cc-text-1">署名</label>
 												</li>
 											</ul>
 										</div>
@@ -490,28 +447,39 @@ pintab.init();
 			</div>
 		</div>
 	</div>
-	<iframe src="http://acl.a.srcdd.com/acl.html?2" width="0" height="0"
-		frameborder="0"></iframe>
-	<script src="http://s.srcdd.com/js/lib/tracker/inc/trackerbase.js"></script>
+	<script src="js/jquery.min.js"></script>
 	<script type="text/javascript">
-_DD_TRACE = window._DD_TRACE || {};
-_DD_TRACE.dtid = _DD_TRACE.Cookie.get('dtid');
-_DD_TRACE.Tracker('pv');var _ddgaq = _ddgaq || [];
-_ddgaq.push(['DDGAT._setAccount', 'UA-30555696-1']);
-_ddgaq.push(['DDGAT._setDomainName', '.diandian.com']);
-_ddgaq.push(['DDGAT._setAllowLinker', true]);
-_ddgaq.push(['DDGAT._addOrganic', 'baidu', 'word']);
-_ddgaq.push(['DDGAT._addOrganic', 'soso', 'w']);
-_ddgaq.push(['DDGAT._addOrganic', 'youdao', 'q']);
-_ddgaq.push(['DDGAT._addOrganic', 'sogou', 'query']);
-_ddgaq.push(['DDGAT._addOrganic', 'so.360.cn', 'q']);
-_ddgaq.push(['DDGAT._trackPageview']);(function() {
-var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-ga.src = 'http://s.srcdd.com/js/base/ga.$5928.js';
-var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-</script>
-
+		// 添加标签
+		function addTag(tagName){
+			$("#post-tag-input").val("");
+			var tag = $("#"+tagName).html();
+			if(tag == null || tag == '' || tag == undefined){
+				$("#post-tag-list").append("<li id='"+tagName+"' tag='"+tagName+"'><span>"+tagName+"</span><a title='删除' class='delete-tag-btn'>x</a></li>");
+			}else{
+				// 重复添加
+			}
+		}
+		
+		// 添加文章
+		function addBlog(){
+			alert("添加文章");
+		}
+		
+		// 预览文章
+		function previewBlog(){
+			alert("预览文章");
+		}
+		
+		// 添加草稿
+		function addDraft(){
+			alert("添加草稿");
+		}
+		
+		// 取消发布文章
+		function cancleBlog(){
+			alert("取消发布");
+		}
+	</script>
 
 </body>
 </html>
