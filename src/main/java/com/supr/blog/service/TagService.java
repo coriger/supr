@@ -1,12 +1,10 @@
-package com.supr.blog.mapper;
+package com.supr.blog.service;
 
 import java.util.List;
 
 import com.supr.blog.model.Tag;
 
-public interface TagMapper {
-
-	Tag getTagById(String tagId);
+public interface TagService {
 
 	List<Tag> getAllTag();
 

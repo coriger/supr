@@ -10,6 +10,28 @@ public class Album {
 	private String albumId;
 	
 	private String albumName;
+	
+	// 相册缩略图
+	private String albumUrl;
+
+	// 相册说明
+	private String albumInfo;
+	
+	public String getAlbumUrl() {
+		return albumUrl;
+	}
+
+	public void setAlbumUrl(String albumUrl) {
+		this.albumUrl = albumUrl;
+	}
+
+	public String getAlbumInfo() {
+		return albumInfo;
+	}
+
+	public void setAlbumInfo(String albumInfo) {
+		this.albumInfo = albumInfo;
+	}
 
 	public String getAlbumId() {
 		return albumId;

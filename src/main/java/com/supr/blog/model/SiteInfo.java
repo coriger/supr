@@ -24,6 +24,17 @@ public class SiteInfo {
 	// 相片数
 	private Integer photoCount;
 	
+	// 评论总数
+	private Integer commentCount;
+	
+	public Integer getCommentCount() {
+		return commentCount;
+	}
+
+	public void setCommentCount(Integer commentCount) {
+		this.commentCount = commentCount;
+	}
+
 	public Long getHitCount() {
 		return hitCount;
 	}
