@@ -9,4 +9,6 @@ public interface BlogService {
 
 	int addBlog(Blog blog);
 
+	int deleteBlogById(Integer blogId);
+
 }

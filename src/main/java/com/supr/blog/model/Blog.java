@@ -15,8 +15,6 @@ public class Blog {
 	
 	private String title;
 	
-	private Integer categoryId;
-	
 	private Date publishTime;
 	
 	private Date updateTime;
@@ -54,14 +52,6 @@ public class Blog {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Integer getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(Integer categoryId) {
-		this.categoryId = categoryId;
 	}
 
 	public Date getPublishTime() {

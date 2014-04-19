@@ -399,7 +399,7 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 					<!-- 文章列表开始 -->
 					<div class="feed-list" id="feed-list">
 						<c:forEach items="${requestScope.pager.list}" var="blog">
-						<div class="feed  feed-text feed-expand" id="feed-165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-comment="1">
+						<div class="feed  feed-text feed-expand" id="${blog.blogId}" data-comment="1">
 							<div class="feed-avatar">
 								<a target="_blank" avatar="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG" title="coriger" href="http://coriger.diandian.com?ref=avatar" class="blog-avatar" style="background-image: url(http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG);">coriger</a>
 							</div>
@@ -430,24 +430,34 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 
 										<div class="feed-tag clearfix">
 											<c:forEach items="${blog.tag}" var="tag">
-												<a href="http://www.diandian.com/tag/${tag.tagName}" class=" last">#${tag.tagName}</a>
+												<a href="./tag/${tag.tagId}">#${tag.tagName}</a>
 											</c:forEach>
 										</div>
 										<div class="feed-act">
-											<a class="feed-del">删除</a> <a href="http://www.diandian.com/edit/165ebd20-c2ba-11e3-b787-90b11c0ed01e" class="feed-edit">编辑</a> <a class="feed-cmt" data-nid="165ebd20-c2ba-11e3-b787-90b11c0ed01e">回应(${blog.commentSum})</a><a data-type="text" data-id="165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-nid="165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-url="coriger" class="feed-nt">热度(${blog.hits})</a>
+											<a href="javascript:return(null)" onclick="deleteBlog('${blog.blogId}')" class="feed-del">删除</a> 
+											<a href="http://www.diandian.com/edit/165ebd20-c2ba-11e3-b787-90b11c0ed01e" class="feed-edit">编辑</a> 
+											<a class="feed-cmt" data-nid="165ebd20-c2ba-11e3-b787-90b11c0ed01e">回应(${blog.commentSum})</a>
+											<a data-type="text" data-id="165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-nid="165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-url="coriger" class="feed-nt">热度(${blog.hits})</a>
 										</div>
 									</div>
 								</div>
 								<div class="feed-ft J_FeedFooter" style="">
 									<div class="feed-ft-bottom"></div>
-									<div class="feed-ft-triangle J_FeedFooterTriangle" style="left: 427px;"></div>
-									<div class="feed-fold-container notes" style="display: none;">
+									<!-- 弹出框 -->
+									<div class="feed-ft-triangle J_FeedFooterTriangle" style="display:none;left: 427px;"></div>
+									<!-- 下拉回应栏 -->
+									<div class="feed-fold-container notes" id="comment" style="display: none;">
 										<div class="feed-notes">
 											<div class="feed-notes-body">
 												<ul class="feed-notes-list">
-													<li class="notes-list-item nt-cmt clearfix first"><div class="notes-item-hd clearfix">
-															<a href="http://coriger.diandian.com" target="_blank"><img width="20" height="20" alt="coriger" class="notes-avatar" src="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG">
-															</a><span class="notes-info"><a href="http://coriger.diandian.com" target="_blank" class="notes-user">coriger</a>在&nbsp;<a target="_blank" href="http://coriger.diandian.com/post/165ebd20-c2ba-11e3-b787-90b11c0ed01e">coriger</a>&nbsp;回应了此文字</span><s class="notes-icon"></s>
+													<li class="notes-list-item nt-cmt clearfix first">
+														<div class="notes-item-hd clearfix">
+															<a href="http://coriger.diandian.com" target="_blank">
+																<img width="20" height="20" alt="coriger" class="notes-avatar" src="http://m1.img.srcdd.com/farm5/d/2012/0808/09/465FFD66E441B6166CC48086BA96E7B3_S64_64_64.JPEG">
+															</a>
+															<span class="notes-info">
+															<a href="http://coriger.diandian.com" target="_blank" class="notes-user">coriger</a>在&nbsp;
+															<a target="_blank" href="http://coriger.diandian.com/post/165ebd20-c2ba-11e3-b787-90b11c0ed01e">coriger</a>&nbsp;回应了此文字</span><s class="notes-icon"></s>
 														</div>
 														<div class="notes-comment">12312312</div>
 													</li>
@@ -471,7 +481,7 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 											<a class="J_NotesFolder fold-btn-close" href="#" onclick="return false;"><span class="J_NotesFolder btn-icon"></span>收起</a><a class="J_GetMoreNotes fold-btn-more" href="#" onclick="return false;" style="display:none;"><span class="J_GetMoreNotes btn-icon"></span>更多热度</a>
 										</div>
 									</div>
-									<div class="feed-fold-container comment" style="">
+									<div class="feed-fold-container comment" style="display: none;">
 										<div class="feed-comment">
 											<div class="cmt-at-list clearfix"></div>
 											<div class="add-comment clearfix">
@@ -766,12 +776,25 @@ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async
 ga.src = 'http://s.srcdd.com/js/base/ga.$5928.js';
 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
-</script>
 
-
+// 删除文章
+function deleteBlog(blogId){
+		$.ajax({
+				url : "./blog/delete/" + blogId,
+				method : "post",
+				contentType : "application/json",
+				dataType : "json",
+				success : function(data) {
+					if (data.resultCode == 'error') {
+						// 这里可以考虑记住标签id 然后自动选择出错字段
+						alert(data.errorInfo);
+					} else if (data.resultCode == 'success') {
+						$("#"+blogId).remove();
+					}
+				}
+		})
+}
+	</script>
 	<a id="J_WebGuideButton" class="web-guide" href="http://www.diandian.com/help">帮助中心</a>
-
-
-	<iframe id="lb_weather_box" src="chrome-extension://eklhgbkeiamnfmofpdmndkemmhpclpmo/lb_weather_animation.html" style="display: none;"></iframe>
 </body>
 </html>

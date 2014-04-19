@@ -45,12 +45,12 @@ public class LoginController {
 			result = new Result("error","密码输入错误!");
 			return result;
 		}
-		admin = new Admin(admin.getUsername(),admin.getPassword());
-		if(adminService.adminExists(admin)){
-			// 存放用户信息在session中  有效时间60分钟
+		admin = adminService.getAdminByNameAndPwd(admin);
+		if (null != admin) {
+			// 存放用户信息在session中 有效时间60分钟
 			session.setAttribute("userInfo", admin);
-			session.setMaxInactiveInterval(60*60);
-			result = new Result("success","登录成功!");
+			session.setMaxInactiveInterval(60 * 60);
+			result = new Result("success", "登录成功!");
 			return result;
 		}else{
 			result = new Result("error","用户名或密码错误！");

@@ -21,8 +21,17 @@
 	</select>
 	
 	<!-- 新增文章 -->
-	<insert id="addBlog" parameterType="com.supr.blog.model.Blog">
-		insert into
+	<insert id="addBlog" parameterType="com.supr.blog.model.Blog" useGeneratedKeys="true" keyProperty="blogId">
+		insert into blog(title,publishTime,updateTime,userId,content,tagIds,hits,commentSum,postFix) 
+		values(#{title},now(),now(),#{userId},#{content},#{tagIds},0,0,#{postFix})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="blogId" >  
+	          SELECT LAST_INSERT_ID()
+        </selectKey> 
 	</insert>
+	
+	<!-- 删除单篇文章 -->
+	<delete id="deleteBlogById" parameterType="Integer">
+		delete from blog where blogId = #{blogId}
+	</delete>
 	
 </mapper>

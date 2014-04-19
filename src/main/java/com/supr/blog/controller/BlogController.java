@@ -4,13 +4,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.supr.blog.model.Admin;
 import com.supr.blog.model.Blog;
 import com.supr.blog.model.Tag;
+import com.supr.blog.model.vo.Result;
 import com.supr.blog.service.BlogService;
 import com.supr.blog.service.TagService;
 
@@ -47,9 +53,28 @@ public class BlogController extends BaseController {
 	 * 新增文章
 	 */
 	@RequestMapping("/add")
-	public String addBlog(Blog blog){
+	public String addBlog(Blog blog,HttpSession session){
+		Admin admin = (Admin)session.getAttribute("userInfo");
+		blog.setUserId(admin.getUserId());
 		int i = blogService.addBlog(blog);
-		return "redirect:/home";
+		if(i > 0){
+			return "redirect:/home";
+		}else{
+			// 更新失败
+			return "error";
+		}
+	}
+	
+	@RequestMapping("/delete/{blogId}")
+	public @ResponseBody
+	Result deleteBlog(@PathVariable Integer blogId){
+		int i = blogService.deleteBlogById(blogId);
+		if(i > 0){
+			return new Result("success", "删除成功！");
+		}else{
+			// 更新失败
+			return new Result("error", "删除失败！");
+		}
 	}
 	
 }
