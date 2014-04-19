@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.supr.blog.model.Blog;
 import com.supr.blog.model.Category;
 import com.supr.blog.model.Tag;
 import com.supr.blog.service.BlogService;
@@ -47,7 +48,7 @@ public class BlogController extends BaseController {
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("tagList", tagList);
 		model.addAttribute("publishTime", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-		model.addAttribute("postFix", 1);
+		model.addAttribute("postFix", new SimpleDateFormat("HHmmss").format(new Date()));
 		return "/admin/blog/add_blog";
 	}
 	
@@ -55,15 +56,8 @@ public class BlogController extends BaseController {
 	 * 新增文章
 	 */
 	@RequestMapping("/add")
-	public String addBlog(ModelMap model){
-		// 获取文章分类  
-		List<Category> categoryList = categoryService.getAllCategory();
+	public String addBlog(Blog blog){
 		
-		// 获取文章标签
-		List<Tag> tagList = tagService.getAllTag();
-		
-		model.addAttribute("categoryList", categoryList);
-		model.addAttribute("tagList", tagList);
 		return "/home/blog/add_blog";
 	}
 	
