@@ -12,12 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.supr.blog.model.Admin;
 import com.supr.blog.model.Album;
-import com.supr.blog.model.Category;
 import com.supr.blog.model.SiteInfo;
+import com.supr.blog.model.Tag;
 import com.supr.blog.service.AlbumService;
 import com.supr.blog.service.BlogService;
-import com.supr.blog.service.CategoryService;
 import com.supr.blog.service.SiteService;
+import com.supr.blog.service.TagService;
 
 /**
  * @功能：后台首页
@@ -31,7 +31,7 @@ public class HomeController extends BaseController{
 	private BlogService blogService;
 	
 	@Autowired
-	private CategoryService categoryService;
+	private TagService tagService;
 	
 	@Autowired
 	private AlbumService albumService;
@@ -51,9 +51,9 @@ public class HomeController extends BaseController{
 		pager =blogService.getBlogByPager(pageNum,pageSize);
 		map.put("pager", pager);
 		
-		// 分类
-		List<Category> categoryList = categoryService.getAllCategory();
-		map.put("categoryList", categoryList);
+		// 标签
+		List<Tag> tagList = tagService.getAllTag();
+		map.put("tagList", tagList);
 		
 		// 相册
 		List<Album> albumList = albumService.getAllAlbum();

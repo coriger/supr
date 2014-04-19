@@ -10,6 +10,17 @@ public class Tag {
 	private Integer tagId;
 	
 	private String tagName;
+	
+	// 分类文章数
+	private Integer blogCount;
+
+	public Integer getBlogCount() {
+		return blogCount;
+	}
+
+	public void setBlogCount(Integer blogCount) {
+		this.blogCount = blogCount;
+	}
 
 	public Integer getTagId() {
 		return tagId;

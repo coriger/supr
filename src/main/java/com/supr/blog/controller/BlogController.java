@@ -10,10 +10,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.supr.blog.model.Blog;
-import com.supr.blog.model.Category;
 import com.supr.blog.model.Tag;
 import com.supr.blog.service.BlogService;
-import com.supr.blog.service.CategoryService;
 import com.supr.blog.service.TagService;
 
 /**
@@ -29,9 +27,6 @@ public class BlogController extends BaseController {
 	private BlogService blogService;
 	
 	@Autowired
-	private CategoryService categoryService;
-	
-	@Autowired
 	private TagService tagService;
 	
 	/**
@@ -39,13 +34,9 @@ public class BlogController extends BaseController {
 	 */
 	@RequestMapping("/new")
 	public String newBlog(ModelMap model){
-		// 获取文章分类  
-		List<Category> categoryList = categoryService.getAllCategory();
-		
 		// 获取文章标签
 		List<Tag> tagList = tagService.getAllTag();
 		
-		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("tagList", tagList);
 		model.addAttribute("publishTime", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 		model.addAttribute("postFix", new SimpleDateFormat("HHmmss").format(new Date()));
@@ -57,7 +48,7 @@ public class BlogController extends BaseController {
 	 */
 	@RequestMapping("/add")
 	public String addBlog(Blog blog){
-		
+		int i = blogService.addBlog(blog);
 		return "redirect:/home";
 	}
 	

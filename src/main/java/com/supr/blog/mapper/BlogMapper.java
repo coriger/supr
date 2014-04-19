@@ -13,4 +13,6 @@ public interface BlogMapper {
 
 	int getBlogCountByCategoryId(Integer categoryId);
 
+	int addBlog(Blog blog);
+
 }

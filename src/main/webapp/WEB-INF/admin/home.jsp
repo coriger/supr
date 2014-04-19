@@ -622,12 +622,12 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 				
 				<!-- 分类开始 -->
 				<ul id="asideSideTrackedTag" class="sidemenu sidebox js-hook-track-tag side-tracked-tag">
-					<c:forEach items="${requestScope.categoryList}" var="category">
-						<li class="aside-hot-tag" tag="${category.categoryName}">
+					<c:forEach items="${requestScope.tagList}" var="tag">
+						<li class="aside-hot-tag" tag="${tag.tagName}">
 							<a class="followed-tag clearfix" href="">
 								<span class="aside-icon"></span>
-								<span class="sidemenu-item-extra sidemenu-item-notify">${category.blogCount}</span>
-								<span class=""> ${category.categoryName} </span>
+								<span class="sidemenu-item-extra sidemenu-item-notify">${tag.blogCount}</span>
+								<span class=""> ${tag.tagName} </span>
 							</a>
 						</li>
 					</c:forEach>

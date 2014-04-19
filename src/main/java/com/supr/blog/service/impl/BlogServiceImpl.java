@@ -52,4 +52,9 @@ public class BlogServiceImpl implements BlogService {
 		return pager;
 	}
 	
+	@Override
+	public int addBlog(Blog blog) {
+		return blogMapper.addBlog(blog);
+	}
+	
 }

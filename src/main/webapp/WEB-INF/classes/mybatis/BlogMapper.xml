@@ -20,4 +20,9 @@
 		select count(1) from blog where categoryId = #{categoryId}
 	</select>
 	
+	<!-- 新增文章 -->
+	<insert id="addBlog" parameterType="com.supr.blog.model.Blog">
+		insert into
+	</insert>
+	
 </mapper>
