@@ -12,3 +12,4 @@
 .project
 *.bak
 /src/main/webapp/META-INF/
+/src
