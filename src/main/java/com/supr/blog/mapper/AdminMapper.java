@@ -11,5 +11,5 @@ public interface AdminMapper {
 	Admin getAdminByName(String username);
 
 	Admin adminExists(Admin admin);
-	
+
 }

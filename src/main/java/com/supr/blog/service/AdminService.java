@@ -42,7 +42,7 @@ public interface AdminService {
 	 * @return
 	 */
 	Boolean usernameDisabled(String username);
-	
-	
+
+	Admin getAdminByNameAndPwd(Admin admin);
 	
 }

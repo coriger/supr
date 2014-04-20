@@ -255,6 +255,7 @@ pintab.init();
 							-->
 						</div>
 						<input type="hidden" id="tags" name="tagIds"/>
+						<input type="hidden" name="postFix" value="/blog/${publishTime}/${postFix}"/>
 						<!-- 按钮结束 -->
 						</form>
 					</div>
@@ -319,7 +320,6 @@ pintab.init();
 									<div class="permallink" id="permallink">
 										<font style="color:black;font-weight: bold;font-size: 15px">
 											/blog/${publishTime}/${postFix}
-											<input type="hidden" name="postFix" value="/blog/${publishTime}/${postFix}"/>
 										</font>
 									</div>
 								</div>

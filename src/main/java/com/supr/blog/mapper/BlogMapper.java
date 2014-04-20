@@ -15,4 +15,6 @@ public interface BlogMapper {
 
 	int addBlog(Blog blog);
 
+	int deleteBlogById(Integer blogId);
+
 }

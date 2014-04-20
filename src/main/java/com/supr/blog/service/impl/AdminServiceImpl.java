@@ -60,4 +60,9 @@ public class AdminServiceImpl implements AdminService {
 		return (null == admin ? false : true);
 	}
 	
+	@Override
+	public Admin getAdminByNameAndPwd(Admin admin) {
+		return adminMapper.adminExists(admin);
+	}
+	
 }
