@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*"  pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -255,6 +256,8 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 </style>
 </head>
 <body id="page-home">
+	<form id="form" action="" method="post"></form>
+	
 	<div id="PopElementContainer"></div>
 	<div id="PopMenuContainer">
 		<div id="pop-blog-list-holder" class="pop-menu-list-holder" style="display:none;">
@@ -420,7 +423,7 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 										<div class="feed-ct">
 											<div class="feed-txt-full rich-content">
 												<div class="feed-txt-summary">
-													${blog.content}
+													${fn:trim(blog.content)} 
 												</div>
 												<div class="feed-txt-more">
 													<a href="http://coriger.diandian.com/post/2014-04-13/40061501864" target="_blank">未完，继续阅读</a>→
@@ -435,7 +438,7 @@ try { document.execCommand('BackgroundImageCache', false, true); } catch (e) {}
 										</div>
 										<div class="feed-act">
 											<a href="javascript:return(null)" onclick="deleteBlog('${blog.blogId}')" class="feed-del">删除</a> 
-											<a href="http://www.diandian.com/edit/165ebd20-c2ba-11e3-b787-90b11c0ed01e" class="feed-edit">编辑</a> 
+											<a href="javascript:return(null)" onclick="editBlog('${blog.blogId}')" class="feed-edit">编辑</a> 
 											<a class="feed-cmt" data-nid="165ebd20-c2ba-11e3-b787-90b11c0ed01e">回应(${blog.commentSum})</a>
 											<a data-type="text" data-id="165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-nid="165ebd20-c2ba-11e3-b787-90b11c0ed01e" data-url="coriger" class="feed-nt">热度(${blog.hits})</a>
 										</div>
@@ -794,6 +797,13 @@ function deleteBlog(blogId){
 				}
 		})
 }
+
+// 编辑文章
+function editBlog(blogId){
+	$("#form").attr("action","./blog/edit/" + blogId);
+	$("#form").submit();
+}
+
 	</script>
 	<a id="J_WebGuideButton" class="web-guide" href="http://www.diandian.com/help">帮助中心</a>
 </body>

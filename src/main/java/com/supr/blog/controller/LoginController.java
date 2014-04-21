@@ -31,7 +31,7 @@ public class LoginController {
 		return "/admin/login";
 	}
 	
-	@RequestMapping(value="/submit",method=RequestMethod.POST)
+	@RequestMapping(value="/submit")
 	public @ResponseBody 
 	Result login(@RequestBody Admin admin,HttpSession session){
 		Result result = null;
