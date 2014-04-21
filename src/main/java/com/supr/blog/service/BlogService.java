@@ -11,4 +11,8 @@ public interface BlogService {
 
 	int deleteBlogById(Integer blogId);
 
+	Blog getBlogById(Integer blogId);
+
+	int updateBlog(Blog blog);
+
 }

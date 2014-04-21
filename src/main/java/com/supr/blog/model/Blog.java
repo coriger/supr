@@ -98,7 +98,9 @@ public class Blog {
 		if(null == this.tag){
 			this.tag = new ArrayList<Tag>();
 		}
-		this.tag.add(tag);
+		if(tag != null){
+			this.tag.add(tag);
+		}
 	}
 
 	public Integer getHits() {

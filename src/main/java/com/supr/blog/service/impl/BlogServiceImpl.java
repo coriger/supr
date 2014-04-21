@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.supr.blog.mapper.BlogMapper;
@@ -14,6 +17,7 @@ import com.supr.blog.service.BlogService;
 import com.supr.blog.util.pager.Pager;
 
 @Service
+@Transactional(isolation=Isolation.READ_COMMITTED,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
 public class BlogServiceImpl implements BlogService {
 	
 	@Autowired
@@ -23,6 +27,7 @@ public class BlogServiceImpl implements BlogService {
 	private TagMapper tagMapper;
 	
 	@Override
+	@Transactional(readOnly=true)
 	public Pager getBlogByPager(int pageNum, int pageSize) {
 		Pager pager = new Pager();
 		// 获取数据总量
@@ -62,4 +67,28 @@ public class BlogServiceImpl implements BlogService {
 		return blogMapper.deleteBlogById(blogId);
 	}
 	
+	@Override
+	@Transactional(readOnly=true)
+	public Blog getBlogById(Integer blogId) {
+		Blog blog = blogMapper.getBlogById(blogId);
+		if(null != blog){
+			// 获取每个博客的tag
+			String tagIds = blog.getTagIds();
+			if(!StringUtils.isEmpty(tagIds)){
+				String[] tags = tagIds.split(",");
+				Tag tag = null;
+				for(String tagId : tags){
+					// 遍历查询tag表  tag不会改变 可以全部放入缓存
+					tag = tagMapper.getTagById(tagId);
+					blog.setTag(tag);
+				}
+			}
+		}
+		return blog;
+	}
+	
+	@Override
+	public int updateBlog(Blog blog) {
+		return blogMapper.updateBlog(blog);
+	}
 }

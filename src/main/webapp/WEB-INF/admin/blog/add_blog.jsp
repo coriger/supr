@@ -514,7 +514,6 @@ pintab.init();
 		
 		// 添加文章
 		function addBlog(){
-			alert("添加文章");
 			$("#form").submit();
 		}
 		

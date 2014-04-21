@@ -33,5 +33,29 @@
 	<delete id="deleteBlogById" parameterType="Integer">
 		delete from blog where blogId = #{blogId}
 	</delete>
+
+	<!-- 根据id获取文章 -->
+	<select id="getBlogById" parameterType="Integer" resultType="com.supr.blog.model.Blog">
+		select * from blog where blogId = #{blogId}
+	</select>
 	
+	<!-- 更新文章 -->
+	<update id="updateBlog" parameterType="com.supr.blog.model.Blog">
+		update blog set updateTime = now() 
+		<include refid="updateBlogParam"/> 
+		where blogId = #{blogId}		
+	</update>
+	
+	<sql id="updateBlogParam">
+		<if test="title != null and title != ''">
+			,title = #{title}
+		</if>
+		<if test="content != null and content != ''">
+			,content = #{content}
+		</if>
+		<if test="tagId != null and tagIds != ''">
+			,tagIds = #{tagIds}
+		</if>
+	</sql>
+
 </mapper>

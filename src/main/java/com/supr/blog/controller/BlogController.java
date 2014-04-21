@@ -37,6 +37,8 @@ public class BlogController extends BaseController {
 	
 	/**
 	 * 跳转新增文章页面
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/new")
 	public String newBlog(ModelMap model){
@@ -51,6 +53,9 @@ public class BlogController extends BaseController {
 	
 	/**
 	 * 新增文章
+	 * @param blog
+	 * @param session
+	 * @return
 	 */
 	@RequestMapping("/add")
 	public String addBlog(Blog blog,HttpSession session){
@@ -61,10 +66,15 @@ public class BlogController extends BaseController {
 			return "redirect:/home";
 		}else{
 			// 更新失败
-			return "error";
+			return "/admin/error/error";
 		}
 	}
 	
+	/**
+	 * 删除文章
+	 * @param blogId
+	 * @return
+	 */
 	@RequestMapping("/delete/{blogId}")
 	public @ResponseBody
 	Result deleteBlog(@PathVariable Integer blogId){
@@ -74,6 +84,34 @@ public class BlogController extends BaseController {
 		}else{
 			// 更新失败
 			return new Result("error", "删除失败！");
+		}
+	}
+	
+	/**
+	 * 编辑文章
+	 * @param blogId
+	 * @return
+	 */
+	@RequestMapping("/edit/{blogId}")
+	public String editBlog(@PathVariable Integer blogId,ModelMap model){
+		// 获取文章标签
+		List<Tag> tagList = tagService.getAllTag();
+		// 文章对象
+		Blog blog = blogService.getBlogById(blogId);
+		
+		model.addAttribute("tagList", tagList);
+		model.addAttribute("blog", blog);
+		return "/admin/blog/edit_blog";
+	}
+	
+	@RequestMapping("/update")
+	public String updateBlog(Blog blog){
+		int i = blogService.updateBlog(blog);
+		if(i > 0){
+			return "redirect:/home";
+		}else{
+			// 更新失败
+			return "/admin/error/error";
 		}
 	}
 	
