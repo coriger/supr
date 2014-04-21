@@ -55,7 +55,7 @@
 		<property name="defaultStatusCode" value="500"></property>
 	</bean>
 	<!-- 全局异常配置 end -->
-	
+
 	<!-- 自定义异常处理 
 	<bean id="exceptionHandler" class="com.supr.blog.exception.ExceptionHandler"/>
 	-->
