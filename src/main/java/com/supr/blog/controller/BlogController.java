@@ -1,9 +1,15 @@
 package com.supr.blog.controller;
 
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.supr.blog.freemarker.FreemarkerUtil;
 import com.supr.blog.model.Admin;
 import com.supr.blog.model.Blog;
 import com.supr.blog.model.Tag;
@@ -29,11 +36,16 @@ import com.supr.blog.service.TagService;
 @RequestMapping("/blog")
 public class BlogController extends BaseController {
 	
+	private static final Logger logger = Logger.getLogger(BlogController.class);
+	
 	@Autowired
 	private BlogService blogService;
 	
 	@Autowired
 	private TagService tagService;
+	
+	@Autowired
+	private FreemarkerUtil freemarkerUtil;
 	
 	/**
 	 * 跳转新增文章页面
@@ -116,14 +128,22 @@ public class BlogController extends BaseController {
 	}
 	
 	@RequestMapping("/{postFix}")
-	public String blogInfo(@PathVariable String postFix){
-		// 检查文章是否存在静态化页面
-		
-		// 有则直接跳转页面
+	public String blogInfo(@PathVariable String postFix,Blog blog,HttpServletRequest request,HttpServletResponse response){
+		if(isExistPage(request, response)){
+			// 有则直接跳转页面
+			try {
+				response.sendRedirect(request.getRequestURI()+".html");
+			} catch (IOException e) {
+				logger.error("跳转静态页面异常...",e);
+			}
+			return null;
+		}
 		
 		// 没有则执行静态化操作  并返回静态页面
+		blog = blogService.getBlogById(blog.getBlogId());
+		// 开启线程执行静态化操作  也可以放在定时任务统一执行
 		
-		return "";
+		return "/blog/single_blog";
 	}
 	
 }

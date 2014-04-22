@@ -1,5 +1,10 @@
 package com.supr.blog.controller;
 
+import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.supr.blog.model.vo.Result;
 import com.supr.blog.util.pager.Pager;
 
@@ -29,6 +34,22 @@ public class BaseController {
 	 * json返回值
 	 */
 	public Result result;
+	
+	/**
+	 * 判断是否存在静态页面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public Boolean isExistPage(HttpServletRequest request,HttpServletResponse response){
+		String url = request.getRequestURI();
+		File file = new File(url + ".html");
+		if(!file.exists()){
+			file.mkdir();
+			return false;
+		}
+		return true;
+	}
 
 	public int getPageSize() {
 		return pageSize;
@@ -61,4 +82,5 @@ public class BaseController {
 	public void setResult(Result result) {
 		this.result = result;
 	}
+	
 }
