@@ -115,4 +115,15 @@ public class BlogController extends BaseController {
 		}
 	}
 	
+	@RequestMapping("/{postFix}")
+	public String blogInfo(@PathVariable String postFix){
+		// 检查文章是否存在静态化页面
+		
+		// 有则直接跳转页面
+		
+		// 没有则执行静态化操作  并返回静态页面
+		
+		return "";
+	}
+	
 }
