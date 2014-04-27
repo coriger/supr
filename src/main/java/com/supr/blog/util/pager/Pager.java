@@ -1,6 +1,9 @@
 package com.supr.blog.util.pager;
 
 import java.util.List;
+import java.util.Map;
+
+import org.apache.solr.client.solrj.response.FacetField.Count;
 
 /**
  * @功能：分页类
@@ -57,6 +60,11 @@ public class Pager {
 	 */
 	private int endIndex;
 	
+	/**
+	 * solr facet结果集  各个facet字段 对应的可用属性
+	 */
+	private Map<String,List<Count>> facetFieldMap;
+	
 	public int getPageNum() {
 		return pageNum;
 	}
@@ -75,6 +83,16 @@ public class Pager {
 			startIndex = (pageNum - 1) * pageSize;
 		}
 		this.pageNum = pageNum;
+	}
+	
+	public int getStart() {
+		// 分页开始值 关键
+		if (pageNum == 0) {
+			startIndex = 0;
+		} else {
+			startIndex = (pageNum - 1) * pageSize;
+		}
+		return startIndex;
 	}
 
 	public int getPageSize() {
@@ -133,5 +151,13 @@ public class Pager {
 
 	public void setEndIndex(int endIndex) {
 		this.endIndex = endIndex;
+	}
+
+	public Map<String, List<Count>> getFacetFieldMap() {
+		return facetFieldMap;
+	}
+
+	public void setFacetFieldMap(Map<String, List<Count>> facetFieldMap) {
+		this.facetFieldMap = facetFieldMap;
 	}
 }
