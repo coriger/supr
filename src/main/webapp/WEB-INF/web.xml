@@ -12,6 +12,7 @@
 			classpath:spring/spring-core.xml
 			<!--classpath:spring/spring-quartz-config.xml 上下两者选一 -->
 			classpath:spring/spring-quartz-annotation.xml
+			classpath:spring/spring-ehcache.xml
 		</param-value>
 	</context-param>
 	

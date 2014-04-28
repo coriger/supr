@@ -16,18 +16,27 @@ import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.supr.blog.util.pager.Pager;
+import com.supr.blog.util.pager.SolrPager;
 
 /**
  * @功能：solr工具类
  * @作者：ljt
  * @时间：2014-4-26 下午6:54:40
  */
+@Component
 public class SolrUtil {
 	
 	private static final Logger logger = Logger.getLogger(SolrUtil.class);
+	
+	// 解析后的solrQuery绑定线程
+	private static ThreadLocal<SolrQuery> solrQueryThreadLocal = new ThreadLocal<SolrQuery>();
+	
+	// url对应的facetField
+	private static ThreadLocal<Set<String>> facetFieldThreadLocal = new ThreadLocal<Set<String>>();
 
 	// 分面
 	private static final int FACET_FIELD = 1;
@@ -194,13 +203,34 @@ public class SolrUtil {
 	public int getPageCount(Class type,String url) {
 		int result = 0;
 		SolrQuery query = parseUrl(type, url);
+		// 绑定线程
+		solrQueryThreadLocal.set(query);
 		try {
 			QueryResponse response = server.query(query);
 			result = (int) response.getResults().getNumFound();
 		} catch (SolrServerException e) {
-			logger.error("solr查询异常...",e);
+			logger.error("solr查询总量异常...",e);
 		}
 		return result;
+	}
+	
+	public static SolrQuery getThreadLocalSolrQuery(Class type,String url) {
+		// 从线程中取出解析后的solrQuery对象
+		SolrQuery query = solrQueryThreadLocal.get();
+		if (null == query) {
+			// 线程不存在 则解析url
+			query = parseUrl(type, url);
+		}
+		return query;
+	}
+	
+	public static Set<String> getThreadLocalFacetField(Class type, String url) {
+		// url facet字段映射
+		Set<String> facetSet = facetFieldThreadLocal.get();
+		if (null == facetSet) {
+			facetSet = getFacetFromUrl(type, url);
+		}
+		return facetSet;
 	}
 
 	/**
@@ -209,29 +239,29 @@ public class SolrUtil {
 	 * @param url
 	 * @return
 	 */
-	public static Pager getPageInfo(Class type,Pager pager, String url) {
-		SolrQuery query = parseUrl(type, url);
+	public static SolrPager getPageInfo(Class type,SolrPager pager, String url) {
+		// 获取SolrQuery对象
+		SolrQuery query = getThreadLocalSolrQuery(type, url);
 		// 设置分页信息
 		query.setStart(pager.getStartIndex());
 		query.setRows(pager.getPageSize());
 		
-		// url facet字段映射
-		Set<String> facetSet = getFacetFromUrl(type,url);
-		
 		try {
+			// 响应内容
 			QueryResponse response = server.query(query);
-			// 高亮字段设置  判断url中需要高亮的字段 自动设置  需要遍历list
-			Map<String, Map<String, List<String>>> highMap = response.getHighlighting();
+			pager.setObj(response);
 			
 			// 查询内容封装
 			List<Object> list = response.getBeans(type);
 			pager.setList(list);
 			
-			// facet去掉已选facet字段属性
+			// facet去掉已选facet字段属性 封装到pager中
 			List<FacetField> facetFiledList = response.getFacetDates();
 			if(null != facetFiledList && facetFiledList.size() > 0){
 				// facetField --->> List<Count>
 				Map<String,List<Count>> facetFieldMap = new HashMap<String, List<Count>>();
+				// 获取已经分面的字段
+				Set<String> facetSet = getThreadLocalFacetField(type, url);
 				for(FacetField facetField : facetFiledList){
 					// 判断url条件中是否已经存在该参数值了  如果存在 则不再返回  这里默认是attr 商品属性
 					List<Count> countList = facetField.getValues();
@@ -247,7 +277,6 @@ public class SolrUtil {
 				}
 				pager.setFacetFieldMap(facetFieldMap);
 			}
-			
 		} catch (SolrServerException e) {
 			logger.error("solr查询异常...",e);
 		}

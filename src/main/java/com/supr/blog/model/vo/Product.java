@@ -2,6 +2,7 @@ package com.supr.blog.model.vo;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import com.supr.blog.solr.CategoryField;
 import com.supr.blog.solr.FacetField;
 import com.supr.blog.solr.HighlightField;
 import com.supr.blog.solr.PrimaryField;
@@ -55,6 +56,7 @@ public class Product {
 	 * 商品属性值【材质=木头、大小=23码、季节=夏天】
 	 */
 	@Field
+	@FacetField
 	private String[] attrvalue;
 	
 	/**
@@ -79,7 +81,8 @@ public class Product {
 	 * 分类
 	 */
 	@Field
-//	@FacetField
+	@FacetField
+	@CategoryField
 	private String[] category;
 
 	public String getProductId() {

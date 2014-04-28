@@ -1,0 +1,49 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect"
+         dynamicConfig="true" maxBytesLocalHeap="400M" maxBytesLocalOffHeap="2G">
+
+	<diskStore path="java.io.tmpdir"/>
+    
+    <!-- 
+    	name:缓存名称
+    	maxElementsInMemory：缓存对象最大个数
+    	eternal：缓存对象是否永久 true:是  false：不是  如果是true 则timeout无效
+    	timeToIdleSeconds：缓存对象最大闲置时间,超过则自动清除（秒）
+    	timeToLiveSeconds：缓存对象存活时间（秒）
+    	overflowToDisk：内存对象达到最大值maxElementsInMemory,将缓存对象写入磁盘
+    	memoryStoreEvictionPolicy：内存对象达到最大值maxElementsInMemory,根据策略清除缓存 默认LRU（最近最少使用） LFU（较少使用）
+     -->
+     
+ 	<defaultCache  
+            maxElementsInMemory="3000"  
+            eternal="false"  
+            timeToIdleSeconds="3600"  
+            timeToLiveSeconds="3600"  
+            overflowToDisk="true"  
+            diskPersistent="false"  
+            diskExpiryThreadIntervalSeconds="100"  
+            memoryStoreEvictionPolicy="LRU"  
+            />
+              
+    <!-- 商品属性 -->
+    <cache name="productAttrCache"
+           maxElementsInMemory="3000"  
+           eternal="false"  
+           overflowToDisk="true"  
+           timeToIdleSeconds="36000"  
+           timeToLiveSeconds="36000"  
+           memoryStoreEvictionPolicy="LRU"  
+            /> 
+    
+    <!-- 商品值 -->
+    <cache name="productValueCache"  
+           maxElementsInMemory="3000"  
+           eternal="false"  
+           overflowToDisk="true"  
+           timeToIdleSeconds="36000"  
+           timeToLiveSeconds="36000"  
+           memoryStoreEvictionPolicy="LRU"  
+            />  
+
+</ehcache>
