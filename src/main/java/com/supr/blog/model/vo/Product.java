@@ -40,8 +40,8 @@ public class Product {
 	 * 商品价格
 	 */
 	@Field
-	@RangeField
 	@SortField
+	@RangeField
 	private float price;
 	
 	/**
@@ -79,6 +79,7 @@ public class Product {
 	 * 分类
 	 */
 	@Field
+//	@FacetField
 	private String[] category;
 
 	public String getProductId() {
