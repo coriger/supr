@@ -1,7 +1,6 @@
 package com.supr.blog.solr;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +18,9 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.supr.blog.model.vo.Product;
+import com.supr.blog.model.vo.ProductRequestVo;
+import com.supr.blog.util.SuprUtil;
 import com.supr.blog.util.pager.SolrPager;
 
 /**
@@ -32,11 +34,17 @@ public class SolrUtil {
 	private static final Logger logger = Logger.getLogger(SolrUtil.class);
 	
 	// 解析后的solrQuery绑定线程
-	private static ThreadLocal<SolrQuery> solrQueryThreadLocal = new ThreadLocal<SolrQuery>();
+	public static ThreadLocal<SolrQuery> solrQueryThreadLocal = new ThreadLocal<SolrQuery>();
 	
 	// url对应的facetField
-	private static ThreadLocal<Set<String>> facetFieldThreadLocal = new ThreadLocal<Set<String>>();
+	public static ThreadLocal<Set<String>> facetFieldThreadLocal = new ThreadLocal<Set<String>>();
 
+	// key是className value是高亮字段集合  需要初始化
+	public static Map<String,List<String>> classHighlightFieldMap = new HashMap<String,List<String>>();
+	
+	// key是className value是facet字段集合  需要初始化
+	public static Map<String,List<String>> classFacetFieldMap = new HashMap<String,List<String>>();
+		
 	// 分面
 	private static final int FACET_FIELD = 1;
 	
@@ -83,7 +91,7 @@ public class SolrUtil {
 	
 	private static HttpSolrServer server;
 	
-	private static final String solrUrl = "";
+	private static final String solrUrl = "http://localhost:8080/solr";
 	
 	private SolrUtil(){
 		init();
@@ -94,195 +102,45 @@ public class SolrUtil {
 		server = new HttpSolrServer(solrUrl);
 		server.setConnectionTimeout(3000);
 		server.setSoTimeout(5000);
+		
+		// 初始化类 高亮字段
+		List<String> highLightList = new ArrayList<String>();
+		highLightList.add("productName");
+		classHighlightFieldMap.put("product", highLightList);
+		
+		// 初始化类 facet字段
+		List<String> facetFieldList = new ArrayList<String>();
+		facetFieldList.add("attrvalue");
+		classFacetFieldMap.put("product", facetFieldList);
 	}
 	
 	public static HttpSolrServer getSolrServer(){
 		return server;
 	}
 	
-	/**
-	 * 解析url
-	 * 默认规则是  属性名Id_属性值Id&索引条件名=值&索引条件名=[1-100]
-	 * url:productName_2000&price_[1-100]&attrvalue_attrId=attrValue&price_desc&count_asc
-	 * _隔开参数和参数值
-	 * 
-	 * @param url
-	 * @return
-	 */
-	public static SolrQuery parseUrl(Class type,String url) {
-		SolrQuery solrQuery = new SolrQuery();
-		String query = "*:* ";
-		
-		// 获取class对应的字段映射map
-		Map<String,String> map = classMap.get(type.getSimpleName());
-		
-		// 拆分url
-		if(!StringUtils.isEmpty(url)){
-			String[] urlStr = url.split("&");
-			
-			// 获取参数  与type匹配看是什么类型  然后组装query
-			for(String str : urlStr){
-				String[] s = str.split("_");
-				String param = s[0];
-				String value = s[1];
-				// 判断param是不是type类中字段
-				if(null != map.get(param)){
-					/**
-					 * 1、主键
-					 * 2、普通属性
-					 * 3、高亮
-					 * 4、排序
-					 * 5、范围属性
-					 * 6、facet
-					 */
-					try {
-						Field field = type.getDeclaredField(param);
-						// 设置可见
-						field.setAccessible(true);
-						// 获取字段的annotation
-						Annotation[] annotations = field.getAnnotations();
-						if(null != annotations && annotations.length > 0){
-							for(Annotation annotation : annotations){
-								Class annotationClass = annotation.getClass();
-								if(classMap.containsKey(annotationClass.getSimpleName())){
-									// 存在该注解   判断是什么类型
-									int fieldType = annotationMap.get(annotationClass.getSimpleName());
-									switch (fieldType) {
-										case FACET_FIELD:
-											solrQuery.addFacetField(param);
-											break;
-										case HIGHLIGHT_FIELD:
-											solrQuery.setHighlight(true);
-											solrQuery.addHighlightField(param);
-											solrQuery.setHighlightSimplePost(HIGHLIGHT_PRE);
-											solrQuery.setHighlightSimplePost(HIGHLIGHT_POST);
-											break;
-										case PRIMARY_FIELD:
-											query = query + " AND " + param + ":" +value;
-											break;
-										case RANGE_FIELD:
-											value = value.replaceAll("-", " TO ");
-											query = query + " AND " + param + ":" +value;
-											break;
-										case SORT_FIELD:
-											if(value.equals(SORT_ASC)){
-												solrQuery.setSort(param,ORDER.asc);
-											}else if(value.equals(SORT_DESC)){
-												solrQuery.setSort(param,ORDER.desc);
-											}else{
-												solrQuery.setSort(param,ORDER.desc);
-											}
-											break;
-										default:
-											break;
-									}
-								}
-							}
-						}
-					}catch (NoSuchFieldException e) {
-						logger.warn(type+"类中没有此字段："+param, e);
-						// 解析下一个字段
-						continue;
-					}
-				}else{
-					// 请求参数不对  忽略掉
-					continue;
-				}
-			}
-		}
-		
-		return solrQuery.setQuery(query);
-	}
-
-	/**
-	 * 根据url获取solr匹配数据总数
-	 * @param url
-	 * @return
-	 */
-	public int getPageCount(Class type,String url) {
-		int result = 0;
-		SolrQuery query = parseUrl(type, url);
-		// 绑定线程
-		solrQueryThreadLocal.set(query);
-		try {
-			QueryResponse response = server.query(query);
-			result = (int) response.getResults().getNumFound();
-		} catch (SolrServerException e) {
-			logger.error("solr查询总量异常...",e);
-		}
-		return result;
-	}
 	
-	public static SolrQuery getThreadLocalSolrQuery(Class type,String url) {
+	/**
+	 * 从线程中获取解析过的solrQuery
+	 * @param type
+	 * @param pro
+	 * @return
+	 */
+	public static SolrQuery getThreadLocalSolrQuery(Class<?> type,ProductRequestVo pro) {
 		// 从线程中取出解析后的solrQuery对象
 		SolrQuery query = solrQueryThreadLocal.get();
 		if (null == query) {
 			// 线程不存在 则解析url
-			query = parseUrl(type, url);
+			query = parseSolrRequest(type, pro);
 		}
 		return query;
 	}
 	
-	public static Set<String> getThreadLocalFacetField(Class type, String url) {
-		// url facet字段映射
+	public static Set<String> getThreadLocalFacetField() {
 		Set<String> facetSet = facetFieldThreadLocal.get();
-		if (null == facetSet) {
-			facetSet = getFacetFromUrl(type, url);
-		}
 		return facetSet;
 	}
 
-	/**
-	 * 根据url获取solr匹配数据
-	 * @param pager
-	 * @param url
-	 * @return
-	 */
-	public static SolrPager getPageInfo(Class type,SolrPager pager, String url) {
-		// 获取SolrQuery对象
-		SolrQuery query = getThreadLocalSolrQuery(type, url);
-		// 设置分页信息
-		query.setStart(pager.getStartIndex());
-		query.setRows(pager.getPageSize());
-		
-		try {
-			// 响应内容
-			QueryResponse response = server.query(query);
-			pager.setObj(response);
-			
-			// 查询内容封装
-			List<Object> list = response.getBeans(type);
-			pager.setList(list);
-			
-			// facet去掉已选facet字段属性 封装到pager中
-			List<FacetField> facetFiledList = response.getFacetDates();
-			if(null != facetFiledList && facetFiledList.size() > 0){
-				// facetField --->> List<Count>
-				Map<String,List<Count>> facetFieldMap = new HashMap<String, List<Count>>();
-				// 获取已经分面的字段
-				Set<String> facetSet = getThreadLocalFacetField(type, url);
-				for(FacetField facetField : facetFiledList){
-					// 判断url条件中是否已经存在该参数值了  如果存在 则不再返回  这里默认是attr 商品属性
-					List<Count> countList = facetField.getValues();
-					for(Count count : countList){
-						String facetAttrId = count.getName();// 前端需要这个属性  这里面保存的是商品属性Id
-						long facetAttrCount = count.getCount();// 这个是显示该类的总数  暂时可以不考虑
-						// 判断属性Id是否已经是筛选条件了   已经是的话  就不再返回
-						if(facetSet.contains(facetAttrId)){
-							countList.remove(count);
-						}
-					}
-					facetFieldMap.put(facetField.getName(), countList);
-				}
-				pager.setFacetFieldMap(facetFieldMap);
-			}
-		} catch (SolrServerException e) {
-			logger.error("solr查询异常...",e);
-		}
-		
-		return pager;
-	}
-
+	
 	/**
 	 * 获取url facet已选字段
 	 * @param type
@@ -309,5 +167,186 @@ public class SolrUtil {
 		
 		return facetFieldSet;
 	}
+
+	public int getPageCount(Class<Product> type, ProductRequestVo pro) {
+		int result = 0;
+		SolrQuery query = parseSolrRequest(type, pro);
+		// 绑定线程
+		solrQueryThreadLocal.set(query);
+		try {
+			QueryResponse response = server.query(query);
+			result = (int) response.getResults().getNumFound();
+		} catch (SolrServerException e) {
+			logger.error("solr查询总量异常...",e);
+		}
+		return result;
+	}
+
+	/**
+	 * 解析requestVo对象
+	 * @param type
+	 * @param pro
+	 * @return
+	 */
+	public static SolrQuery parseSolrRequest(Class<?> type, ProductRequestVo pro) {
+		SolrQuery solrQuery = new SolrQuery();
+		String query = "*:* ";
+		
+		// 关键字
+		String keyword = pro.getKeyword();
+		if(!StringUtils.isEmpty(keyword)){
+			// 去type类中查找需要搜索的字段   
+			
+			query = query + " AND productName:" + SuprUtil.encodeUrl(SuprUtil.formatUrl(keyword));
+		}
+		
+		// 普通参数
+		String params = pro.getParam();
+		if(!StringUtils.isEmpty(params)){
+			String[] param = params.split(";");
+			for(String str : param){
+				// 判断字段是否真实存在 否则过滤 categoryId:1100 必须要有categoryId字段
+				
+				// 判断格式是否正确 必须categoryId:1100 冒号分割
+				
+				query = query + " AND " + str;
+			}
+		}
+		
+		// 排序字段查询参数
+		String sort = pro.getSort();
+		if(!StringUtils.isEmpty(sort)){
+			String[] so = sort.split(";");
+			for(String str : so){
+				// 判断格式是否正确 必须sort:desc 冒号分割
+
+				String[] sortParamValue = str.split(":");
+				String sortParam = sortParamValue[0];
+				String sortValue = sortParamValue[1];
+				// 判断字段是否真实存在且可排序  否则过滤
+				if(!StringUtils.isEmpty(sortValue)){
+					if(sortValue.equals(SORT_DESC)){
+						solrQuery.addSort(sortParam, ORDER.desc);
+					}else if(sortValue.equals(SORT_ASC)){
+						solrQuery.addSort(sortParam, ORDER.asc);
+					}
+				}
+			}
+		}
+		
+		// 范围字段查询参数
+		String range = pro.getRange();
+		if (!StringUtils.isEmpty(range)) {
+			String[] ran = range.split(";");
+			for (String str : ran) {
+				// 判断格式是否正确 必须comment:[1-3] 冒号分割
+
+				String[] rangeParamValue = str.split(":");
+				String rangeParam = rangeParamValue[0];
+				String rangeValue = rangeParamValue[1];
+				// 校验范围参数必须是[1-100]这种结构
+				
+				query = query + " AND " + rangeParam + ":" + rangeValue.replaceAll("-", " TO ");
+			}
+		}
+		
+		// 商品属性查询
+		Set<String> attrSet = new HashSet<String>();
+		String attrs = pro.getAttrvalue();
+		if (!StringUtils.isEmpty(attrs)) {
+			String[] attr = attrs.split(";");
+			for(String str : attr){
+				// 判断格式是否正确 必须attrId1:valueId1 冒号分割
+				
+				// 判断字段必须要有
+				
+				query = query + " AND " + str;
+				attrSet.add(str);
+			}
+			// 绑定到线程中
+			facetFieldThreadLocal.set(attrSet);
+		}
+		
+		// 高亮字段设置  获取type类中需要高亮的字段  去缓存中读取
+		List<String> HiFieldList = classHighlightFieldMap.get(type.getSimpleName());
+		if(!SuprUtil.isEmptyCollection(HiFieldList)){
+			// 设置高亮
+			solrQuery.setHighlight(true);
+			solrQuery.setHighlightSimplePost(HIGHLIGHT_PRE);
+			solrQuery.setHighlightSimplePost(HIGHLIGHT_POST);
+			for(String fieldName : HiFieldList){
+				solrQuery.addHighlightField(fieldName);
+			}
+		}
+		
+		// facet字段设置 获取type类中需要facet的字段 去缓存中读取
+		List<String> facetFieldList = classFacetFieldMap.get(type.getSimpleName());
+		if(!SuprUtil.isEmptyCollection(facetFieldList)){
+			// 设置facet
+			solrQuery.setFacet(true);
+			// 分组类别数限制 也就相当于商品属性数限制
+			solrQuery.setFacetLimit(10);
+			// 限制分组count数下限 这里设置至少要有一条数据  没有数据的显示出来也没有意义
+			solrQuery.setFacetMinCount(1);
+			for(String fieldName : facetFieldList){
+				// 添加facet字段
+				solrQuery.addFacetField(fieldName);
+			}
+		}
+		
+		return solrQuery.setQuery(query);
+	}
 	
+	/**
+	 * requestVo
+	 * @param type
+	 * @param pager
+	 * @param pro
+	 * @return
+	 */
+	public static SolrPager getPageInfo(Class<?> type, SolrPager pager, ProductRequestVo pro) {
+		// 获取线程绑定的SolrQuery对象
+		SolrQuery query = getThreadLocalSolrQuery(type, pro);
+		// 设置分页信息
+		query.setStart(pager.getStartIndex());
+		query.setRows(pager.getPageSize());
+
+		try {
+			// 响应内容
+			QueryResponse response = server.query(query);
+			pager.setObj(response);
+
+			// 查询内容封装
+			List<?> list = response.getBeans(type);
+			pager.setList(list);
+
+			// facet去掉已选facet字段属性 封装到pager中
+			List<FacetField> facetFiledList = response.getFacetDates();
+			// 存放筛选后的字段facet列表
+			Map<String,List<Count>> facetFieldMap = new HashMap<String,List<Count>>();
+			if (null != facetFiledList && facetFiledList.size() > 0) {
+				for (FacetField facetField : facetFiledList) {
+					Set<String> facetSet = getThreadLocalFacetField();
+					// 判断url条件中是否已经存在该参数值了 如果存在 则不再返回 这里默认是attr 商品属性
+					List<Count> countList = facetField.getValues();
+					for (Count count : countList) {
+						// 前端需要这个属性 这里面保存的是商品属性Id
+						String facetAttrId = count.getName();
+						// 判断属性Id是否已经是筛选条件了 已经是的话 就不再返回
+						if (facetSet.contains(facetAttrId)) {
+							countList.remove(count);
+						}
+					}
+					facetFieldMap.put(facetField.getName(), countList);
+				}
+				// 筛选后的商品属性放入到pager对象中
+				pager.setFacetFieldMap(facetFieldMap);
+			}
+		} catch (SolrServerException e) {
+			logger.error("solr查询异常...", e);
+		}
+
+		return pager;
+	}
+
 }

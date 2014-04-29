@@ -56,7 +56,7 @@ public class SolrPager {
 	private List<?> attrList;
 	
 	/**
-	 * 附属对象
+	 * 搜索响应对象
 	 */
 	private Object obj;
 	
