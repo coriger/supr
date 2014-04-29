@@ -18,12 +18,12 @@ public class BaseController {
 	/**
 	 * 分页 每页显示数量
 	 */
-	public int pageSize;
+	public int pageSize = Pager.PAGE_SIZE;
 	
 	/**
 	 * 分页 当前页数
 	 */
-	public int pageNum = Pager.PAGE_SIZE;
+	public int pageNum;
 	
 	/**
 	 * 分页类

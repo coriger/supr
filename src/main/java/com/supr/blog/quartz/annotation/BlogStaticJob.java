@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Lazy(value=false)
 public class BlogStaticJob {
 	
-	@Scheduled(cron="* * * * * ?")
+//	@Scheduled(cron="* * * * * ?")
 	public void doWork(){
 		System.out.println("annotation定时任务执行...");
 	}

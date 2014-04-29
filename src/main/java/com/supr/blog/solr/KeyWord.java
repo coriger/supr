@@ -6,12 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @功能：分类字段
+ * @功能：标记关键字搜索字段
  * @作者： ljt
- * @时间： 2014-4-28 上午10:47:33
+ * @时间： 2014-4-29 下午4:23:19
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CategoryField {
+public @interface KeyWord {
 
 }
