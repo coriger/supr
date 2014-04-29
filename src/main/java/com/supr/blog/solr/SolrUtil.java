@@ -137,6 +137,9 @@ public class SolrUtil {
 	
 	public static Set<String> getThreadLocalFacetField() {
 		Set<String> facetSet = facetFieldThreadLocal.get();
+		if(null == facetSet){
+			facetSet = new HashSet<String>();
+		}
 		return facetSet;
 	}
 
@@ -262,7 +265,7 @@ public class SolrUtil {
 				
 				String[] s = str.split("_");
 				query = query + " AND attrvalue:" + s[0] + "=" + s[1];
-				attrSet.add(str.replaceAll(":", "="));
+				attrSet.add(str.replaceAll("_", "="));
 			}
 			// 绑定到线程中
 			facetFieldThreadLocal.set(attrSet);
@@ -273,11 +276,11 @@ public class SolrUtil {
 		if(!SuprUtil.isEmptyCollection(HiFieldList)){
 			// 设置高亮
 			solrQuery.setHighlight(true);
-			solrQuery.setHighlightSimplePost(HIGHLIGHT_PRE);
-			solrQuery.setHighlightSimplePost(HIGHLIGHT_POST);
 			for(String fieldName : HiFieldList){
 				solrQuery.addHighlightField(fieldName);
 			}
+			solrQuery.setHighlightSimplePre(HIGHLIGHT_PRE);
+			solrQuery.setHighlightSimplePost(HIGHLIGHT_POST);
 		}
 		
 		// facet字段设置 获取type类中需要facet的字段 去缓存中读取
@@ -322,7 +325,7 @@ public class SolrUtil {
 			pager.setList(list);
 
 			// facet去掉已选facet字段属性 封装到pager中
-			List<FacetField> facetFiledList = response.getFacetDates();
+			List<FacetField> facetFiledList = response.getFacetFields();
 			// 存放筛选后的字段facet列表
 			Map<String,List<Count>> facetFieldMap = new HashMap<String,List<Count>>();
 			if (null != facetFiledList && facetFiledList.size() > 0) {
@@ -330,15 +333,16 @@ public class SolrUtil {
 					Set<String> facetSet = getThreadLocalFacetField();
 					// 判断url条件中是否已经存在该参数值了 如果存在 则不再返回 这里默认是attr 商品属性
 					List<Count> countList = facetField.getValues();
+					List<Count> countList_new = new ArrayList<Count>();
 					for (Count count : countList) {
 						// 前端需要这个属性 这里面保存的是商品属性Id
 						String facetAttrId = count.getName();
 						// 判断属性Id是否已经是筛选条件了 已经是的话 就不再返回
-						if (facetSet.contains(facetAttrId)) {
-							countList.remove(count);
+						if (null != facetSet && !facetSet.contains(facetAttrId)) {
+							countList_new.add(count);
 						}
 					}
-					facetFieldMap.put(facetField.getName(), countList);
+					facetFieldMap.put(facetField.getName(), countList_new);
 				}
 				// 筛选后的商品属性放入到pager对象中
 				pager.setFacetFieldMap(facetFieldMap);
