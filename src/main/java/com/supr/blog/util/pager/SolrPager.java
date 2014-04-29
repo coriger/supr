@@ -186,4 +186,10 @@ public class SolrPager {
 	public void setObj(Object obj) {
 		this.obj = obj;
 	}
+
+	@Override
+	public String toString() {
+		return "SolrPager [pageNum=" + pageNum + ", pageSize=" + pageSize + ", totalPageNum=" + totalPageNum + ", totalCount=" + totalCount + ", list=" + list + ", attrList=" + attrList + ", obj=" + obj + ", startIndex=" + startIndex + ", endIndex=" + endIndex + ", facetFieldMap=" + facetFieldMap + "]";
+	}
+	
 }

@@ -2,7 +2,6 @@ package com.supr.blog.model.vo;
 
 import org.apache.solr.client.solrj.beans.Field;
 
-import com.supr.blog.solr.CategoryField;
 import com.supr.blog.solr.FacetField;
 import com.supr.blog.solr.HighlightField;
 import com.supr.blog.solr.KeyWord;

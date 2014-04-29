@@ -1,6 +1,7 @@
 package com.supr.blog.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,20 +97,28 @@ public class SearchServiceImpl implements SearchService{
 			// 这里获取的是attrId:valueId的集合
 			List<Count> countList = facetField.getValues();
 			if(!SuprUtil.isEmptyCollection(countList)){
+				Map<String,ProductAttr> attrMap = new HashMap<String,ProductAttr>();
 				ProductAttr attr = null;
 				ProductVal val = null;
 				for(Count co : countList){
 					// 这个是属性Id:值Id
-					String[] attrvalue = co.getName().split(":");
+					String[] attrvalue = co.getName().split("=");
 					String attrId = attrvalue[0];
 					String valId = attrvalue[1];
 					// 根据Id获取商品属性对象
-					attr = this.getProductAttr(attrId);
+					attr = attrMap.get(attrId);
+					if(null == attr){
+						attr = this.getProductAttr(attrId);
+					}
 					// 根据Id获取商品属性值对象
 					val = this.getProductVal(valId);
 					attr.setVal(val);
+					attrMap.put(attrId, attr);
 				}
-				attrList.add(attr);
+				// 把map中的属性对象放到List中
+				for (String key : attrMap.keySet()) {
+					attrList.add(attrMap.get(key));
+				}
 			}
 		}
 		

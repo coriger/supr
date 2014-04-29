@@ -106,12 +106,12 @@ public class SolrUtil {
 		// 初始化类 高亮字段
 		List<String> highLightList = new ArrayList<String>();
 		highLightList.add("productName");
-		classHighlightFieldMap.put("product", highLightList);
+		classHighlightFieldMap.put("Product", highLightList);
 		
 		// 初始化类 facet字段
 		List<String> facetFieldList = new ArrayList<String>();
 		facetFieldList.add("attrvalue");
-		classFacetFieldMap.put("product", facetFieldList);
+		classFacetFieldMap.put("Product", facetFieldList);
 	}
 	
 	public static HttpSolrServer getSolrServer(){
@@ -260,8 +260,9 @@ public class SolrUtil {
 				
 				// 判断字段必须要有
 				
-				query = query + " AND " + str;
-				attrSet.add(str);
+				String[] s = str.split("_");
+				query = query + " AND attrvalue:" + s[0] + "=" + s[1];
+				attrSet.add(str.replaceAll(":", "="));
 			}
 			// 绑定到线程中
 			facetFieldThreadLocal.set(attrSet);
