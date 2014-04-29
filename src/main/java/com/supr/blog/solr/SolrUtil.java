@@ -19,7 +19,6 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.supr.blog.util.pager.Pager;
 import com.supr.blog.util.pager.SolrPager;
 
 /**
@@ -126,7 +125,7 @@ public class SolrUtil {
 				String[] s = str.split("_");
 				String param = s[0];
 				String value = s[1];
-				// 判断param是否是map中的
+				// 判断param是不是type类中字段
 				if(null != map.get(param)){
 					/**
 					 * 1、主键

@@ -22,20 +22,20 @@ import freemarker.template.Template;
 @Service
 public class TemplateServiceImpl implements TemplateService {
 
-	@Autowired
-	@Qualifier("freemarkerConfiguration")
-	private Configuration cfg;
+//	@Autowired
+//	@Qualifier("freemarkerConfiguration")
+//	private Configuration cfg;
 
 	private FreeMarkerConfig configuration;
 
 	@Override
 	public Template getTemplate(String name) {
 		Template template = null;
-		try {
-			template = cfg.getTemplate(name, "utf-8");
-		} catch (IOException e) {
-
-		}
+//		try {
+//			template = cfg.getTemplate(name, "utf-8");
+//		} catch (IOException e) {
+//
+//		}
 		return template;
 	}
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.supr.blog.mapper.SearMapper">
+	
+	<!-- 根据商品属性Id获取商品对象 -->
+	<select id="getProductAttr" parameterType="String" resultType="com.supr.blog.model.vo.ProductAttr">
+		select * from product_attr where attrId = #{attrId}
+	</select>
+	
+	<!-- 根据商品属性值Id获取商品属性值对象 -->
+	<select id="getProductVal" parameterType="String" resultType="com.supr.blog.model.vo.ProductVal">
+		select * from product_val where valId = #{valId}
+	</select>
+			
+</mapper>

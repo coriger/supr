@@ -29,9 +29,9 @@ public class FreemarkerUtil {
 
 	private static final Logger logger = Logger.getLogger(FreemarkerUtil.class);
 	
-	@Autowired
-	@Qualifier("freemarkerConfiguration")
-	private Configuration configuration;
+//	@Autowired
+//	@Qualifier("freemarkerConfiguration")
+//	private Configuration configuration;
 	
 	private static FreemarkerUtil freemarkerUtil = new FreemarkerUtil();
 	
@@ -46,11 +46,11 @@ public class FreemarkerUtil {
 	 */
 	public Template getTemplate(String name){
 		Template template = null;
-		try {
-			template = configuration.getTemplate(name, "utf-8");
-		} catch (IOException e) {
-			logger.error("获取【"+name+"】模板异常...",e);
-		}
+//		try {
+//			template = configuration.getTemplate(name, "utf-8");
+//		} catch (IOException e) {
+//			logger.error("获取【"+name+"】模板异常...",e);
+//		}
 		return template;
 	}
 

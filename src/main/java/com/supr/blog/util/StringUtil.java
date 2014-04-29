@@ -37,7 +37,7 @@ public class StringUtil {
 	public static String formatUrl(String str){
 		String url = "";
 		if(!StringUtils.isEmpty(str)){
-			str = str.replaceAll("&&", "&");
+			url = str.replaceAll("&&", "&");
 		}
 		
 		return url;
