@@ -92,36 +92,33 @@ public class SearchServiceImpl implements SearchService{
 	 */
 	private void buildProductAttr(QueryResponse response,SolrPager pager) {
 		List<ProductAttr> attrList = new ArrayList<ProductAttr>();
-		FacetField facetField = response.getFacetField("attrvalue");
-		if(facetField != null){
-			// 这里获取的是attrId:valueId的集合
-			List<Count> countList = facetField.getValues();
-			if(!SuprUtil.isEmptyCollection(countList)){
-				Map<String,ProductAttr> attrMap = new HashMap<String,ProductAttr>();
-				ProductAttr attr = null;
-				ProductVal val = null;
-				for(Count co : countList){
-					// 这个是属性Id:值Id
-					String[] attrvalue = co.getName().split("=");
-					String attrId = attrvalue[0];
-					String valId = attrvalue[1];
-					// 根据Id获取商品属性对象
-					attr = attrMap.get(attrId);
-					if(null == attr){
-						attr = this.getProductAttr(attrId);
-					}
-					// 根据Id获取商品属性值对象
-					val = this.getProductVal(valId);
-					attr.setVal(val);
-					attrMap.put(attrId, attr);
+		Map<String,List<Count>> map = pager.getFacetFieldMap();
+		List<Count> countList = map.get("attrvalue");
+		if (!SuprUtil.isEmptyCollection(countList)) {
+			Map<String, ProductAttr> attrMap = new HashMap<String, ProductAttr>();
+			ProductAttr attr = null;
+			ProductVal val = null;
+			for (Count co : countList) {
+				// 这个是属性Id:值Id
+				String[] attrvalue = co.getName().split("=");
+				String attrId = attrvalue[0];
+				String valId = attrvalue[1];
+				// 根据Id获取商品属性对象
+				attr = attrMap.get(attrId);
+				if (null == attr) {
+					attr = this.getProductAttr(attrId);
 				}
-				// 把map中的属性对象放到List中
-				for (String key : attrMap.keySet()) {
-					attrList.add(attrMap.get(key));
-				}
+				// 根据Id获取商品属性值对象
+				val = this.getProductVal(valId);
+				attr.setVal(val);
+				attrMap.put(attrId, attr);
+			}
+			// 把map中的属性对象放到List中
+			for (String key : attrMap.keySet()) {
+				attrList.add(attrMap.get(key));
 			}
 		}
-		
+
 		// 商品属性封装到pager中
 		pager.setAttrList(attrList);
 	}

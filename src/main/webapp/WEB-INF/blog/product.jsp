@@ -17,5 +17,14 @@
 		</br>
 	</c:forEach>
 	
+	</br>
+	</br>
+	</br>
+	
+	商品列表：</br>
+	<c:forEach items="${requestScope.pager.list}" var="product">
+		${product.productId}-${product.productName}-${product.saleCount}-${product.price}-${product.source}-${product.url}
+		</br>
+	</c:forEach>
 </body>
 </html>
