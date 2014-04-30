@@ -1,6 +1,5 @@
 package com.supr.blog.model;
 
-import java.util.Date;
 
 /**
  * @功能：站点信息 (访问量 文章 图片数量等)
