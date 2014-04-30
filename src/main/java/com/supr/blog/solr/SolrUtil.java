@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import com.supr.blog.model.vo.IncProductIndex;
 import com.supr.blog.model.vo.Product;
 import com.supr.blog.model.vo.ProductRequestVo;
+import com.supr.blog.util.Constant;
 import com.supr.blog.util.SuprUtil;
 import com.supr.blog.util.pager.SolrPager;
 
@@ -139,7 +140,9 @@ public class SolrUtil {
 		
 		// 初始化solrServer
 		server = new HttpSolrServer(solrUrl);
+		// 连接超时时间 单位秒
 		server.setConnectionTimeout(3000);
+		// 读取超时时间 单位秒
 		server.setSoTimeout(5000);
 		
 		/******************************************************
@@ -164,11 +167,6 @@ public class SolrUtil {
 		classKeywordFieldMap.put("Product", keywordFieldList);
 	}
 	
-	public static HttpSolrServer getSolrServer(){
-		return server;
-	}
-	
-	
 	/**
 	 * 从线程中获取解析过的solrQuery
 	 * @param type
@@ -179,7 +177,7 @@ public class SolrUtil {
 		// 从线程中取出解析后的solrQuery对象
 		SolrQuery query = solrQueryThreadLocal.get();
 		if (null == query) {
-			// 线程不存在 则解析url
+			// 线程不存在 则解析pro
 			query = parseSolrRequest(type, pro);
 		}
 		return query;
@@ -194,33 +192,6 @@ public class SolrUtil {
 	}
 
 	
-	/**
-	 * 获取url facet已选字段
-	 * @param type
-	 * @param url
-	 * @return
-	 */
-	public static Set<String> getFacetFromUrl(Class type,String url) {
-		Set<String> facetFieldSet = new HashSet<String>();
-		// 解析url
-		if(!StringUtils.isEmpty(url)){
-			// 找到url中对应的facet字段
-			String[] paramStr = url.split("&");
-			for(String str : paramStr){
-				String[] paramVlaue = str.split("_");
-				String param = paramVlaue[0];
-				String value = paramVlaue[1];
-				// 判断param是否是facet类型
-				if(classFacetMap.get(type).get(param).equals(com.supr.blog.solr.FacetField.class.getSimpleName())){
-					// attrId=attrValue 把attrId放入set中
-					facetFieldSet.add(value.split("=")[0]);
-				}
-			}
-		}
-		
-		return facetFieldSet;
-	}
-
 	public int getPageCount(Class<Product> type, ProductRequestVo pro) {
 		int result = 0;
 		SolrQuery query = parseSolrRequest(type, pro);
@@ -439,7 +410,7 @@ public class SolrUtil {
 	}
 
 	/**
-	 * requestVo
+	 * 获取分页信息
 	 * @param type
 	 * @param pager
 	 * @param pro
@@ -496,13 +467,14 @@ public class SolrUtil {
 	 * @param productId
 	 */
 	public int deleteIndexById(String productId) {
-		int result = 1;
+		int result = Constant.FAIL;
 		try {
 			server.deleteById(productId);
 			UpdateResponse response = server.commit();
 			result = response.getStatus();
 		} catch (Exception e) {
 			logger.error("根据Id删除索引异常,索引Id:"+productId,e);
+			rollback();
 		}
 		
 		return result;
@@ -514,13 +486,14 @@ public class SolrUtil {
 	 * @return
 	 */
 	public int insertIndex(IncProductIndex product) {
-		int result = 1;
+		int result = Constant.FAIL;
 		try {
 			server.addBean(product);
 			UpdateResponse response = server.commit();
 			result = response.getStatus();
 		} catch (Exception e) {
 			logger.error("新增索引异常,索引对象:"+product.toString(),e);
+			rollback();
 		}
 		
 		return result;
@@ -532,13 +505,14 @@ public class SolrUtil {
 	 * @return
 	 */
 	public int updateIndex(IncProductIndex product) {
-		int result = 1;
+		int result = Constant.FAIL;
 		try {
 			server.addBean(product);
 			UpdateResponse response = server.commit();
 			result = response.getStatus();
 		} catch (Exception e) {
 			logger.error("更新索引异常,索引对象:"+product.toString(),e);
+			rollback();
 		}
 		
 		return result;
@@ -549,16 +523,30 @@ public class SolrUtil {
 	 * @return
 	 */
 	public int deleteAllIndex() {
-		int result = 1;
+		int result = Constant.FAIL;
 		try {
 			server.deleteByQuery("*:*");
 			UpdateResponse response = server.commit();
 			result = response.getStatus();
 		} catch (Exception e) {
 			logger.error("删除全量索引异常...",e);
+			rollback();
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * 索引回滚
+	 */
+	public void rollback(){
+		try {
+			server.rollback();
+		} catch (SolrServerException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

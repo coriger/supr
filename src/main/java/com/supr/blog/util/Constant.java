@@ -10,4 +10,7 @@ public class Constant {
 	// 处理成功
 	public static final int SUCCESS = 0;
 	
+	// 处理失败
+	public static final int FAIL = 1;
+	
 }
