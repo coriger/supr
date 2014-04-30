@@ -137,6 +137,9 @@ public class SolrUtil {
 	
 	public static Set<String> getThreadLocalFacetField() {
 		Set<String> facetSet = facetFieldThreadLocal.get();
+		if(null == facetSet){
+			facetSet = new HashSet<String>();
+		}
 		return facetSet;
 	}
 
@@ -335,7 +338,7 @@ public class SolrUtil {
 						// 前端需要这个属性 这里面保存的是商品属性Id
 						String facetAttrId = count.getName();
 						// 判断属性Id是否已经是筛选条件了 已经是的话 就不再返回
-						if (!facetSet.contains(facetAttrId)) {
+						if (null != facetSet && !facetSet.contains(facetAttrId)) {
 							countList_new.add(count);
 						}
 					}
