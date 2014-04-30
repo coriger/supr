@@ -66,7 +66,7 @@ public class SolrIndexJob {
 	private SolrUtil solrUtil;
 	
 	
-	@Scheduled(cron="* * * * * ?")
+	@Scheduled(cron="* 0/1 * * * ?")
 	public void buildSorlIndex(){
 		logger.info("solr增量索引定时任务开始执行...");
 		
@@ -91,7 +91,7 @@ public class SolrIndexJob {
 					for(IncProductIndex product : productList){
 						// 0：处理成功   其余：处理失败
 						int result = 1;
-						switch (product.getIndexId()) {
+						switch (product.getIndexType()) {
 							case INSERT_INDEX:
 								// 新增索引
 								result = solrUtil.insertIndex(product);

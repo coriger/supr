@@ -111,7 +111,7 @@ public class SolrUtil {
 	/**
 	 * 配置文件名
 	 */
-	private static final String solrConfigName = "supr.properties";
+	private static final String solrConfigName = "/supr.properties";
 	
 	/**
 	 * solr配置文件属性对象
@@ -498,7 +498,8 @@ public class SolrUtil {
 	public int deleteIndexById(String productId) {
 		int result = 1;
 		try {
-			UpdateResponse response = server.deleteById(productId);
+			server.deleteById(productId);
+			UpdateResponse response = server.commit();
 			result = response.getStatus();
 		} catch (Exception e) {
 			logger.error("根据Id删除索引异常,索引Id:"+productId,e);
@@ -515,10 +516,11 @@ public class SolrUtil {
 	public int insertIndex(IncProductIndex product) {
 		int result = 1;
 		try {
-			UpdateResponse response = server.addBean(product);
+			server.addBean(product);
+			UpdateResponse response = server.commit();
 			result = response.getStatus();
 		} catch (Exception e) {
-			logger.error("更新索引异常,索引对象:"+product.toString(),e);
+			logger.error("新增索引异常,索引对象:"+product.toString(),e);
 		}
 		
 		return result;
@@ -532,7 +534,8 @@ public class SolrUtil {
 	public int updateIndex(IncProductIndex product) {
 		int result = 1;
 		try {
-			UpdateResponse response = server.addBean(product);
+			server.addBean(product);
+			UpdateResponse response = server.commit();
 			result = response.getStatus();
 		} catch (Exception e) {
 			logger.error("更新索引异常,索引对象:"+product.toString(),e);
@@ -548,7 +551,8 @@ public class SolrUtil {
 	public int deleteAllIndex() {
 		int result = 1;
 		try {
-			UpdateResponse response = server.deleteByQuery("*:*");
+			server.deleteByQuery("*:*");
+			UpdateResponse response = server.commit();
 			result = response.getStatus();
 		} catch (Exception e) {
 			logger.error("删除全量索引异常...",e);

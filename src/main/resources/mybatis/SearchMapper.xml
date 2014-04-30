@@ -21,10 +21,10 @@
 	
 	<!-- 获取待处理增量索引集合 -->
 	<select id="getIncrementIndex" parameterType="int" resultType="com.supr.blog.model.vo.IncProductIndex">
-		select in.productId,pro.productName,pro.categoryId,pro.price,pro.saleCount 
-		from index_product in 
-		left join product pro on in.productId = pro.productId 
-		where in.indexStatue = 0 
+		select ip.productId,pro.productName,pro.categoryId,pro.price,pro.saleCount,ip.indexStatue,ip.indexType,ip.indexId   
+		from index_product ip 
+		left join product pro on ip.productId = pro.productId 
+		where ip.indexStatue = 0 
 		limit 0,#{indexCount}
 	</select>
 	
