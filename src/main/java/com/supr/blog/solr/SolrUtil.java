@@ -1,14 +1,15 @@
 package com.supr.blog.solr;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
-
-import javax.print.attribute.standard.Severity;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -49,6 +50,9 @@ public class SolrUtil {
 	
 	// key是className value是facet字段集合  需要初始化
 	public static Map<String,List<String>> classFacetFieldMap = new HashMap<String,List<String>>();
+	
+	// key是className value是keyword字段集合  需要初始化
+	public static Map<String,List<String>> classKeywordFieldMap = new HashMap<String,List<String>>();
 		
 	// 分面
 	private static final int FACET_FIELD = 1;
@@ -93,19 +97,46 @@ public class SolrUtil {
 	private static Map<String,Map<String,String>> classFacetMap = new HashMap<String,Map<String,String>>();
 	
 	/**
+	 * 类   -->> 字段名集合
+	 */
+	private static Map<String,Set<String>> classFieldMap = new HashMap<String,Set<String>>();
+	
+	/**
 	 * 注解map  注解类className ---->> 模板
 	 */
 	private static Map<String,Integer> annotationMap = new HashMap<String,Integer>();
 	
 	private static HttpSolrServer server;
 	
-	private static final String solrUrl = "http://localhost:8080/solr";
+	/**
+	 * 配置文件名
+	 */
+	private static final String solrConfigName = "supr.properties";
+	
+	/**
+	 * solr配置文件属性对象
+	 */
+	private static Properties properties;
+	
+	/**
+	 * 配置文件读取
+	 */
+	private static String solrUrl;
 	
 	private SolrUtil(){
 		init();
 	}
 	
 	public void init(){
+		// 读取配置参数
+		properties = new Properties();
+		try {
+			properties.load(SolrUtil.class.getResourceAsStream(solrConfigName));
+			solrUrl = properties.getProperty("solrUrl");
+		} catch (IOException e) {
+			logger.error("读取["+solrConfigName+"]配置文件失败...",e);
+		}
+		
 		// 初始化solrServer
 		server = new HttpSolrServer(solrUrl);
 		server.setConnectionTimeout(3000);
@@ -126,6 +157,11 @@ public class SolrUtil {
 		List<String> facetFieldList = new ArrayList<String>();
 		facetFieldList.add("attrvalue");
 		classFacetFieldMap.put("Product", facetFieldList);
+		
+		// 初始化类 keyword字段
+		List<String> keywordFieldList = new ArrayList<String>();
+		keywordFieldList.add("productName");
+		classKeywordFieldMap.put("Product", keywordFieldList);
 	}
 	
 	public static HttpSolrServer getSolrServer(){
@@ -213,7 +249,7 @@ public class SolrUtil {
 		String keyword = pro.getKeyword();
 		if(!StringUtils.isEmpty(keyword)){
 			// 去type类中查找需要搜索的字段   
-			List<String> keywordFieldList = getKeywrodFieldList(type);
+			List<String> keywordFieldList = classKeywordFieldMap.get(type.getSimpleName());
 			if(!SuprUtil.isEmptyCollection(keywordFieldList)){
 				for(String fieldName : keywordFieldList){
 					query = query + " AND " + fieldName + ":" + SuprUtil.encodeUrl(SuprUtil.formatUrl(keyword));
@@ -226,10 +262,10 @@ public class SolrUtil {
 		if(!StringUtils.isEmpty(params)){
 			String[] param = params.split(";");
 			for(String str : param){
-				// 判断字段是否真实存在 否则过滤 categoryId:1100 必须要有categoryId字段
-				if(isExistParam(str)){
-					// 判断格式是否正确 必须categoryId:1100 冒号分割
-					if(isRightFormat(str)){
+				// 判断格式是否正确 必须 冒号分割
+				if(isRightFormat(str)){
+					// 判断字段是否真实存在
+					if(isExistParam(type,str)){
 						query = query + " AND " + str;
 					}
 				}
@@ -241,9 +277,10 @@ public class SolrUtil {
 		if(!StringUtils.isEmpty(sort)){
 			String[] so = sort.split(";");
 			for(String str : so){
-				// 判断字段是否真实存在
-				if(isExistParam(str)){
-					if(isRightSortFormat(str)){
+				// 判断格式是否正确 可排序 price:desc
+				if(isRightSortFormat(str)){
+					// 判断字段是否真实存在
+					if(isExistParam(type,str)){
 						String[] sortParamValue = str.split(":");
 						String sortParam = sortParamValue[0];
 						String sortValue = sortParamValue[1];
@@ -264,9 +301,10 @@ public class SolrUtil {
 		if (!StringUtils.isEmpty(range)) {
 			String[] ran = range.split(";");
 			for (String str : ran) {
-				// 判断字段是否真实存在
-				if(isExistParam(str)){
-					if(isRightRangeFormat(str)){
+				// 判断格式是否正确 范围查询[1-1000]
+				if(isRightRangeFormat(str)){
+					// 判断字段是否真实存在
+					if(isExistParam(type,str)){
 						String[] rangeParamValue = str.split(":");
 						String rangeParam = rangeParamValue[0];
 						String rangeValue = rangeParamValue[1];
@@ -283,10 +321,10 @@ public class SolrUtil {
 		if (!StringUtils.isEmpty(attrs)) {
 			String[] attr = attrs.split(";");
 			for(String str : attr){
-				// 判断字段必须要有
-				if(isExistParam(str)){
-					// 判断格式是否正确 必须attrId1:valueId1 冒号分割
-					if(isRightFormat(str)){
+				// 判断格式是否正确 必须 冒号分割
+				if(isRightFormat(str)){
+					// 判断字段是否真实存在
+					if(isExistParam(type,str)){
 						String[] s = str.split("_");
 						query = query + " AND attrvalue:" + s[0] + "=" + s[1];
 						attrSet.add(str.replaceAll("_", "="));
@@ -327,6 +365,79 @@ public class SolrUtil {
 		return solrQuery.setQuery(query);
 	}
 	
+	/**
+	 * 判断str字符串格式是否满足range条件
+	 * @param str
+	 * @return
+	 */
+	private static boolean isRightRangeFormat(String str) {
+		String regEx = "^[0{1}|/d+-0{1}|/d+]$";
+		Pattern pattern = Pattern.compile(regEx);
+		if(!StringUtils.isEmpty(str)){
+			String[] s = str.split(":");
+			if(s.length == 2 && !StringUtils.isEmpty(s[1])){
+				if(pattern.matcher(s[1]).find()){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 判断str字符串格式是否满足sort条件
+	 * @param str
+	 * @return
+	 */
+	private static boolean isRightSortFormat(String str) {
+		if(!StringUtils.isEmpty(str)){
+			String[] s = str.split(":");
+			if(s.length == 2 && !StringUtils.isEmpty(s[1])){
+				if(s[1].equals(SORT_ASC) || s[1].equals(SORT_DESC)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 判断str字符串格式是否 是:隔开
+	 * @param str
+	 * @return
+	 */
+	private static boolean isRightFormat(String str) {
+		if(!StringUtils.isEmpty(str)){
+			String[] s = str.split(":");
+			if(s.length == 2){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 判断类中是否存在指定字段
+	 * @param str
+	 * @return
+	 */
+	private static boolean isExistParam(Class<?> type,String str) {
+		Set<String> fieldNameSet = classFieldMap.get(type.getSimpleName());
+		if(SuprUtil.isEmptyCollection(fieldNameSet)){
+			fieldNameSet = new HashSet<String>();
+			Field[] fields = type.getFields();
+			for(Field field : fields){
+				fieldNameSet.add(field.getName());
+			}
+		}
+		
+		if(!SuprUtil.isEmptyCollection(fieldNameSet) && fieldNameSet.contains(str)){
+			return true;
+		}
+		
+		return false;
+	}
+
 	/**
 	 * requestVo
 	 * @param type
