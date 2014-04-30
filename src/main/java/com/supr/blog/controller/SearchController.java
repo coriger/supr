@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.supr.blog.model.vo.ProductRequestVo;
 import com.supr.blog.model.vo.Result;
 import com.supr.blog.service.SearchService;
+import com.supr.blog.util.Constant;
 import com.supr.blog.util.StringUtil;
 import com.supr.blog.util.pager.SolrPager;
 
@@ -34,6 +35,18 @@ public class SearchController extends BaseController{
 		SolrPager pager = searchService.getProductPageInfo(pageSize,pageNum,product);
 		model.put("pager", pager);
 		return "/blog/product";
+	}
+	
+	/**
+	 * 构造全量索引
+	 */
+	public void buildAllIndex(){
+		int result = searchService.deleteAllIndex();
+		if(result == Constant.SUCCESS){
+			// 开始构建全量索引  分批读取数据
+			
+			
+		}
 	}
 	
 }

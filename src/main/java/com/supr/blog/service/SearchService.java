@@ -30,5 +30,15 @@ public interface SearchService {
 	 */
 	List<IncProductIndex> getIncrementIndex(int indexCount);
 
+	/**
+	 * 更新增量索引处理状态
+	 * @param product
+	 */
 	void updateIncIndexStatus(IncProductIndex product);
+
+	/**
+	 * 删除全部索引
+	 * @return
+	 */
+	int deleteAllIndex();
 }
