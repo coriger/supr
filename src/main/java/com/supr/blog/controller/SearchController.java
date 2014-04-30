@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.supr.blog.model.vo.ProductRequestVo;
+import com.supr.blog.model.vo.Result;
 import com.supr.blog.service.SearchService;
 import com.supr.blog.util.StringUtil;
 import com.supr.blog.util.pager.SolrPager;

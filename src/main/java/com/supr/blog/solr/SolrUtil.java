@@ -1,11 +1,14 @@
 package com.supr.blog.solr;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.print.attribute.standard.Severity;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -15,9 +18,11 @@ import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.supr.blog.model.vo.IncProductIndex;
 import com.supr.blog.model.vo.Product;
 import com.supr.blog.model.vo.ProductRequestVo;
 import com.supr.blog.util.SuprUtil;
@@ -352,6 +357,56 @@ public class SolrUtil {
 		}
 
 		return pager;
+	}
+
+	/**
+	 * 根据Id删除索引
+	 * @param productId
+	 */
+	public int deleteIndexById(String productId) {
+		int result = 1;
+		try {
+			UpdateResponse response = server.deleteById(productId);
+			result = response.getStatus();
+		} catch (Exception e) {
+			logger.error("根据Id删除索引异常,索引Id:"+productId,e);
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 新增索引
+	 * @param product
+	 * @return
+	 */
+	public int insertIndex(IncProductIndex product) {
+		int result = 1;
+		try {
+			UpdateResponse response = server.addBean(product);
+			result = response.getStatus();
+		} catch (Exception e) {
+			logger.error("更新索引异常,索引对象:"+product.toString(),e);
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 更新索引
+	 * @param product
+	 * @return
+	 */
+	public int updateIndex(IncProductIndex product) {
+		int result = 1;
+		try {
+			UpdateResponse response = server.addBean(product);
+			result = response.getStatus();
+		} catch (Exception e) {
+			logger.error("更新索引异常,索引对象:"+product.toString(),e);
+		}
+		
+		return result;
 	}
 
 }

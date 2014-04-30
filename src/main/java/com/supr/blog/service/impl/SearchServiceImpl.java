@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.supr.blog.mapper.SearchMapper;
+import com.supr.blog.model.vo.IncProductIndex;
 import com.supr.blog.model.vo.Product;
 import com.supr.blog.model.vo.ProductAttr;
 import com.supr.blog.model.vo.ProductRequestVo;
@@ -149,5 +149,19 @@ public class SearchServiceImpl implements SearchService{
 			}
 		}
 	}
+	
+	@Override
+	public int getIncrementIndexCount() {
+		return searchMapper.getIncrementIndexCount();
+	}
+	
+	@Override
+	public List<IncProductIndex> getIncrementIndex(int indexCount) {
+		return searchMapper.getIncrementIndex(indexCount);
+	}
 
+	@Override
+	public void updateIncIndexStatus(IncProductIndex product) {
+		searchMapper.updateIncIndexStatus(product);
+	}
 }
