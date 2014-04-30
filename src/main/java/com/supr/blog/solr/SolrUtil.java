@@ -65,6 +65,9 @@ public class SolrUtil {
 	// 排序
 	private static final int SORT_FIELD = 5;
 	
+	// 关键字查询
+	private static final int KEYWORD_FIELD = 6;
+	
 	// 高亮前置
 	private static final String HIGHLIGHT_PRE = "<font style = 'color:red'>";
 	
@@ -107,6 +110,12 @@ public class SolrUtil {
 		server = new HttpSolrServer(solrUrl);
 		server.setConnectionTimeout(3000);
 		server.setSoTimeout(5000);
+		
+		/******************************************************
+		 * 
+		 * 					初始化部分暂时写死
+		 * 
+		 ******************************************************/
 		
 		// 初始化类 高亮字段
 		List<String> highLightList = new ArrayList<String>();
@@ -204,8 +213,12 @@ public class SolrUtil {
 		String keyword = pro.getKeyword();
 		if(!StringUtils.isEmpty(keyword)){
 			// 去type类中查找需要搜索的字段   
-			
-			query = query + " AND productName:" + SuprUtil.encodeUrl(SuprUtil.formatUrl(keyword));
+			List<String> keywordFieldList = getKeywrodFieldList(type);
+			if(!SuprUtil.isEmptyCollection(keywordFieldList)){
+				for(String fieldName : keywordFieldList){
+					query = query + " AND " + fieldName + ":" + SuprUtil.encodeUrl(SuprUtil.formatUrl(keyword));
+				}
+			}
 		}
 		
 		// 普通参数
@@ -214,10 +227,12 @@ public class SolrUtil {
 			String[] param = params.split(";");
 			for(String str : param){
 				// 判断字段是否真实存在 否则过滤 categoryId:1100 必须要有categoryId字段
-				
-				// 判断格式是否正确 必须categoryId:1100 冒号分割
-				
-				query = query + " AND " + str;
+				if(isExistParam(str)){
+					// 判断格式是否正确 必须categoryId:1100 冒号分割
+					if(isRightFormat(str)){
+						query = query + " AND " + str;
+					}
+				}
 			}
 		}
 		
@@ -226,17 +241,19 @@ public class SolrUtil {
 		if(!StringUtils.isEmpty(sort)){
 			String[] so = sort.split(";");
 			for(String str : so){
-				// 判断格式是否正确 必须sort:desc 冒号分割
-
-				String[] sortParamValue = str.split(":");
-				String sortParam = sortParamValue[0];
-				String sortValue = sortParamValue[1];
-				// 判断字段是否真实存在且可排序  否则过滤
-				if(!StringUtils.isEmpty(sortValue)){
-					if(sortValue.equals(SORT_DESC)){
-						solrQuery.addSort(sortParam, ORDER.desc);
-					}else if(sortValue.equals(SORT_ASC)){
-						solrQuery.addSort(sortParam, ORDER.asc);
+				// 判断字段是否真实存在
+				if(isExistParam(str)){
+					if(isRightSortFormat(str)){
+						String[] sortParamValue = str.split(":");
+						String sortParam = sortParamValue[0];
+						String sortValue = sortParamValue[1];
+						if(!StringUtils.isEmpty(sortValue)){
+							if(sortValue.equals(SORT_DESC)){
+								solrQuery.addSort(sortParam, ORDER.desc);
+							}else if(sortValue.equals(SORT_ASC)){
+								solrQuery.addSort(sortParam, ORDER.asc);
+							}
+						}
 					}
 				}
 			}
@@ -247,14 +264,16 @@ public class SolrUtil {
 		if (!StringUtils.isEmpty(range)) {
 			String[] ran = range.split(";");
 			for (String str : ran) {
-				// 判断格式是否正确 必须comment:[1-3] 冒号分割
-
-				String[] rangeParamValue = str.split(":");
-				String rangeParam = rangeParamValue[0];
-				String rangeValue = rangeParamValue[1];
-				// 校验范围参数必须是[1-100]这种结构
+				// 判断字段是否真实存在
+				if(isExistParam(str)){
+					if(isRightRangeFormat(str)){
+						String[] rangeParamValue = str.split(":");
+						String rangeParam = rangeParamValue[0];
+						String rangeValue = rangeParamValue[1];
+						query = query + " AND " + rangeParam + ":" + rangeValue.replaceAll("-", " TO ");
+					}
+				}
 				
-				query = query + " AND " + rangeParam + ":" + rangeValue.replaceAll("-", " TO ");
 			}
 		}
 		
@@ -264,13 +283,15 @@ public class SolrUtil {
 		if (!StringUtils.isEmpty(attrs)) {
 			String[] attr = attrs.split(";");
 			for(String str : attr){
-				// 判断格式是否正确 必须attrId1:valueId1 冒号分割
-				
 				// 判断字段必须要有
-				
-				String[] s = str.split("_");
-				query = query + " AND attrvalue:" + s[0] + "=" + s[1];
-				attrSet.add(str.replaceAll("_", "="));
+				if(isExistParam(str)){
+					// 判断格式是否正确 必须attrId1:valueId1 冒号分割
+					if(isRightFormat(str)){
+						String[] s = str.split("_");
+						query = query + " AND attrvalue:" + s[0] + "=" + s[1];
+						attrSet.add(str.replaceAll("_", "="));
+					}
+				}
 			}
 			// 绑定到线程中
 			facetFieldThreadLocal.set(attrSet);
@@ -404,6 +425,22 @@ public class SolrUtil {
 			result = response.getStatus();
 		} catch (Exception e) {
 			logger.error("更新索引异常,索引对象:"+product.toString(),e);
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 删除全量索引
+	 * @return
+	 */
+	public int deleteAllIndex() {
+		int result = 1;
+		try {
+			UpdateResponse response = server.deleteByQuery("*:*");
+			result = response.getStatus();
+		} catch (Exception e) {
+			logger.error("删除全量索引异常...",e);
 		}
 		
 		return result;

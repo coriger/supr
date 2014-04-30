@@ -164,4 +164,9 @@ public class SearchServiceImpl implements SearchService{
 	public void updateIncIndexStatus(IncProductIndex product) {
 		searchMapper.updateIncIndexStatus(product);
 	}
+	
+	@Override
+	public int deleteAllIndex() {
+		return solrUtil.deleteAllIndex();
+	}
 }
