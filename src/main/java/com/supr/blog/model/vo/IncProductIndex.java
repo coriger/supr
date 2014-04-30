@@ -1,5 +1,7 @@
 package com.supr.blog.model.vo;
 
+import org.apache.solr.client.solrj.beans.Field;
+
 /**
  * @功能：增量索引
  * @作者： ljt
@@ -7,12 +9,16 @@ package com.supr.blog.model.vo;
  */
 public class IncProductIndex {
 	
+	@Field("id")
 	private String productId;
 	
+	@Field
 	private String productName;
 	
+	@Field
 	private float price;
 	
+	@Field
 	private int saleCount;
 	
 	private int categoryId;
@@ -85,5 +91,10 @@ public class IncProductIndex {
 
 	public void setIndexStatue(int indexStatue) {
 		this.indexStatue = indexStatue;
+	}
+
+	@Override
+	public String toString() {
+		return "IncProductIndex [productId=" + productId + ", productName=" + productName + ", price=" + price + ", saleCount=" + saleCount + ", categoryId=" + categoryId + ", indexType=" + indexType + ", indexId=" + indexId + ", indexStatue=" + indexStatue + "]";
 	}
 }

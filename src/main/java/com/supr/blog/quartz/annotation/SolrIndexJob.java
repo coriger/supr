@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.supr.blog.model.vo.IncProductIndex;
 import com.supr.blog.service.SearchService;
 import com.supr.blog.solr.SolrUtil;
+import com.supr.blog.util.Constant;
 import com.supr.blog.util.SuprUtil;
 
 /**
@@ -66,7 +67,7 @@ public class SolrIndexJob {
 	private SolrUtil solrUtil;
 	
 	
-	@Scheduled(cron="* * * * * ?")
+	@Scheduled(cron="* 0/1 * * * ?")
 	public void buildSorlIndex(){
 		logger.info("solr增量索引定时任务开始执行...");
 		
@@ -90,8 +91,8 @@ public class SolrIndexJob {
 				if(!SuprUtil.isEmptyCollection(productList)){
 					for(IncProductIndex product : productList){
 						// 0：处理成功   其余：处理失败
-						int result = 1;
-						switch (product.getIndexId()) {
+						int result = Constant.FAIL;
+						switch (product.getIndexType()) {
 							case INSERT_INDEX:
 								// 新增索引
 								result = solrUtil.insertIndex(product);
@@ -108,7 +109,7 @@ public class SolrIndexJob {
 								break;
 						}
 						// solr处理成功   则更新数据状态  为已处理  否则不更新
-						if(result == 0){
+						if(result == Constant.SUCCESS){
 							product.setIndexStatue(PROCESSED);
 							searchService.updateIncIndexStatus(product);
 						}
