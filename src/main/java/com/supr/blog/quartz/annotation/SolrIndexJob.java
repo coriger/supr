@@ -78,6 +78,11 @@ public class SolrIndexJob {
 		 * 		*更新：先删除再添加
 		 * 		*删除：根据Id删除索引
 		 * 3、处理完后再更新数据库表状态
+		 * 
+		 * 4、待优化：
+		 * 		-、增量索引现在是单个提交，性能不好，最好批量提交
+		 * 		-、solrServer多线程环境下commit()问题
+		 * 		-、solr commit 和  数据库update操作放在一个事物中
 		 */
 		// 获取索引表待处理数据总量
 		int indexCount = searchService.getIncrementIndexCount();
