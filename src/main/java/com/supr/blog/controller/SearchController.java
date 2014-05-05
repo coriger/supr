@@ -13,7 +13,6 @@ import com.supr.blog.model.vo.ProductRequestVo;
 import com.supr.blog.model.vo.Result;
 import com.supr.blog.service.SearchService;
 import com.supr.blog.util.Constant;
-import com.supr.blog.util.StringUtil;
 import com.supr.blog.util.pager.SolrPager;
 
 /**
@@ -47,6 +46,17 @@ public class SearchController extends BaseController{
 			
 			
 		}
+	}
+	
+	/**
+	 * 自动提示
+	 */
+	@RequestMapping("/suggest")
+	public @ResponseBody  
+	Result getSuggestByKeyword(){
+		
+		
+		return new Result("", "");
 	}
 	
 }
