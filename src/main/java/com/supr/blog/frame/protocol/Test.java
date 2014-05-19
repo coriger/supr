@@ -1,6 +1,5 @@
 package com.supr.blog.frame.protocol;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 public class Test {

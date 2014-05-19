@@ -1,7 +1,6 @@
 package com.supr.blog.frame.protocol;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 
 import com.supr.blog.frame.protocol.filter.MessageFilterHandler;
 
