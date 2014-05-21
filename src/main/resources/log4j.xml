@@ -71,7 +71,7 @@
 	</appender> 
 
 	<root>
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="LOG.CONSOLE" />
 		<appender-ref ref="LOG.DEBUG" />
 		<appender-ref ref="LOG.INFO" />

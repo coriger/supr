@@ -67,7 +67,7 @@ public class SolrIndexJob {
 	private SolrUtil solrUtil;
 	
 	
-	@Scheduled(cron="* 0/1 * * * ?")
+//	@Scheduled(cron="* 0/1 * * * ?")
 	public void buildSorlIndex(){
 		logger.info("solr增量索引定时任务开始执行...");
 		

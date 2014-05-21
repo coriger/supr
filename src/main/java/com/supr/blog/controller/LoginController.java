@@ -5,7 +5,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,7 +32,7 @@ public class LoginController {
 	
 	@RequestMapping(value="/submit")
 	public @ResponseBody 
-	Result login(@RequestBody Admin admin,HttpSession session){
+	Result login(Admin admin,HttpSession session){
 		Result result = null;
 		// 校验用户名 
 		if (StringUtils.isEmpty(admin.getUsername())) {

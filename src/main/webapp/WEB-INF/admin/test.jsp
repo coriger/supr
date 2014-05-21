@@ -1,12 +1,23 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	这里是jsp ${username}
-</body>
-</html>
+// 删除文章
+function deleteBlog(blogId){
+		$.ajax({
+				url : "./blog/delete/" + blogId,
+				method : "post",
+				contentType : "application/json",
+				dataType : "json",
+				success : function(data) {
+					if (data.resultCode == 'error') {
+						// 这里可以考虑记住标签id 然后自动选择出错字段
+						alert(data.errorInfo);
+					} else if (data.resultCode == 'success') {
+						$("#"+blogId).remove();
+					}
+				}
+		})
+}
+
+// 编辑文章
+function editBlog(blogId){
+	$("#form").attr("action","./blog/edit/" + blogId);
+	$("#form").submit();
+}
