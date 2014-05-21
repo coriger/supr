@@ -23,4 +23,8 @@
 		where username = #{username}
 	</select>
 	
+	<select id="getAdminList" resultType="com.supr.blog.model.Admin" >
+		select * from admin  
+	</select>
+	
 </mapper>
