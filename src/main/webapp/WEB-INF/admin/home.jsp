@@ -21,11 +21,8 @@
 <script type="text/javascript">
 	
 	function addTab(tabId,htmlUrl,title){
-		alert("打开个tab");
-		alert(tabId+":"+htmlUrl+":"+title);
 		//如果当前id的tab不存在则创建一个tab
 	    if($("#"+tabId).html()==null){
-	    	var name = 'iframe_'+tabId;
 	        $('#center-tab').tabs('add',{  
 	            title: title,           
 	            closable:true,
@@ -33,7 +30,7 @@
 	            cache : false,  
 	            //注：使用iframe即可防止同一个页面出现js和css冲突的问题  
 	            content : createFrame(tabId,"./admin/list")
-	        });  
+	        });
 	    }else{
 	    	alert("已存在...");
 	    }
