@@ -1,5 +1,7 @@
 package com.supr.blog.service;
 
+import java.util.List;
+
 import com.supr.blog.model.Admin;
 
 /**
@@ -44,5 +46,11 @@ public interface AdminService {
 	Boolean usernameDisabled(String username);
 
 	Admin getAdminByNameAndPwd(Admin admin);
+
+	/**
+	 * 管理员列表
+	 * @return
+	 */
+	List<Admin> getAdminList();
 	
 }

@@ -1,5 +1,7 @@
 package com.supr.blog.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +65,11 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public Admin getAdminByNameAndPwd(Admin admin) {
 		return adminMapper.adminExists(admin);
+	}
+	
+	@Override
+	public List<Admin> getAdminList() {
+		return adminMapper.getAdminList();
 	}
 	
 }
