@@ -6,6 +6,10 @@ package com.supr.blog.model;
  * @时间： 2014-4-11 下午5:41:52
  */
 public class Admin {
+	
+	public static final Boolean isEnable = true;
+	
+	public static final Boolean disEnable = false;
 
 	private Integer userId;
 

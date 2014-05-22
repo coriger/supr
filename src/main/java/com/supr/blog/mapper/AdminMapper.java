@@ -6,7 +6,7 @@ import com.supr.blog.model.Admin;
 
 public interface AdminMapper {
 	
-	void addAdmin(Admin admin);
+	int addAdmin(Admin admin);
 
 	Admin getAdminByEmail(String email);
 
@@ -15,5 +15,11 @@ public interface AdminMapper {
 	Admin adminExists(Admin admin);
 
 	List<Admin> getAdminList();
+
+	int deleteBatch(String[] adminIds);
+
+	int updateAdmin(Admin admin);
+
+	Admin getAdminById(String userId);
 
 }

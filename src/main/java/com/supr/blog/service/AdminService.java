@@ -53,4 +53,17 @@ public interface AdminService {
 	 */
 	List<Admin> getAdminList();
 	
+	/**
+	 * 根据Id批量删除管理员
+	 * @param adminIds
+	 * @return
+	 */
+	int deleteBatch(String[] adminIds);
+
+	int addAdmin(Admin admin);
+
+	int updateAdmin(Admin admin);
+
+	Admin getAdminById(String userId);
+	
 }

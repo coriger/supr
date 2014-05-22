@@ -35,7 +35,6 @@
 	
 	// 登录
 	function login(){
-		console.log($("#form").serialize());
 		$.ajax({
 			url : "./login/submit/",
 			data: $("#form").serialize(),

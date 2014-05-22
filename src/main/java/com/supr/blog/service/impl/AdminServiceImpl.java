@@ -72,4 +72,23 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.getAdminList();
 	}
 	
+	@Override
+	public int deleteBatch(String[] adminIds) {
+		return adminMapper.deleteBatch(adminIds);
+	}
+	
+	@Override
+	public int addAdmin(Admin admin) {
+		return adminMapper.addAdmin(admin);
+	}
+	
+	@Override
+	public int updateAdmin(Admin admin) {
+		return adminMapper.updateAdmin(admin);
+	}
+	
+	@Override
+	public Admin getAdminById(String userId) {
+		return adminMapper.getAdminById(userId);
+	}
 }
