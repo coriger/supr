@@ -5,6 +5,6 @@ package com.supr.blog.jsoup.config;
  * @author	ljt
  * @time	2014-5-26 上午10:40:30
  */
-public class ParseConfig {
+public interface ParseConfig {
 
 }

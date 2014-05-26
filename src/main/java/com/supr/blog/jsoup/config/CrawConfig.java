@@ -5,6 +5,7 @@ package com.supr.blog.jsoup.config;
  * @author	ljt
  * @time	2014-5-26 上午10:40:19
  */
-public class CrawConfig {
-
+public interface CrawConfig {
+	
+	
 }

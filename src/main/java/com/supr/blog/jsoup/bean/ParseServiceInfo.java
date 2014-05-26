@@ -9,8 +9,12 @@ import com.supr.blog.jsoup.config.ParseConfig;
  */
 public class ParseServiceInfo {
 
+	// 解析服务名称
 	private String parseServiceName;
 	
 	private ParseConfig parseConfig;
+
+	// 解析服务状态
+	private ParseStatus parseStatus;
 	
 }

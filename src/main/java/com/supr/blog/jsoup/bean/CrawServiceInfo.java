@@ -9,8 +9,12 @@ import com.supr.blog.jsoup.config.CrawConfig;
  */
 public class CrawServiceInfo {
 	
+	// 爬虫服务名
 	private String crawServiceName;
 	
 	private CrawConfig crawConfig;
 	
+	// 爬虫状态
+	private CrawStatus crawStatus;
 }
+

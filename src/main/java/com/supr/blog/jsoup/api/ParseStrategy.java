@@ -1,5 +1,7 @@
 package com.supr.blog.jsoup.api;
 
+import com.supr.blog.jsoup.config.ParseConfig;
+
 /**
  * @desc	解析策略
  * @author	ljt
@@ -10,6 +12,6 @@ public interface ParseStrategy {
 	/**
 	 * 解析方法    每个策略都会有一个独立的解析方法
 	 */
-	public void parse();
+	public void parse(ParseConfig config);
 	
 }
