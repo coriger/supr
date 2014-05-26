@@ -5,7 +5,7 @@
 	<form id="admin_form" method="post">
 		<div>
             <label>用户名:</label>
-            <input name="username" value="${admin.username}" type="text">
+	            <input name="username" value="${admin.username}" type="text">
         </div>
         <div>
             <label>密码:</label>
