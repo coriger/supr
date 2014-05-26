@@ -1,5 +1,7 @@
 package com.supr.blog.jsoup.bean;
 
+import com.supr.blog.jsoup.config.ParseConfig;
+
 /**
  * @desc	解析服务bean
  * @author	ljt
@@ -9,6 +11,6 @@ public class ParseServiceInfo {
 
 	private String parseServiceName;
 	
-	private Integer sum;
+	private ParseConfig parseConfig;
 	
 }
