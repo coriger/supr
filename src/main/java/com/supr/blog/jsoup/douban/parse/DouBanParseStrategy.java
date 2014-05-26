@@ -1,8 +1,9 @@
 package com.supr.blog.jsoup.douban.parse;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,6 +14,7 @@ import com.supr.blog.jsoup.api.ParseStrategy;
 import com.supr.blog.jsoup.config.ParseConfig;
 import com.supr.blog.jsoup.douban.bean.DouBanBean;
 import com.supr.blog.jsoup.douban.config.DouBanParseConfig;
+import com.supr.blog.util.SuprUtil;
 
 /**
  * @desc	豆瓣解析策略
@@ -23,11 +25,13 @@ public class DouBanParseStrategy implements ParseStrategy{
 	
 	@Override
 	public void parse(ParseConfig config) {
+		List<DouBanBean> douBanList = new ArrayList<DouBanBean>();
 		DouBanParseConfig douBanParseConfig = null;
 		if(config instanceof DouBanParseConfig){
 			douBanParseConfig = (DouBanParseConfig)config;
 		}
 		
+		// 列表解析
 		if(null != douBanParseConfig){
 			String directoryPath = douBanParseConfig.getFileDirectoryPath();
 			// 遍历文件夹所有文件  依次解析
@@ -49,6 +53,7 @@ public class DouBanParseStrategy implements ParseStrategy{
 							Element titleDiv = titleDivs.get(0);
 							bean.setTitle(titleDiv.attr("title"));
 							String href = titleDiv.attr("href");
+							bean.setUrl(href);
 							String[] hrefs = href.split("/");
 							bean.setId(hrefs[hrefs.length-1]);
 							
@@ -77,13 +82,32 @@ public class DouBanParseStrategy implements ParseStrategy{
 							bean.setCommentNum(commentDiv.text());
 							
 							System.out.println(bean);
+							douBanList.add(bean);
 						} catch (Exception e) {
+							System.out.println("+++");
 							continue;
 						}
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+		
+		System.out.println("开始解析实体....");
+		
+		// 实体解析(抓取内容简介、作者简介、书评、读书笔记)
+		if(!SuprUtil.isEmptyCollection(douBanList)){
+			for(DouBanBean bean : douBanList){
+				System.out.println("实体Id:"+bean.getId());
+				// 获取内容简介
+				
+				// 获取作者简介
+				
+				// 获取评论  链接模板：http://book.douban.com/subject/1317293/reviews
+				
+				// 获取读书笔记  链接模板：http://book.douban.com/subject/1317288/annotation
+				
 			}
 		}
 	}

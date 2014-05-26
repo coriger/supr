@@ -8,7 +8,10 @@ import com.supr.blog.httpclient.HttpClientUtil;
 import com.supr.blog.jsoup.api.CrawService;
 import com.supr.blog.jsoup.api.UrlGeneratorStratery;
 import com.supr.blog.jsoup.bean.CrawServiceInfo;
+import com.supr.blog.jsoup.douban.DouBanJsoupUtil;
+import com.supr.blog.jsoup.douban.bean.DouBanBean;
 import com.supr.blog.jsoup.douban.config.DouBanCrawConfig;
+import com.supr.blog.util.SuprUtil;
 
 /**
  * @desc	豆瓣网站爬取服务
@@ -52,20 +55,37 @@ public class DouBanCrawService implements CrawService{
 	 */
 	@Override
 	public void start() {
+		List<String> bookUrlList = null;
 		String fileName = douBanCrawConfig.getCrawFileName();
 		int i = 0;
 		for(String url : urlList){
-			// 读取url 把响应消息下载到本地
+			// 读取url 获取实体url
 			InputStream is = HttpClientUtil.getResponse(url);
-			HttpClientUtil.writeToFile(fileName+(++i)+".html",is);
-			System.out.println("下载完毕，路径："+fileName+i);
+			// 实体url
+			bookUrlList = DouBanJsoupUtil.getListFromStream(is);
+		}
+		
+		if(!SuprUtil.isEmptyCollection(bookUrlList)){
+			for(String url : bookUrlList){
+				// 读取url
+				InputStream is = HttpClientUtil.getResponse(url);
+				// 解析成bean
+				DouBanBean bean = DouBanJsoupUtil.getBeanFromStream(is);
+				// 下载评论到本地
+				
+				// 下载读书笔记到本地
+				
+				// 下载书籍首页到本地
+				
+			}
 		}
 	}
 	
 	public static void main(String[] args) {
 		List<String> list = new ArrayList<String>();
-		list.add("小说");list.add("文学");list.add("随笔");list.add("中国文学");list.add("经典");list.add("散文");
-		list.add("杂文");list.add("名著");list.add("诗词");list.add("港台");list.add("漫画");list.add("言情");
+//		list.add("小说");list.add("文学");list.add("随笔");list.add("中国文学");list.add("经典");list.add("散文");
+//		list.add("杂文");list.add("名著");list.add("诗词");list.add("港台");list.add("言情");
+		list.add("漫画");
 		douBanCrawConfig = new DouBanCrawConfig();
 		douBanCrawConfig.setTagList(list);
 		douBanCrawConfig.setMaxCount(1000);

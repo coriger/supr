@@ -9,6 +9,9 @@ import com.supr.blog.jsoup.douban.config.DouBanCrawConfig;
 
 /**
  * @desc	豆瓣url爬取生成策略
+ * 			
+ * 			1、根据tag标签抓取所有实体页面以及实体的评论、读书笔记页面
+ *
  * @author	ljt
  * @time	2014-5-26 上午10:22:12
  */

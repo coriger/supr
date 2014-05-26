@@ -1,6 +1,12 @@
 package com.supr.blog.jsoup.douban.bean;
 
+import java.util.List;
 
+/**
+ * @desc	豆瓣读书bean
+ * @author	ljt
+ * @time	2014-5-26 下午3:36:33
+ */
 public class DouBanBean {
 	
 	// 实体id
@@ -9,8 +15,14 @@ public class DouBanBean {
 	// 实体真实url
 	private String url;
 	
+	// 实体图片url
+	private String imageUrl;
+	
 	// 实体名称
 	private String title;
+	
+	// 别名
+	private String secondTitle;
 	
 	// 发行时间
 	private String publishDate;
@@ -18,13 +30,22 @@ public class DouBanBean {
 	// 作者
 	private String author;
 	
+	// 作者简介
+	private String authorDesc;
+	
+	// 译者
+	private String translator;
+	
+	// 页数
+	private String pageTotal;
+	
 	// 价格
 	private String price;
 	
 	// 发行商
 	private String publishName;
 	
-	// 简述
+	// 内容简介
 	private String desc;
 	
 	// 评分
@@ -32,6 +53,15 @@ public class DouBanBean {
 	
 	// 评论数
 	private String commentNum;
+	
+	// 书籍ISBN
+	private String ISBN;
+	
+	// 评论
+	private List<DouBanCommentBean> commentList;
+	
+	// 读书笔记
+	private List<DouBanReadBean> readList;
 	
 	public String getId() {
 		return id;
@@ -105,11 +135,88 @@ public class DouBanBean {
 		this.commentNum = commentNum;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public List<DouBanCommentBean> getCommentList() {
+		return commentList;
+	}
+
+	public void setCommentList(List<DouBanCommentBean> commentList) {
+		this.commentList = commentList;
+	}
+
+	public List<DouBanReadBean> getReadList() {
+		return readList;
+	}
+
+	public void setReadList(List<DouBanReadBean> readList) {
+		this.readList = readList;
+	}
+	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	
+	public String getISBN() {
+		return ISBN;
+	}
+
+	public void setISBN(String iSBN) {
+		ISBN = iSBN;
+	}
+
+	public String getTranslator() {
+		return translator;
+	}
+
+	public void setTranslator(String translator) {
+		this.translator = translator;
+	}
+
+	public String getPageTotal() {
+		return pageTotal;
+	}
+
+	public void setPageTotal(String pageTotal) {
+		this.pageTotal = pageTotal;
+	}
+
+	public String getAuthorDesc() {
+		return authorDesc;
+	}
+
+	public void setAuthorDesc(String authorDesc) {
+		this.authorDesc = authorDesc;
+	}
+
+	public String getSecondTitle() {
+		return secondTitle;
+	}
+
+	public void setSecondTitle(String secondTitle) {
+		this.secondTitle = secondTitle;
+	}
+
 	@Override
 	public String toString() {
-		return "DouBanBean [id=" + id + ", title=" + title + ", publishDate="
-				+ publishDate + ", author=" + author + ", price=" + price
-				+ ", publishName=" + publishName + ", desc=" + desc
-				+ ", rateNum=" + rateNum + ", commentNum=" + commentNum + "]";
+		return "DouBanBean [id=" + id + ", url=" + url + ", imageUrl="
+				+ imageUrl + ", title=" + title + ", publishDate="
+				+ publishDate + ", author=" + author + ", authorDesc="
+				+ authorDesc + ", translator=" + translator + ", pageTotal="
+				+ pageTotal + ", price=" + price + ", publishName="
+				+ publishName + ", desc=" + desc + ", rateNum=" + rateNum
+				+ ", commentNum=" + commentNum + ", ISBN=" + ISBN
+				+ ", commentList=" + commentList + ", readList=" + readList
+				+ "]";
 	}
 }
