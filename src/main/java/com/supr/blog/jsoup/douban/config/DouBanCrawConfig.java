@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.supr.blog.jsoup.config.CrawConfig;
+import com.supr.blog.jsoup.douban.FilterType;
 import com.supr.blog.jsoup.douban.LanguageType;
 
 /**
@@ -45,6 +46,15 @@ public class DouBanCrawConfig implements CrawConfig{
 	
 	// 爬取指定类型的数据  中文 英文 根据文件title来区分
 	private LanguageType languageType;
+	
+	// 黑名单 含有指定字符的不被抓取
+	private List<String> blackKeyWord;
+	
+	// 白名单 只抓取指定字符
+	private List<String> whiteKeyWord;
+	
+	// 过滤类型
+	private FilterType filterType;
 	
 	public Integer getMaxCount() {
 		return maxCount;
@@ -132,5 +142,29 @@ public class DouBanCrawConfig implements CrawConfig{
 
 	public void setLanguageType(LanguageType languageType) {
 		this.languageType = languageType;
+	}
+
+	public List<String> getBlackKeyWord() {
+		return blackKeyWord;
+	}
+
+	public void setBlackKeyWord(List<String> blackKeyWord) {
+		this.blackKeyWord = blackKeyWord;
+	}
+
+	public List<String> getWhiteKeyWord() {
+		return whiteKeyWord;
+	}
+
+	public void setWhiteKeyWord(List<String> whiteKeyWord) {
+		this.whiteKeyWord = whiteKeyWord;
+	}
+
+	public FilterType getFilterType() {
+		return filterType;
+	}
+
+	public void setFilterType(FilterType filterType) {
+		this.filterType = filterType;
 	}
 }

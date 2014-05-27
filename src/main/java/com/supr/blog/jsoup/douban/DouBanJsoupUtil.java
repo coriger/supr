@@ -158,7 +158,7 @@ public class DouBanJsoupUtil {
 					}
 					System.out.println("评论数："+count+";最大页数："+max);
 					for(int i = 1;i<=max;i++){
-						commentUrlList.add(commentUrl + "?score=&start="+(i*25));
+						commentUrlList.add(commentUrl + "?score=&start="+(i-1)*25);
 					}
 				}
 				
@@ -189,7 +189,7 @@ public class DouBanJsoupUtil {
 						max = count/10 + 1;
 					}
 					for(int i = 1;i<=max;i++){
-						readUrlList.add(readUrl + "?sort=rank&start="+(i*10));
+						readUrlList.add(readUrl + "?sort=rank&start="+(i-1)*10);
 					}
 				}
 				bean.setReadUrlList(readUrlList);

@@ -9,6 +9,7 @@ import com.supr.blog.jsoup.api.CrawService;
 import com.supr.blog.jsoup.api.UrlGeneratorStratery;
 import com.supr.blog.jsoup.bean.CrawServiceInfo;
 import com.supr.blog.jsoup.douban.DouBanJsoupUtil;
+import com.supr.blog.jsoup.douban.FilterType;
 import com.supr.blog.jsoup.douban.bean.DouBanBean;
 import com.supr.blog.jsoup.douban.config.DouBanCrawConfig;
 import com.supr.blog.util.SuprUtil;
@@ -66,6 +67,18 @@ public class DouBanCrawService implements CrawService{
 		
 		if(!SuprUtil.isEmptyCollection(bookUrlList)){
 			for(String url : bookUrlList){
+				// 过滤器
+				FilterType type = douBanCrawConfig.getFilterType();
+				if(type.equals(FilterType.BLACK)){// 黑名单模式
+					if(douBanCrawConfig.getBlackKeyWord().contains(url)){
+						continue;
+					}
+				}else if(type.equals(FilterType.WHITE)){// 白名单模式
+					if(!douBanCrawConfig.getBlackKeyWord().contains(url)){
+						continue;
+					}
+				}
+				
 				// 解析成bean
 				DouBanBean bean = DouBanJsoupUtil.getBeanFromStream(url);
 				// 下载书籍首页到本地
@@ -75,17 +88,21 @@ public class DouBanCrawService implements CrawService{
 				List<String> commentUrl = bean.getCommentUrlList();
 				if(!SuprUtil.isEmptyCollection(commentUrl)){
 					int k = 0;
+					System.out.println("开始下载评论...");
 					for(String str : commentUrl){
 						HttpClientUtil.writeToFile(fileName+bean.getTitle()+"评论"+(k+=1)+"-"+(k+=25)+".html", str);
 					}
+					System.out.println("结束下载评论...");
 				}
 				// 下载读书笔记到本地
 				List<String> readUrl = bean.getReadUrlList();
 				if(!SuprUtil.isEmptyCollection(readUrl)){
 					int v = 0;
+					System.out.println("开始下载笔记...");
 					for(String str : readUrl){
 						HttpClientUtil.writeToFile(fileName+bean.getTitle()+"读书笔记"+(v+=1)+"-"+(v+=10)+".html", str);
 					}
+					System.out.println("结束下载笔记...");
 				}
 			}
 		}
@@ -93,16 +110,24 @@ public class DouBanCrawService implements CrawService{
 	
 	public static void main(String[] args) {
 		List<String> list = new ArrayList<String>();
-//		list.add("小说");list.add("文学");list.add("随笔");list.add("中国文学");list.add("经典");list.add("散文");
+//		list.add("哲学");list.add("文学");list.add("随笔");list.add("中国文学");list.add("经典");list.add("散文");
 //		list.add("杂文");list.add("名著");list.add("诗词");list.add("港台");list.add("言情");
 //		list.add("漫画");
-		list.add("java");
+		list.add("哲学");
 		douBanCrawConfig = new DouBanCrawConfig();
 		douBanCrawConfig.setTagList(list);
 		douBanCrawConfig.setMaxCount(1000);
 		douBanCrawConfig.setStartNum(0);
 		douBanCrawConfig.setStepCount(20);
 		douBanCrawConfig.setCrawFileName("E:\\craw\\");
+		// 黑名单
+		douBanCrawConfig.setFilterType(FilterType.BLACK);
+		
+		List<String> blackList = new ArrayList<String>();
+		blackList.add("9787309041644");
+		blackList.add("9787115282828");
+		blackList.add("9787508044019");
+		douBanCrawConfig.setBlackKeyWord(blackList);
 		
 		DouBanCrawService service = new DouBanCrawService();
 		
