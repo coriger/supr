@@ -60,8 +60,14 @@ public class DouBanBean {
 	// 评论
 	private List<DouBanCommentBean> commentList;
 	
+	// 评论url
+	private List<String> commentUrlList;
+	
 	// 读书笔记
 	private List<DouBanReadBean> readList;
+	
+	// 读书笔记url
+	private List<String> readUrlList;
 	
 	public String getId() {
 		return id;
@@ -207,16 +213,19 @@ public class DouBanBean {
 		this.secondTitle = secondTitle;
 	}
 
-	@Override
-	public String toString() {
-		return "DouBanBean [id=" + id + ", url=" + url + ", imageUrl="
-				+ imageUrl + ", title=" + title + ", publishDate="
-				+ publishDate + ", author=" + author + ", authorDesc="
-				+ authorDesc + ", translator=" + translator + ", pageTotal="
-				+ pageTotal + ", price=" + price + ", publishName="
-				+ publishName + ", desc=" + desc + ", rateNum=" + rateNum
-				+ ", commentNum=" + commentNum + ", ISBN=" + ISBN
-				+ ", commentList=" + commentList + ", readList=" + readList
-				+ "]";
+	public List<String> getCommentUrlList() {
+		return commentUrlList;
+	}
+
+	public void setCommentUrlList(List<String> commentUrlList) {
+		this.commentUrlList = commentUrlList;
+	}
+
+	public List<String> getReadUrlList() {
+		return readUrlList;
+	}
+
+	public void setReadUrlList(List<String> readUrlList) {
+		this.readUrlList = readUrlList;
 	}
 }
