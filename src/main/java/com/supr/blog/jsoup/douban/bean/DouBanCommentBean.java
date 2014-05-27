@@ -7,5 +7,47 @@ package com.supr.blog.jsoup.douban.bean;
  */
 public class DouBanCommentBean {
 	
+	// 用户名
+	private String username;
 	
+	// 用户头像
+	private String userUrl;
+
+	// 评论
+	private String comment;
+	
+	// 评论Id
+	private Integer commentId;
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getUserUrl() {
+		return userUrl;
+	}
+
+	public void setUserUrl(String userUrl) {
+		this.userUrl = userUrl;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public Integer getCommentId() {
+		return commentId;
+	}
+
+	public void setCommentId(Integer commentId) {
+		this.commentId = commentId;
+	}
 }

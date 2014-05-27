@@ -21,8 +21,6 @@ import org.apache.http.impl.client.HttpClients;
  */
 public class HttpClientUtil {
 	
-	private static HttpClientUtil httpClientUtil = new HttpClientUtil();
-	
 	private static CloseableHttpClient httpClient;
 	
 	private HttpClientUtil(){

@@ -1,6 +1,5 @@
 package com.supr.blog.jsoup.douban.craw;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,34 +55,36 @@ public class DouBanCrawService implements CrawService{
 	 */
 	@Override
 	public void start() {
-		List<String> bookUrlList = null;
+		List<String> bookUrlList = new ArrayList<String>(1000);
 		String fileName = douBanCrawConfig.getCrawFileName();
 		for(String url : urlList){
 			// 实体url
-			bookUrlList = DouBanJsoupUtil.getListFromUrl(url);
+			bookUrlList.addAll(DouBanJsoupUtil.getListFromUrl(url));
 		}
 		
 		System.out.println("++++++++++++++++++++解析标签列表完成++++++++++++++++++++");
 		
 		if(!SuprUtil.isEmptyCollection(bookUrlList)){
 			for(String url : bookUrlList){
+				// 解析成bean
+				DouBanBean bean = DouBanJsoupUtil.getBeanFromStream(url);
+				
 				// 过滤器
 				FilterType type = douBanCrawConfig.getFilterType();
 				if(type.equals(FilterType.BLACK)){// 黑名单模式
-					if(douBanCrawConfig.getBlackKeyWord().contains(url)){
+					if(douBanCrawConfig.getBlackKeyWord().contains(bean.getISBN())){
 						continue;
 					}
 				}else if(type.equals(FilterType.WHITE)){// 白名单模式
-					if(!douBanCrawConfig.getBlackKeyWord().contains(url)){
+					if(!douBanCrawConfig.getBlackKeyWord().contains(bean.getISBN())){
 						continue;
 					}
 				}
 				
-				// 解析成bean
-				DouBanBean bean = DouBanJsoupUtil.getBeanFromStream(url);
 				// 下载书籍首页到本地
 				System.out.println(bean.getUrl()+"下载到："+fileName+bean.getTitle()+".html");
 				HttpClientUtil.writeToFile(fileName+bean.getTitle()+".html", bean.getUrl());
+				
 				// 下载评论到本地
 				List<String> commentUrl = bean.getCommentUrlList();
 				if(!SuprUtil.isEmptyCollection(commentUrl)){
@@ -94,6 +95,7 @@ public class DouBanCrawService implements CrawService{
 					}
 					System.out.println("结束下载评论...");
 				}
+				
 				// 下载读书笔记到本地
 				List<String> readUrl = bean.getReadUrlList();
 				if(!SuprUtil.isEmptyCollection(readUrl)){
