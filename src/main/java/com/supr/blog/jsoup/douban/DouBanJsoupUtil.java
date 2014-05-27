@@ -94,22 +94,26 @@ public class DouBanJsoupUtil {
 				parseContent(ele.text(),bean,con);
 			}
 			
-			// 解析内容简介
-			Elements descs = doc.select("#link-report .intro");
-			Element desc = null;
-			if(descs.size() == 1){
-				desc = descs.get(0);
-			}else if(descs.size() > 1){
-				desc = descs.get(descs.size() -1);
-			}
-			
-			descs = desc.getElementsByTag("p");
 			StringBuffer sb = new StringBuffer();
-			for(Element ele : descs){
-				sb.append(ele.text());
+			
+			// 解析内容简介
+			Elements descs = doc.select("div.related_info + h2");
+			if(null != descs && descs.size() > 0 && descs.get(0).text().contains("内容简介")){
+				descs = doc.select("#link-report .intro");
+				Element desc = null;
+				if(descs.size() == 1){
+					desc = descs.get(0);
+				}else if(descs.size() > 1){
+					desc = descs.get(descs.size() -1);
+				}
+				
+				descs = desc.getElementsByTag("p");
+				for(Element ele : descs){
+					sb.append(ele.text());
+				}
+				bean.setDesc(sb.toString());
+				System.out.println("内容简介："+bean.getDesc());
 			}
-			bean.setDesc(sb.toString());
-			System.out.println("内容简介："+bean.getDesc());
 			
 			// 解析作者简介
 			Elements authors = doc.select("#link-report + h2");
