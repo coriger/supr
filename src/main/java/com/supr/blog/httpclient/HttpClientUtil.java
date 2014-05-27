@@ -80,4 +80,35 @@ public class HttpClientUtil {
 		}
 	}
 	
+	
+	public static void writeToFile(String fileName, String url) {
+		InputStream is = getResponse(url);
+		BufferedOutputStream bos = null;
+		try {
+			bos = new BufferedOutputStream(new FileOutputStream(new File(fileName)));
+			byte[] b = new byte[2048];
+			int s = 0;
+			while((s = is.read(b))!= -1){
+				bos.write(b, 0, s);
+			}
+			bos.flush();
+			bos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally{
+			if(null != bos){
+				try {
+					bos.close();
+				} catch (IOException e) {}
+			}
+			if(null != is){
+				try {
+					is.close();
+				} catch (IOException e) {}
+			}
+		}
+	}
+	
 }

@@ -6,5 +6,6 @@ package com.supr.blog.jsoup.douban.bean;
  * @time	2014-5-26 下午3:35:54
  */
 public class DouBanCommentBean {
-
+	
+	
 }
