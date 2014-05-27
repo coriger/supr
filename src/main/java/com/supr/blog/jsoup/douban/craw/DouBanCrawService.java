@@ -81,31 +81,33 @@ public class DouBanCrawService implements CrawService{
 					}
 				}
 				
-				// 下载书籍首页到本地
-				System.out.println(bean.getUrl()+"下载到："+fileName+bean.getTitle()+".html");
-				HttpClientUtil.writeToFile(fileName+bean.getTitle()+".html", bean.getUrl());
-				
-				// 下载评论到本地
-				List<String> commentUrl = bean.getCommentUrlList();
-				if(!SuprUtil.isEmptyCollection(commentUrl)){
-					int k = 0;
-					System.out.println("开始下载评论...");
-					for(String str : commentUrl){
-						HttpClientUtil.writeToFile(fileName+bean.getTitle()+"评论"+(k+=1)+"-"+(k+=25)+".html", str);
-					}
-					System.out.println("结束下载评论...");
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 				
-				// 下载读书笔记到本地
-				List<String> readUrl = bean.getReadUrlList();
-				if(!SuprUtil.isEmptyCollection(readUrl)){
-					int v = 0;
-					System.out.println("开始下载笔记...");
-					for(String str : readUrl){
-						HttpClientUtil.writeToFile(fileName+bean.getTitle()+"读书笔记"+(v+=1)+"-"+(v+=10)+".html", str);
-					}
-					System.out.println("结束下载笔记...");
-				}
+//				下载书籍首页到本地
+//				HttpClientUtil.writeToFile(fileName+bean.getTitle()+".html", bean.getUrl());
+				
+//				下载评论到本地
+//				List<String> commentUrl = bean.getCommentUrlList();
+//				if(!SuprUtil.isEmptyCollection(commentUrl)){
+//					int k = 0;
+//					for(String str : commentUrl){
+//						HttpClientUtil.writeToFile(fileName+bean.getTitle()+"评论"+(k+=1)+"-"+(k+=25)+".html", str);
+//					}
+//				}
+				
+//				下载读书笔记到本地
+//				List<String> readUrl = bean.getReadUrlList();
+//				if(!SuprUtil.isEmptyCollection(readUrl)){
+//					int v = 0;
+//					for(String str : readUrl){
+//						HttpClientUtil.writeToFile(fileName+bean.getTitle()+"读书笔记"+(v+=1)+"-"+(v+=10)+".html", str);
+//					}
+//				}
+				
 			}
 		}
 	}
@@ -114,8 +116,8 @@ public class DouBanCrawService implements CrawService{
 		List<String> list = new ArrayList<String>();
 //		list.add("哲学");list.add("文学");list.add("随笔");list.add("中国文学");list.add("经典");list.add("散文");
 //		list.add("杂文");list.add("名著");list.add("诗词");list.add("港台");list.add("言情");
-//		list.add("漫画");
-		list.add("哲学");
+		list.add("漫画");
+//		list.add("哲学");
 		douBanCrawConfig = new DouBanCrawConfig();
 		douBanCrawConfig.setTagList(list);
 		douBanCrawConfig.setMaxCount(1000);

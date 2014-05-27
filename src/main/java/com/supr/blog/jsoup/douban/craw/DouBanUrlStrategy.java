@@ -40,7 +40,7 @@ public class DouBanUrlStrategy implements UrlGeneratorStratery{
 				for(int i = douBanCrawConfig.getStartNum();i<douBanCrawConfig.getMaxCount();i+=douBanCrawConfig.getStepCount()){
 					param = "start="+i+"&type=T";
 					urlList.add(urlHead+"?"+param);
-					System.out.println(urlHead+"?"+param);
+//					System.out.println(urlHead+"?"+param);
 				}
 			}
 		}

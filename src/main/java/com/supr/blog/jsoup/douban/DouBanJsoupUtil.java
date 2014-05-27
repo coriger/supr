@@ -2,7 +2,6 @@ package com.supr.blog.jsoup.douban;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,19 +48,22 @@ public class DouBanJsoupUtil {
 	 */
 	public static List<String> getListFromUrl(String url){
 		List<String> list = new ArrayList<String>();
+		// 这种方式貌似不好 很容易被禁403
+		// Document doc = Jsoup.connect(url).get();
+		Document doc = Jsoup.parse(HttpClientUtil.getHtml(url));
+		
 		try {
-			Document doc = Jsoup.parse(new URL(url),20000);
-			Elements elements = doc.select("div.info > h2 > a");
-			for (Element ele : elements) {
-				System.out.println(ele.attr("href"));
-				list.add(ele.attr("href"));
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			// 休眠一下 
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
+		Elements elements = doc.select("div.info > h2 > a");
+		for (Element ele : elements) {
+			list.add(ele.attr("href"));
+		}
+
 		return list;
 	}
 
@@ -73,7 +75,7 @@ public class DouBanJsoupUtil {
 	public static DouBanBean getBeanFromStream(String url) {
 		DouBanBean bean = new DouBanBean();
 		try {
-			Document doc = Jsoup.parse(new URL(url),200000);
+			Document doc = Jsoup.parse(HttpClientUtil.getHtml(url));
 			// 书籍首页地址
 			bean.setUrl(url);
 			// 书籍名称
@@ -97,7 +99,7 @@ public class DouBanJsoupUtil {
 			StringBuffer sb = new StringBuffer();
 			
 			// 解析内容简介
-			Elements descs = doc.select("div.related_info + h2");
+			Elements descs = doc.select("div.related_info > h2");
 			if(null != descs && descs.size() > 0 && descs.get(0).text().contains("内容简介")){
 				descs = doc.select("#link-report .intro");
 				Element desc = null;
@@ -196,7 +198,7 @@ public class DouBanJsoupUtil {
 				System.out.println("读书笔记url列表：："+bean.getReadUrlList().toString());
 			}
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return bean;
