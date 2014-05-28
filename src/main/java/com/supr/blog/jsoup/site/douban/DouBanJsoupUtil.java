@@ -147,6 +147,12 @@ public class DouBanJsoupUtil {
 				System.out.println("作者简介："+bean.getAuthorDesc());
 			}
 			
+			/***********************************************************************
+			 * 
+			 * 评论、笔记解析   如果数据过多  效率很差   可以考虑只抓取一部分数据  参数配置
+			 * 
+			 ***********************************************************************/
+			
 			// 解析评论
 			String commentUrl = null;
 			String commentCount = null;
@@ -168,17 +174,23 @@ public class DouBanJsoupUtil {
 					}else{
 						max = count/25 + 1;
 					}
+					
 					System.out.println("评论数："+count+";最大页数："+max);
+					
+					max = Math.min(max,douBanCrawConfig.getCommentPageNum());
+					
 					for(int i = 1;i<=max;i++){
 						// 读取评论页面列表  返回评论Id集合
 						getCommentIdList(commentIdList,commentUrl + "?score=&start="+(i-1)*25);
 					}
 				}
 				
-				bean.setCommentNum(commentCount);
+				bean.setCommentNum(count);
 				bean.setCommentIdList(commentIdList);
 				System.out.println("评论数："+bean.getCommentNum());
 				System.out.println("评论Id列表：："+bean.getCommentIdList().toString());
+			}else{
+				bean.setCommentNum(0);
 			}
 			
 			// 解析读书笔记
@@ -201,14 +213,21 @@ public class DouBanJsoupUtil {
 					}else{
 						max = count/10 + 1;
 					}
+					
 					System.out.println("笔记数："+count+";最大页数："+max);
+					
+					max = Math.min(max,douBanCrawConfig.getReadPageNum());
+					
 					for(int i = 1;i<=max;i++){
 						// 读取评论页面列表  返回评论Id集合
 						getReadIdList(readIdList,readUrl + "?sort=rank&start="+(i-1)*10);
 					}
 				}
 				bean.setReadIdList(readIdList);
+				bean.setReadNum(count);
 				System.out.println("读书笔记Id列表：："+bean.getReadIdList().toString());
+			}else{
+				bean.setReadNum(0);
 			}
 			
 		} catch (Exception e) {

@@ -53,7 +53,10 @@ public class DouBanBean implements Serializable{
 	private String rateNum;
 	
 	// 评论数
-	private String commentNum;
+	private Integer commentNum;
+	
+	// 笔记数
+	private Integer readNum;
 	
 	// 书籍ISBN
 	private String ISBN;
@@ -132,14 +135,6 @@ public class DouBanBean implements Serializable{
 
 	public void setRateNum(String rateNum) {
 		this.rateNum = rateNum;
-	}
-
-	public String getCommentNum() {
-		return commentNum;
-	}
-
-	public void setCommentNum(String commentNum) {
-		this.commentNum = commentNum;
 	}
 
 	public String getUrl() {
@@ -228,5 +223,21 @@ public class DouBanBean implements Serializable{
 
 	public void setReadIdList(List<String> readIdList) {
 		this.readIdList = readIdList;
+	}
+
+	public Integer getCommentNum() {
+		return commentNum;
+	}
+
+	public void setCommentNum(Integer commentNum) {
+		this.commentNum = commentNum;
+	}
+
+	public Integer getReadNum() {
+		return readNum;
+	}
+
+	public void setReadNum(Integer readNum) {
+		this.readNum = readNum;
 	}
 }

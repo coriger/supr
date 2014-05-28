@@ -56,6 +56,12 @@ public class DouBanCrawConfig implements CrawConfig{
 	// 过滤类型
 	private FilterType filterType;
 	
+	// 抓取评论页数上限
+	private Integer commentPageNum = 2;
+
+	// 抓取笔记页数上限
+	private Integer readPageNum = 2;
+	
 	public Integer getMaxCount() {
 		return maxCount;
 	}
@@ -166,5 +172,21 @@ public class DouBanCrawConfig implements CrawConfig{
 
 	public void setFilterType(FilterType filterType) {
 		this.filterType = filterType;
+	}
+
+	public Integer getCommentPageNum() {
+		return commentPageNum;
+	}
+
+	public void setCommentPageNum(Integer commentPageNum) {
+		this.commentPageNum = commentPageNum;
+	}
+
+	public Integer getReadPageNum() {
+		return readPageNum;
+	}
+
+	public void setReadPageNum(Integer readPageNum) {
+		this.readPageNum = readPageNum;
 	}
 }

@@ -79,7 +79,7 @@ public class DouBanParseStrategy implements ParseStrategy{
 							}
 							
 							Element commentDiv = infoDiv.getElementsByClass("pl").get(0);
-							bean.setCommentNum(commentDiv.text());
+//							bean.setCommentNum(commentDiv.text());
 							
 							System.out.println(bean);
 							douBanList.add(bean);

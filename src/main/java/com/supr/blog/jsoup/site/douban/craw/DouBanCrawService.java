@@ -135,7 +135,7 @@ public class DouBanCrawService implements CrawService{
 		douBanCrawConfig.setMaxCount(1000);
 		douBanCrawConfig.setStartNum(0);
 		douBanCrawConfig.setStepCount(20);
-		douBanCrawConfig.setCrawFileName("E:\\craw\\");
+//		douBanCrawConfig.setCrawFileName("E:\\craw\\");
 		// 黑名单
 		douBanCrawConfig.setFilterType(FilterType.BLACK);
 		
