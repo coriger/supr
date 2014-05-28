@@ -87,9 +87,11 @@ public class DouBanJsoupUtil {
 			
 			// 书籍首页地址
 			bean.setUrl(url);
+			System.out.println("书籍地址："+bean.getUrl());
 			
 			// 书籍Id
 			bean.setId(url.split("/")[url.split("/").length-1]);
+			System.out.println("书籍Id："+bean.getId());
 			
 			// 书籍图片地址
 			Element picEle = doc.select("div#mainpic > a > img").get(0);
@@ -156,9 +158,9 @@ public class DouBanJsoupUtil {
 			
 			if(null != commentCount){
 				int count = Integer.parseInt(commentCount);
-				List<String> commentUrlList = new ArrayList<String>();
+				List<String> commentIdList = new ArrayList<String>();
 				if(count < 25){
-					commentUrlList.add(commentUrl);
+					getCommentIdList(commentIdList,commentUrl);
 				}else{
 					int max = 0;
 					if(count%25 == 0){
@@ -168,14 +170,15 @@ public class DouBanJsoupUtil {
 					}
 					System.out.println("评论数："+count+";最大页数："+max);
 					for(int i = 1;i<=max;i++){
-						commentUrlList.add(commentUrl + "?score=&start="+(i-1)*25);
+						// 读取评论页面列表  返回评论Id集合
+						getCommentIdList(commentIdList,commentUrl + "?score=&start="+(i-1)*25);
 					}
 				}
 				
 				bean.setCommentNum(commentCount);
-				bean.setCommentUrlList(commentUrlList);
+				bean.setCommentIdList(commentIdList);
 				System.out.println("评论数："+bean.getCommentNum());
-				System.out.println("评论url列表：："+bean.getCommentUrlList().toString());
+				System.out.println("评论Id列表：："+bean.getCommentIdList().toString());
 			}
 			
 			// 解析读书笔记
@@ -188,9 +191,9 @@ public class DouBanJsoupUtil {
 			}
 			if(null != readCount){
 				int count = Integer.parseInt(readCount);
-				List<String> readUrlList = new ArrayList<String>();
+				List<String> readIdList = new ArrayList<String>();
 				if(count < 10){
-					readUrlList.add(readUrl);
+					getReadIdList(readIdList,readUrl);
 				}else{
 					int max = 0;
 					if(count%10 == 0){
@@ -198,18 +201,38 @@ public class DouBanJsoupUtil {
 					}else{
 						max = count/10 + 1;
 					}
+					System.out.println("笔记数："+count+";最大页数："+max);
 					for(int i = 1;i<=max;i++){
-						readUrlList.add(readUrl + "?sort=rank&start="+(i-1)*10);
+						// 读取评论页面列表  返回评论Id集合
+						getReadIdList(readIdList,readUrl + "?sort=rank&start="+(i-1)*10);
 					}
 				}
-				bean.setReadUrlList(readUrlList);
-				System.out.println("读书笔记url列表：："+bean.getReadUrlList().toString());
+				bean.setReadIdList(readIdList);
+				System.out.println("读书笔记Id列表：："+bean.getReadIdList().toString());
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return bean;
+	}
+	
+	public static void getCommentIdList(List<String> commentIdList,String newUrl){
+		Document document = Jsoup.parse(HttpClientUtil.getHtml(newUrl));
+		Elements elements = document.select("[class=j a_unfolder]");
+		for(Element ele : elements){
+			String href = ele.attr("href");
+			commentIdList.add(href.split("/")[href.split("/").length-1]);
+		}
+	}
+	
+	public static void getReadIdList(List<String> readIdList,String newUrl){
+		Document document = Jsoup.parse(HttpClientUtil.getHtml(newUrl));
+		Elements elements = document.select(".note-unfolder");
+		for(Element ele : elements){
+			String href = ele.attr("href");
+			readIdList.add(href.split("/")[href.split("/").length-1]);
+		}
 	}
 
 	private static void parseContent(String text, DouBanBean bean,String[] con) {

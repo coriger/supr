@@ -86,13 +86,12 @@ public class DouBanCrawService implements CrawService{
 				final DouBanBean bean = DouBanJsoupUtil.getBeanFromStream(douBanCrawConfig,url);
 				if(null != bean){
 					final String json = JSON.toJSONString(bean); 
+					System.out.println("序列化后json串:"+json);
 					// 新增到redis队列中
 					redisTemplate.execute(new RedisCallback<Object>() {
 						@Override
 						public Object doInRedis(RedisConnection con) throws DataAccessException {
 							String key = bean.getId();
-							System.out.println("key:"+key);
-							
 							con.hSet("douban".getBytes(), key.getBytes(),json.getBytes());
 							return null;
 						}
@@ -126,9 +125,6 @@ public class DouBanCrawService implements CrawService{
 	
 	@Test
 	public void testAll() {
-		
-//		redisTemplate.setKeySerializer(StringSerializer.INSTANCE);  
-		redisTemplate.setValueSerializer(new JacksonJsonRedisSerializer<DouBanBean>(DouBanBean.class)); 
 		
 		List<String> list = new ArrayList<String>();
 //		list.add("哲学");list.add("文学");list.add("随笔");list.add("中国文学");list.add("经典");list.add("散文");

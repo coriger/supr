@@ -61,14 +61,14 @@ public class DouBanBean implements Serializable{
 	// 评论
 	private List<DouBanCommentBean> commentList;
 	
-	// 评论url
-	private List<String> commentUrlList;
+	// 评论Id
+	private List<String> commentIdList;
 	
 	// 读书笔记
 	private List<DouBanReadBean> readList;
 	
-	// 读书笔记url
-	private List<String> readUrlList;
+	// 读书笔记Id
+	private List<String> readIdList;
 	
 	public String getId() {
 		return id;
@@ -214,19 +214,19 @@ public class DouBanBean implements Serializable{
 		this.secondTitle = secondTitle;
 	}
 
-	public List<String> getCommentUrlList() {
-		return commentUrlList;
+	public List<String> getCommentIdList() {
+		return commentIdList;
 	}
 
-	public void setCommentUrlList(List<String> commentUrlList) {
-		this.commentUrlList = commentUrlList;
+	public void setCommentIdList(List<String> commentIdList) {
+		this.commentIdList = commentIdList;
 	}
 
-	public List<String> getReadUrlList() {
-		return readUrlList;
+	public List<String> getReadIdList() {
+		return readIdList;
 	}
 
-	public void setReadUrlList(List<String> readUrlList) {
-		this.readUrlList = readUrlList;
+	public void setReadIdList(List<String> readIdList) {
+		this.readIdList = readIdList;
 	}
 }
