@@ -1,4 +1,4 @@
-package com.supr.blog.jsoup.douban.config;
+package com.supr.blog.jsoup.site.douban.config;
 
 import com.supr.blog.jsoup.config.ParseConfig;
 

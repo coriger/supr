@@ -1,8 +1,7 @@
-package com.supr.blog.jsoup.douban;
+package com.supr.blog.jsoup.site.douban;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.supr.blog.httpclient.HttpClientUtil;
-import com.supr.blog.jsoup.douban.bean.DouBanBean;
+import com.supr.blog.jsoup.site.douban.bean.DouBanBean;
 
 /**
  * @desc	豆瓣Jsoup工具类
@@ -51,14 +50,6 @@ public class DouBanJsoupUtil {
 		// 这种方式貌似不好 很容易被禁403
 		// Document doc = Jsoup.connect(url).get();
 		Document doc = Jsoup.parse(HttpClientUtil.getHtml(url));
-		
-		try {
-			// 休眠一下 
-			Thread.sleep(200);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		Elements elements = doc.select("div.info > h2 > a");
 		for (Element ele : elements) {
 			list.add(ele.attr("href"));

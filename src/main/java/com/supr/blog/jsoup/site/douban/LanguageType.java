@@ -1,4 +1,4 @@
-package com.supr.blog.jsoup.douban;
+package com.supr.blog.jsoup.site.douban;
 
 /**
  * @desc	豆瓣书本类型

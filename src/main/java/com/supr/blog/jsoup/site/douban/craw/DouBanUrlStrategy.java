@@ -1,11 +1,11 @@
-package com.supr.blog.jsoup.douban.craw;
+package com.supr.blog.jsoup.site.douban.craw;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.supr.blog.jsoup.api.UrlGeneratorStratery;
 import com.supr.blog.jsoup.config.CrawConfig;
-import com.supr.blog.jsoup.douban.config.DouBanCrawConfig;
+import com.supr.blog.jsoup.site.douban.config.DouBanCrawConfig;
 
 /**
  * @desc	豆瓣url爬取生成策略

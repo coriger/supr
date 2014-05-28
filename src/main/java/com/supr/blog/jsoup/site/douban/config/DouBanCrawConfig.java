@@ -1,11 +1,11 @@
-package com.supr.blog.jsoup.douban.config;
+package com.supr.blog.jsoup.site.douban.config;
 
 import java.util.Date;
 import java.util.List;
 
 import com.supr.blog.jsoup.config.CrawConfig;
-import com.supr.blog.jsoup.douban.FilterType;
-import com.supr.blog.jsoup.douban.LanguageType;
+import com.supr.blog.jsoup.site.douban.FilterType;
+import com.supr.blog.jsoup.site.douban.LanguageType;
 
 /**
  * @desc	豆瓣爬虫配置

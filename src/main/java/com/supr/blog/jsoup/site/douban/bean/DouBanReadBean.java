@@ -1,4 +1,4 @@
-package com.supr.blog.jsoup.douban.bean;
+package com.supr.blog.jsoup.site.douban.bean;
 
 /**
  * @desc 豆瓣读书笔记Bean

@@ -1,4 +1,4 @@
-package com.supr.blog.jsoup.douban.parse;
+package com.supr.blog.jsoup.site.douban.parse;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import org.jsoup.select.Elements;
 
 import com.supr.blog.jsoup.api.ParseStrategy;
 import com.supr.blog.jsoup.config.ParseConfig;
-import com.supr.blog.jsoup.douban.bean.DouBanBean;
-import com.supr.blog.jsoup.douban.config.DouBanParseConfig;
+import com.supr.blog.jsoup.site.douban.bean.DouBanBean;
+import com.supr.blog.jsoup.site.douban.config.DouBanParseConfig;
 import com.supr.blog.util.SuprUtil;
 
 /**

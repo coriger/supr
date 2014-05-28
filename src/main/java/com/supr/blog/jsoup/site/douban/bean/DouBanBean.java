@@ -1,4 +1,4 @@
-package com.supr.blog.jsoup.douban.bean;
+package com.supr.blog.jsoup.site.douban.bean;
 
 import java.util.List;
 

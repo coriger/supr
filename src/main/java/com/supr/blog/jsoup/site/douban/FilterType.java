@@ -1,4 +1,4 @@
-package com.supr.blog.jsoup.douban;
+package com.supr.blog.jsoup.site.douban;
 
 /**
  * @desc	抓取过滤类型

@@ -1,4 +1,4 @@
-package com.supr.blog.jsoup.douban.parse;
+package com.supr.blog.jsoup.site.douban.parse;
 
 import com.supr.blog.jsoup.api.ParseService;
 

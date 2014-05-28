@@ -1,20 +1,14 @@
 package com.supr.blog.httpclient;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
-import org.apache.http.HttpEntity;
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -35,11 +29,28 @@ public class HttpClientUtil {
 	
 	static HttpContext context = null;
 	
+	private static String bid ;
+	
 	static {
+		bid = generateBId();
 		httpClient = HttpClients.createDefault();
 		cookieStore = new BasicCookieStore();
 		context = new BasicHttpContext(); 
 		context.setAttribute(ClientContext.COOKIE_STORE,cookieStore);
+	}
+	
+	public static String generateBId(){
+		return "xMMPn2CAuqo";
+	}
+	
+	/**
+	 * 刷新cookie
+	 */
+	public static void refreshCookie(){
+		// 清除原有cookie
+		cookieStore.clear();
+		// 重新设置cookie
+		bid = generateBId();
 	}
 	
 	public static void setHeader(HttpGet get,String url){
@@ -50,54 +61,11 @@ public class HttpClientUtil {
 		get.setHeader("Referer","http://book.douban.com/");
 		get.setHeader("Content-Type","text/html; charset=utf-8");
 		
-//		CookieManager cookieManager = CookieManager.getInstance();
-//		get.setHeader("Cookie",cookieManager.getCookies(url));
-		get.setHeader("Cookie","bid=xMMPn2CAuqo");
+//		get.setHeader("Cookie","bid=xMMPn2CAuqo");
+		System.out.println("bid:"+bid);
+		get.setHeader("Cookie","bid="+bid);
 	}
 	
-	public static void writeToFile(String fileName, String url) {
-		InputStream is = null;
-		BufferedOutputStream bos = null;
-		HttpGet get = new HttpGet(url);
-		// 设置头信息
-		setHeader(get,url);
-		HttpResponse response = null;
-		try {
-			response = httpClient.execute(get);
-			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-				HttpEntity httpEntity = response.getEntity();
-				if (httpEntity != null) {
-					is = httpEntity.getContent();
-					bos = new BufferedOutputStream(new FileOutputStream(new File(fileName)));
-					byte[] b = new byte[2048];
-					int s = 0;
-					while((s = is.read(b))!= -1){
-						bos.write(b, 0, s);
-					}
-					bos.flush();
-					bos.close();
-				}
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally{
-			if(null != bos){
-				try {
-					bos.close();
-				} catch (IOException e) {e.printStackTrace();}
-			}
-			if(null != is){
-				try {
-					is.close();
-				} catch (IOException e) {e.printStackTrace();}
-			}
-			// 释放链接
-			get.releaseConnection();
-		}
-	}
-
 	public static String getHtml(String url) {
 		HttpGet get = new HttpGet(url);
 		setHeader(get,url);
@@ -109,14 +77,16 @@ public class HttpClientUtil {
 			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
 				html = EntityUtils.toString(response.getEntity());
 				
-				// 获取cookie
-				List<Cookie> cookieList = cookieStore.getCookies(); 
-				for(Cookie cookie : cookieList){
-					System.out.println(cookie.getName()+":"+cookie.getValue());
-				}
+//				获取cookie
+//				List<Cookie> cookieList = cookieStore.getCookies(); 
+//				for(Cookie cookie : cookieList){
+//					System.out.println(cookie.getName()+":"+cookie.getValue());
+//				}
 				
 			}else{
 				System.out.println("响应失败："+response.getStatusLine().getStatusCode());
+				// 重新设置请求头
+				refreshCookie();
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -129,9 +99,4 @@ public class HttpClientUtil {
 		return html;
 	}
 
-	public static String getCookie(String url) {
-		
-		return null;
-	}
-	
 }

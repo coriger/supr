@@ -1,16 +1,15 @@
-package com.supr.blog.jsoup.douban.craw;
+package com.supr.blog.jsoup.site.douban.craw;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.supr.blog.httpclient.HttpClientUtil;
 import com.supr.blog.jsoup.api.CrawService;
 import com.supr.blog.jsoup.api.UrlGeneratorStratery;
 import com.supr.blog.jsoup.bean.CrawServiceInfo;
-import com.supr.blog.jsoup.douban.DouBanJsoupUtil;
-import com.supr.blog.jsoup.douban.FilterType;
-import com.supr.blog.jsoup.douban.bean.DouBanBean;
-import com.supr.blog.jsoup.douban.config.DouBanCrawConfig;
+import com.supr.blog.jsoup.site.douban.DouBanJsoupUtil;
+import com.supr.blog.jsoup.site.douban.FilterType;
+import com.supr.blog.jsoup.site.douban.bean.DouBanBean;
+import com.supr.blog.jsoup.site.douban.config.DouBanCrawConfig;
 import com.supr.blog.util.SuprUtil;
 
 /**
@@ -79,12 +78,6 @@ public class DouBanCrawService implements CrawService{
 					if(!douBanCrawConfig.getBlackKeyWord().contains(bean.getISBN())){
 						continue;
 					}
-				}
-				
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
 				}
 				
 //				下载书籍首页到本地
