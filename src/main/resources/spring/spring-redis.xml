@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd ">
+  
+  <!-- 引入属性文件 -->
+  <context:property-placeholder location="classpath:/redis.properties" />
+  
+  <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+        <property name="testOnBorrow" value="true" />  
+  </bean>  
+  
+  <!-- 四种redis connection factory -->
+  
+  <!-- Jedis  connection 工厂 -->
+  <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" 
+  	p:host-name="localhost" p:port="6379" p:use-pool="true" p:database="0" p:pool-config-ref="poolConfig"/>
+  
+  <!-- <bean id="jredisConnectionFactory"
+	class="org.springframework.data.redis.connection.jredis.JredisConnectionFactory">
+	<constructor-arg>
+		<bean
+			class="org.springframework.data.redis.connection.jredis.DefaultJredisPool">
+			<constructor-arg value="localhost" />
+			<constructor-arg value="6379" />
+		</bean>
+	</constructor-arg>
+  </bean>
+  
+  <bean id="srpConnectionFactory" class="org.springframework.data.redis.connection.srp.SrpConnectionFactory"
+        p:host-name="server" p:port="6379"/>
+        
+  <bean id="lettuceConnectionFactory" class="org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory"
+        p:host-name="server" p:port="6379"/>      --> 
+  
+  
+  <!-- redis template definition -->
+  <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+   			 p:connection-factory-ref="jedisConnectionFactory"/>
+  
+</beans>
