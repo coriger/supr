@@ -91,7 +91,7 @@ public class DouBanCrawService implements CrawService{
 					redisTemplate.execute(new RedisCallback<Object>() {
 						@Override
 						public Object doInRedis(RedisConnection con) throws DataAccessException {
-							String key = bean.getId();
+							String key = "book:"+bean.getId();
 							con.hSet("douban".getBytes(), key.getBytes(),json.getBytes());
 							return null;
 						}
