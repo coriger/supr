@@ -26,26 +26,6 @@ public class DouBanJsoupUtil {
 	 * @param is
 	 * @return
 	 */
-	public static List<String> getListFromStream(InputStream is) {
-		List<String> list = new ArrayList<String>();
-		try {
-			Document doc = Jsoup.parse(is, "utf-8",null);
-			Elements elements = doc.select("a[onclick]");
-			for(Element ele : elements){
-				list.add(ele.attr("href"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
-	
-	/**
-	 * 解析标签列表
-	 * @param is
-	 * @return
-	 */
 	public static List<String> getListFromUrl(String url){
 		List<String> list = new ArrayList<String>();
 		// 这种方式貌似不好 很容易被禁403
