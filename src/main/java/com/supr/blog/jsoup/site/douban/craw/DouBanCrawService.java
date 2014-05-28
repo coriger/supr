@@ -3,8 +3,20 @@ package com.supr.blog.jsoup.site.douban.craw;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.alibaba.fastjson.JSON;
 import com.supr.blog.jsoup.api.CrawService;
-import com.supr.blog.jsoup.api.UrlGeneratorStratery;
+import com.supr.blog.jsoup.api.CrawStratery;
 import com.supr.blog.jsoup.bean.CrawServiceInfo;
 import com.supr.blog.jsoup.site.douban.DouBanJsoupUtil;
 import com.supr.blog.jsoup.site.douban.FilterType;
@@ -17,13 +29,15 @@ import com.supr.blog.util.SuprUtil;
  * @author	ljt
  * @time	2014-5-26 上午10:17:55
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"classpath:spring/spring-redis.xml"})
 public class DouBanCrawService implements CrawService{
 	
 	// 爬取服务bean
 	private CrawServiceInfo crawServiceInfo;
 	
 	// 爬取策略  url生成策略
-	private UrlGeneratorStratery urlGeneratorStratery;
+	private CrawStratery urlGeneratorStratery;
 	
 	// 需要爬取的url
 	private List<String> urlList = new ArrayList<String>();
@@ -33,6 +47,9 @@ public class DouBanCrawService implements CrawService{
 	
 	// 爬虫服务配置对象
 	private static DouBanCrawConfig douBanCrawConfig;
+	
+	@Autowired
+	private RedisTemplate<String, DouBanBean> redisTemplate;
 	
 	@Override
 	public void init() {
@@ -52,10 +69,10 @@ public class DouBanCrawService implements CrawService{
 	/**
 	 * 启动爬取服务  开启线程执行
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void start() {
-		List<String> bookUrlList = new ArrayList<String>(1000);
-		String fileName = douBanCrawConfig.getCrawFileName();
+		List<String> bookUrlList = new ArrayList<String>();
 		for(String url : urlList){
 			// 实体url
 			bookUrlList.addAll(DouBanJsoupUtil.getListFromUrl(url));
@@ -66,18 +83,20 @@ public class DouBanCrawService implements CrawService{
 		if(!SuprUtil.isEmptyCollection(bookUrlList)){
 			for(String url : bookUrlList){
 				// 解析成bean
-				DouBanBean bean = DouBanJsoupUtil.getBeanFromStream(url);
-				
-				// 过滤器
-				FilterType type = douBanCrawConfig.getFilterType();
-				if(type.equals(FilterType.BLACK)){// 黑名单模式
-					if(douBanCrawConfig.getBlackKeyWord().contains(bean.getISBN())){
-						continue;
-					}
-				}else if(type.equals(FilterType.WHITE)){// 白名单模式
-					if(!douBanCrawConfig.getBlackKeyWord().contains(bean.getISBN())){
-						continue;
-					}
+				final DouBanBean bean = DouBanJsoupUtil.getBeanFromStream(douBanCrawConfig,url);
+				if(null != bean){
+					final String json = JSON.toJSONString(bean); 
+					// 新增到redis队列中
+					redisTemplate.execute(new RedisCallback<Object>() {
+						@Override
+						public Object doInRedis(RedisConnection con) throws DataAccessException {
+							String key = bean.getId();
+							System.out.println("key:"+key);
+							
+							con.hSet("douban".getBytes(), key.getBytes(),json.getBytes());
+							return null;
+						}
+					});
 				}
 				
 //				下载书籍首页到本地
@@ -105,7 +124,12 @@ public class DouBanCrawService implements CrawService{
 		}
 	}
 	
-	public static void main(String[] args) {
+	@Test
+	public void testAll() {
+		
+//		redisTemplate.setKeySerializer(StringSerializer.INSTANCE);  
+		redisTemplate.setValueSerializer(new JacksonJsonRedisSerializer<DouBanBean>(DouBanBean.class)); 
+		
 		List<String> list = new ArrayList<String>();
 //		list.add("哲学");list.add("文学");list.add("随笔");list.add("中国文学");list.add("经典");list.add("散文");
 //		list.add("杂文");list.add("名著");list.add("诗词");list.add("港台");list.add("言情");
@@ -125,13 +149,11 @@ public class DouBanCrawService implements CrawService{
 		blackList.add("9787508044019");
 		douBanCrawConfig.setBlackKeyWord(blackList);
 		
-		DouBanCrawService service = new DouBanCrawService();
-		
 		// 初始化
-		service.init();
+		init();
 		
 		// 开始爬取
-		service.start();
+		start();
 	}
 	
 	/**

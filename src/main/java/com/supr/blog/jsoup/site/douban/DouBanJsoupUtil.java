@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 
 import com.supr.blog.httpclient.HttpClientUtil;
 import com.supr.blog.jsoup.site.douban.bean.DouBanBean;
+import com.supr.blog.jsoup.site.douban.config.DouBanCrawConfig;
 
 /**
  * @desc	豆瓣Jsoup工具类
@@ -63,16 +64,32 @@ public class DouBanJsoupUtil {
 	 * @param is
 	 * @return
 	 */
-	public static DouBanBean getBeanFromStream(String url) {
+	public static DouBanBean getBeanFromStream(DouBanCrawConfig douBanCrawConfig,String url) {
 		DouBanBean bean = new DouBanBean();
 		try {
 			Document doc = Jsoup.parse(HttpClientUtil.getHtml(url));
-			// 书籍首页地址
-			bean.setUrl(url);
 			// 书籍名称
 			Element titleEle = doc.select("div#wrapper > h1 > span").get(0);
 			bean.setTitle(titleEle.text());
 			System.out.println("书籍名称："+bean.getTitle());
+
+			// 过滤器
+			FilterType type = douBanCrawConfig.getFilterType();
+			if(type.equals(FilterType.BLACK)){// 黑名单模式
+				if(douBanCrawConfig.getBlackKeyWord().contains(bean.getISBN())){
+					return null;
+				}
+			}else if(type.equals(FilterType.WHITE)){// 白名单模式
+				if(!douBanCrawConfig.getBlackKeyWord().contains(bean.getISBN())){
+					return null;
+				}
+			}
+			
+			// 书籍首页地址
+			bean.setUrl(url);
+			
+			// 书籍Id
+			bean.setId(url.split("/")[url.split("/").length-1]);
 			
 			// 书籍图片地址
 			Element picEle = doc.select("div#mainpic > a > img").get(0);

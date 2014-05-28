@@ -1,5 +1,6 @@
 package com.supr.blog.jsoup.site.douban.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * @author	ljt
  * @time	2014-5-26 下午3:36:33
  */
-public class DouBanBean {
+public class DouBanBean implements Serializable{
 	
 	// 实体id
 	private String id;

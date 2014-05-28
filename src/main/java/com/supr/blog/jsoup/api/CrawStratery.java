@@ -9,7 +9,7 @@ import com.supr.blog.jsoup.config.CrawConfig;
  * @author	ljt
  * @time	2014-5-26 上午9:59:16
  */
-public interface UrlGeneratorStratery {
+public interface CrawStratery {
 	
 	public List<String> generator(CrawConfig config);
 	

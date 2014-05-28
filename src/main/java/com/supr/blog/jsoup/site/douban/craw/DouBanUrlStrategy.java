@@ -3,7 +3,7 @@ package com.supr.blog.jsoup.site.douban.craw;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.supr.blog.jsoup.api.UrlGeneratorStratery;
+import com.supr.blog.jsoup.api.CrawStratery;
 import com.supr.blog.jsoup.config.CrawConfig;
 import com.supr.blog.jsoup.site.douban.config.DouBanCrawConfig;
 
@@ -15,7 +15,7 @@ import com.supr.blog.jsoup.site.douban.config.DouBanCrawConfig;
  * @author	ljt
  * @time	2014-5-26 上午10:22:12
  */
-public class DouBanUrlStrategy implements UrlGeneratorStratery{
+public class DouBanUrlStrategy implements CrawStratery{
 	
 	// url头  不变的部分
 	private String urlHead;
