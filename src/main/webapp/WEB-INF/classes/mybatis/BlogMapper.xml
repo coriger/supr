@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.supr.blog.mapper.BlogMapper">
+	
+	<!-- 查询所有文章总数 -->
+	<select id="getAllBlogCount" resultType="int">
+		select count(1) from blog
+	</select>
+	
+	<!-- 获取文章分页信息 -->
+	<select id="getBlogByPager" resultType="com.supr.blog.model.Blog" parameterType="com.supr.blog.util.pager.Pager">
+		select * from blog order by publishTime desc 
+		limit  #{startIndex},#{pageSize}
+	</select>
+	
+	<!-- 根据分类Id获取分了下文章数 -->
+	<select id="getBlogCountByCategoryId" parameterType="int" resultType="int">
+		select count(1) from blog where categoryId = #{categoryId}
+	</select>
+	
+	<!-- 新增文章 -->
+	<insert id="addBlog" parameterType="com.supr.blog.model.Blog" useGeneratedKeys="true" keyProperty="blogId">
+		insert into blog(title,publishTime,updateTime,userId,content,tagIds,hits,commentSum,postFix) 
+		values(#{title},now(),now(),#{userId},#{content},#{tagIds},0,0,#{postFix})
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="blogId" >  
+	          SELECT LAST_INSERT_ID()
+        </selectKey> 
+	</insert>
+	
+	<!-- 删除单篇文章 -->
+	<delete id="deleteBlogById" parameterType="Integer">
+		delete from blog where blogId = #{blogId}
+	</delete>
+
+	<!-- 根据id获取文章 -->
+	<select id="getBlogById" parameterType="Integer" resultType="com.supr.blog.model.Blog">
+		select * from blog where blogId = #{blogId}
+	</select>
+	
+	<!-- 更新文章 -->
+	<update id="updateBlog" parameterType="com.supr.blog.model.Blog">
+		update blog set updateTime = now() 
+		<include refid="updateBlogParam"/> 
+		where blogId = #{blogId}		
+	</update>
+	
+	<sql id="updateBlogParam">
+		<if test="title != null and title != ''">
+			,title = #{title}
+		</if>
+		<if test="content != null and content != ''">
+			,content = #{content}
+		</if>
+		<if test="tagId != null and tagIds != ''">
+			,tagIds = #{tagIds}
+		</if>
+	</sql>
+
+</mapper>

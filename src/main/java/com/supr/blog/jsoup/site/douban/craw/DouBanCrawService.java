@@ -129,7 +129,7 @@ public class DouBanCrawService implements CrawService{
 		List<String> list = new ArrayList<String>();
 //		list.add("哲学");list.add("文学");list.add("随笔");list.add("中国文学");list.add("经典");list.add("散文");
 //		list.add("杂文");list.add("名著");list.add("诗词");list.add("港台");list.add("言情");
-		list.add("哲学");
+		list.add("杂文");
 		douBanCrawConfig = new DouBanCrawConfig();
 		douBanCrawConfig.setTagList(list);
 		douBanCrawConfig.setMaxCount(1000);

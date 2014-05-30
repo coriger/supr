@@ -1,5 +1,6 @@
 package com.supr.blog.util.pager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,12 +14,12 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
  * @作者： ljt
  * @时间： 2014-4-18 下午5:14:29
  */
-public class Pager {
+public class Pager<T> {
 	
 	/**
 	 * 默认每页显示数
 	 */
-	public static final int PAGE_SIZE = 10;
+	public static final int PAGE_SIZE = 2;
 	
 	/**
 	 * 默认页数
@@ -48,7 +49,7 @@ public class Pager {
 	/**
 	 * 分页信息
 	 */
-	private List<?> list;
+	private List<T> list = new ArrayList<T>();
 	
 	/**
 	 * 分页计算起始值
@@ -129,11 +130,11 @@ public class Pager {
 		this.totalCount = totalCount;
 	}
 
-	public List<?> getList() {
+	public List<T> getList() {
 		return list;
 	}
 
-	public void setList(List<?> list) {
+	public void setList(List<T> list) {
 		this.list = list;
 	}
 

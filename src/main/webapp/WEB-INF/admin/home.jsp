@@ -160,12 +160,14 @@
 		               {"name":"用户管理", "url":"./admin/list"},
 		               {"name":"资源管理", "url":"./admin/list"},
 		               {"name":"角色管理", "url":"./admin/list"},
-		               {"name":"权限管理", "url":"./admin/list"},
+		               {"name":"权限管理", "url":"./admin/list"}
 		           ]},
-		           {"title":"社交", "menus":[
-		               {"name":"QQ", "url":"./admin/list"},
-		               {"name":"新浪", "url":"./admin/list"},
-		               {"name":"人人", "url":"./admin/list"}
+		           {"title":"模型管理", "menus":[
+		               {"name":"模型列表", "url":"./model/list"},
+		               {"name":"模型属性列表", "url":"./modelAttr/list"},
+		               {"name":"模型维度列表", "url":"./modelLat/list"},
+		               {"name":"模型维度属性列表", "url":"./modelLatAttr/list"},
+		               {"name":"模型数据单元列表", "url":"./modelDataUnit/list"}
 		           ]}
 		       ];
 		
