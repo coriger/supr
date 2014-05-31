@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.supr.blog.model.cmge.Model;
+import com.supr.blog.model.cmge.ModelAttr;
 import com.supr.blog.model.cmge.Trade;
 
 public interface ModelMapper {
@@ -17,5 +18,9 @@ public interface ModelMapper {
 	int deleteBatch(String[] modelIds);
 
 	Model getModelById(String modelId);
+
+	int getModelAttrCount(Map<String, Object> map);
+
+	List<ModelAttr> getModelAttrList(Map<String, Object> map);
 
 }
