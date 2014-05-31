@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.supr.blog.controller.BaseController;
 import com.supr.blog.model.cmge.Model;
+import com.supr.blog.model.cmge.ModelAttr;
 import com.supr.blog.model.cmge.Trade;
 import com.supr.blog.model.vo.Result;
 import com.supr.blog.service.ModelService;
@@ -58,6 +59,20 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
+	 * 获取模型列表
+	 * @param adminId
+	 */
+	@RequestMapping(value = "/list_attr")
+	public @ResponseBody 
+	Map<String, Object> getModelAttrListJson(Model model,@RequestParam(value="rows")int pageSize,@RequestParam(value="page")int pageNum){
+		Map<String, Object> map = new HashMap<String, Object>();
+		Pager<ModelAttr> pager = modelService.getModelAttrList(model,pageSize,pageNum);
+		map.put("rows", pager.getList());
+		map.put("total", pager.getTotalCount());
+		return map;
+	}
+	
+	/**
 	 * 删除模型
 	 * @param adminId
 	 */
@@ -78,12 +93,7 @@ public class ModelController extends BaseController{
 	 * @param admin
 	 */
 	@RequestMapping(value = "/add_model")
-	public String addModel(@RequestParam String type,@RequestParam String modelId,ModelMap map){
-		if(type.equals("edit")){
-			Model model = modelService.getModelById(modelId);
-			map.addAttribute("model", model);
-		}
-		
+	public String addModel(ModelMap map){
 		return "admin/model/add_model";
 	}
 	

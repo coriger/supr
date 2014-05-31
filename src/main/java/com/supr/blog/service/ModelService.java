@@ -3,6 +3,7 @@ package com.supr.blog.service;
 import java.util.List;
 
 import com.supr.blog.model.cmge.Model;
+import com.supr.blog.model.cmge.ModelAttr;
 import com.supr.blog.model.cmge.Trade;
 import com.supr.blog.util.pager.Pager;
 
@@ -16,4 +17,5 @@ public interface ModelService {
 
 	Model getModelById(String modelId);
 
+	Pager<ModelAttr> getModelAttrList(Model model, int pageSize, int pageNum);
 }
