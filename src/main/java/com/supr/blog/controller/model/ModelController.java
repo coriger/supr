@@ -87,4 +87,29 @@ public class ModelController extends BaseController{
 		return "admin/model/add_model";
 	}
 	
+	/**
+	 * 新增模型第一步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/add/step1")
+	public String addModelStep1(ModelMap map){
+		return "admin/model/add_model_step1";
+	}
+	
+	/**
+	 * 新增模型第二步
+	 */
+	@RequestMapping(value = "/add/step2")
+	public String addModelStep2(ModelMap map){
+		return "admin/model/add_model_step2";
+	}
+	
+	/**
+	 * 新增模型第三步
+	 */
+	@RequestMapping(value = "/add/step3")
+	public String addModelStep3(ModelMap map){
+		return "admin/model/add_model_step3";
+	}
+	
 }

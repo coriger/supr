@@ -66,15 +66,15 @@
 			toolbar:[{
 	            text:'新增',
 	            iconCls:'icon-add',
-	            handler:function(){showDialog('add')}
+	            handler:function(){showDialog('add');}
 	        },'-',{
 	            text:'编辑',
 	            iconCls:'icon-edit',
-	            handler:function(){showDialog('edit')}
+	            handler:function(){showDialog('edit');}
 	        },'-',{
 	            text:'删除',
 	            iconCls:'icon-remove',
-	            handler:function(){delModel()}
+	            handler:function(){delModel();}
 	        }],
 	        onDblClickRow:function(rowIndex, rowData){ // 双击一行触发
 	            edit(rowIndex, rowData);
@@ -157,21 +157,20 @@
 			modelId = main.datagrid('getSelected').id;
 		}
 		
-		showDialog = $("<div/>").dialog({
+		showDialog = $("#diaolog").dialog({
 		    title: title,  
 		    top:20,
 		    width: 600,    
 		    height: 400,   
 		    maximizable:true,
 		    closed: false,    
-		    cache: false,    
 		    modal: true,
-		    href:"./model/add_model?type="+type+"&modelId="+modelId,
+		    href:"./model/add_model?type="+type+"&modelId="+modelId,// 先加载指定页面
 		    buttons : [ {
 				text : '完成',
 				iconCls : 'icon-save',
 				handler : function() {
-					saveAdmin();
+					saveModel();
 				}
 			},{
 				text : '下一步',
@@ -184,121 +183,168 @@
 				//alert("关闭...");
 			},
 			onLoad:function(){
-				// 初始化表单
+				// 页面加载完毕后初始化表单
 				formInit(type);
 			}
 		});
 	}
 	
-	function loadBeforeStep(index){
-		alert("加载前一个tab...");
+	// 上一步  切换到上一个tab
+	function beforeStep(){
+		// 获取当前tab
+		var curTab = $("#add_model_top").tabs('getSelected');
+		var index = $('#add_model_top').tabs('getTabIndex',curTab);
+		if(index == '1'){
+			// 保存模型属性 
+			index = index - 1;
+			$('#add_model_top').tabs('disableTab', 1); 
+			$('#add_model_top').tabs('enableTab', 0); 
+			$('#add_model_top').tabs('disableTab', 2); 
+			// 去掉上一步按钮
+			$(".dialog-button a:first-child").remove();
+		}else if(index == '2'){
+			index = index - 1;
+			// 保存模型维度
+			$('#add_model_top').tabs('disableTab', 0); 
+			$('#add_model_top').tabs('disableTab', 2); 
+			$('#add_model_top').tabs('enableTab', 1); 
+			
+			// 增加下一步按钮
+			var beforeButton = "<a href='javascript:nextStep()' class='l-btn l-btn-small' group='' id=''>"+
+						  	"<span class='l-btn-left l-btn-icon-left'>"+
+							"<span class='l-btn-text'>下一步</span>"+
+							"<span class='l-btn-icon icon-save'></span>"+
+						 	"</span>"+
+							"</a>";
+			$(".dialog-button").append(beforeButton);
+		}
+		
+		// 切换到上一个tab
+		$("#add_model_top").tabs('select',index);
+		// 更新tab内容
+		updateTagContent(getTagUrl(index));
+	}
+	
+	// 更新tab内容 重新加载  不要缓存
+	function updateTagContent(url){
+		$("#add_model_top").tabs('update',{
+			tab:$("#add_model_top").tabs('getSelected'),
+		    options : {
+		         content : createFrame(url)
+		    }
+		});
 	}
 	
 	// 下一步 切换到下一个tab
 	function nextStep(){
 		// 获取当前tab  判断是否是最后一个tab
-		var curTab = $("#add_model_tab").tabs('getSelected');
-		var index = $('#add_model_tab').tabs('getTabIndex',curTab);
-
-		showDialog.dialog({
-			buttons : [ {
-				text : '上一步',
-				iconCls : 'icon-save',
-				handler : function() {
-					loadBeforeStep(index-1);
-				}
-			},{
-				text : '完成',
-				iconCls : 'icon-save',
-				handler : function() {
-					saveAdmin();
-				}
-			},{
-				text : '下一步',
-				iconCls : 'icon-cancel',
-				handler : function() {
-					nextStep();
-				}
-			}],
-		})
-		
+		var curTab = $("#add_model_top").tabs('getSelected');
+		var index = $('#add_model_top').tabs('getTabIndex',curTab);
 		if(index == '0'){
 			// 保存模型名称 和 模型key
 			index = index + 1;
-			
+			$('#add_model_top').tabs('enableTab', 1); 
+			$('#add_model_top').tabs('disableTab', 0); 
+			$('#add_model_top').tabs('disableTab', 2); 
+			// 增加上一步按钮
+			var beforeButton = "<a href='javascript:beforeStep()' class='l-btn l-btn-small' group='' id=''>"+
+						  	"<span class='l-btn-left l-btn-icon-left'>"+
+							"<span class='l-btn-text'>上一步</span>"+
+							"<span class='l-btn-icon icon-save'></span>"+
+						 	"</span>"+
+							"</a>";
+			$(".dialog-button").prepend(beforeButton);
 		}else if(index == '1'){
 			// 保存模型属性 
 			index = index + 1;
-			
+			$('#add_model_top').tabs('disableTab', 0); 
+			$('#add_model_top').tabs('enableTab', 2); 
+			$('#add_model_top').tabs('disableTab', 1); 
+			// 去掉下一步按钮
+			$(".dialog-button a:last-child").remove();
 		}else if(index == '2'){
 			// 保存模型维度
-			
+			$('#add_model_top').tabs('disableTab', 0); 
+			$('#add_model_top').tabs('disableTab', 1); 
+			$('#add_model_top').tabs('enableTab', 2); 
 		}
 		
 		// 切换到下一个tab
-		$("#add_model_tab").tabs('select',index);
+		$("#add_model_top").tabs('select',index);
+		// 更新tab内容
+		updateTagContent(getTagUrl(index));
 	}
 	
-	// 保存管理员
-	function saveAdmin(){
-		$("#admin_form").submit();
+	function getTagUrl(index){
+		if(index == '0'){
+			return './model/add/step1?date='+Math.random();
+		}else if(index == '1'){
+			return './model/add/step2?date='+Math.random();
+		}else if(index == '2'){
+			return './model/list?date='+Math.random();
+		}
+	}
+	
+	// 保存模型
+	function saveModel(){
+		console.info("保存模型...");
+		// 当前tab页面 
+		var curTab = $("#add_model_top").tabs('getSelected');
+		var index = $('#add_model_top').tabs('getTabIndex',curTab);
+		
+		if(index == '0'){
+			// 如果是第一步  则保存模型基本信息
+			console.info("第一步保存...");
+		}else if(index == '1'){
+			// 如果是第二部  则保存模型属性信息
+			console.info("第二步保存...");
+		}else if(index == '2'){
+			// 如果是第三部  则保存模型维度信息
+			console.info("第三步保存...");
+		}
+	}
+	
+	// 创建tab页签
+	function createFrame(url) {
+	    var str = '<iframe width=100% height=100% frameborder=0 scrolling=no marginheight=0 marginwidth=0 src="' + url + '"></iframe>';
+	    return str;
 	}
 	
 	// 初始化新增管理员表单
 	function formInit(type){
 		// 初始化三个tab  第一步、第二步、第三步
-		$("#add_model_top").tabs({
+		$('#add_model_top').tabs({
 			border:false,
 		    fit:true,
 		});
 		
-		$("#add_model_top").tabs('add',{
-			title:'第一步',
+		$('#add_model_top').tabs('add',{
+			title:"第一步:模型基本信息定义",
 			selected:true,
-			closable:true,
-			cache : false,
-			content : 'asaa'
+			closable:false,
+			cache:false,
+			content : createFrame(getTagUrl('0')) // 这里动态加载第一步页面信息
 		});
 		
-		$("#add_model_top").tabs('add',{
-			title:'第二步',
+		$('#add_model_top').tabs('add',{
+			title:"第二步:模型属性信息定义",
 			selected:false,
-			closable:true,
-			cache : false,
-			content : 'asaa'
+			closable:false,
+			cache:false,
+			content : createFrame(getTagUrl('1')) // 这里动态加载第二步页面信息
 		});
 		
-		$("#add_model_top").tabs('add',{
-			title:'第三步',
+		$('#add_model_top').tabs('add',{
+			title:"第三步:模型维度信息定义",
 			selected:false,
-			closable:true,
-			cache : false,
-			content : 'asaa'
+			closable:false,
+			cache:false,
+			content : createFrame(getTagUrl('2')) // 这里动态加载第三步页面信息
 		});
 		
-		$("#admin_form").form({    
-		    url:"./admin/add?type="+type,
-		    data:$("#admin_form").serialize(),
-		    onSubmit: function(){    
-		    	$.messager.progress({
-					title : '提示信息！',
-					text : '数据处理中，请稍后....'
-				});
-		    },    
-		    success:function(data){    
-		    	$.messager.progress('close');
-		    	var data = eval('(' + data + ')');  // change the JSON string to javascript object    
-		    	if(data.resultCode == 'success'){
-		    		// 销毁新增对话框
-		    		showDialog.dialog('destroy');
-		    		// 重新加载列表数据
-		    		main.datagrid('reload');
-		    		showMsg(data.errorInfo);
-		    	}else{
-		    		showMsg(data.errorInfo);
-		    	}
-		    }    
-		});    
+		// 初始化时候  禁用1、2 tab
+		$('#add_model_top').tabs('disableTab', 1); 
+		$('#add_model_top').tabs('disableTab', 2); 
 	}
 	
 	// 消息框
@@ -372,6 +418,10 @@
 			</table>
 	</div>
 	
+	<!-- 新增 -->
+	<div id="diaolog">   
+    
+	</div>
 	
 	<!-- 右下角操作提示框 -->
 	<div id="message">   
