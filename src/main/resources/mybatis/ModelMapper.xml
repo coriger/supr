@@ -13,6 +13,10 @@
 		</if>
 	</sql>
 	
+	<sql id="modelAttrList">
+		
+	</sql>
+	
 	<!-- 获取模型总数 -->
 	<select id="getModelCount" resultType="int" parameterType="map">
 		select count(model.Id) from e_res_mould model 
@@ -30,6 +34,27 @@
 		limit #{startIndex},#{pageSize} 
 	</select>
 	
+	<!-- 获取模型属性总数 -->
+	<select id="getModelAttrCount" resultType="int" parameterType="map">
+		select count(pro.Id) from e_res_mould model 
+		inner join e_res_mould_property pro on model.Id = pro.rmId 
+		inner join e_res_mould_data_unit du on pro.rmduId = du.Id 
+		inner join e_data_type dt on du.dtId = dt.Id 
+		where 1 = 1 
+		<include refid="modelAttrList"/>
+	</select>
+	
+	<!-- 获取模型属性列表 -->
+	<select id="getModelAttrList" resultType="com.supr.blog.model.cmge.ModelAttr" parameterType="map">
+		select pro.*,dt.dtName,model.rmName from e_res_mould model 
+		inner join e_res_mould_property pro on model.Id = pro.rmId 
+		inner join e_res_mould_data_unit du on pro.rmduId = du.Id 
+		inner join e_data_type dt on du.dtId = dt.Id 
+		where 1 = 1 
+		<include refid="modelAttrList"/>
+		limit #{startIndex},#{pageSize} 
+	</select>
+
 	<!-- 获取行业列表 -->
 	<select id="getTradeList" resultType="com.supr.blog.model.cmge.Trade">
 		select * from e_trade 
@@ -47,5 +72,19 @@
 	<select id="getModelById" resultType="com.supr.blog.model.cmge.Model" parameterType="String">
 		select * from e_res_mould where Id = #{modelId}
 	</select>
+	
+	<!-- 新增模型 第一步  保存基础信息 -->
+	<insert id="saveModelInfo" parameterType="com.supr.blog.model.cmge.Model" > 
+		<![CDATA[
+		insert into e_res_mould(tId,rmName,rmKey,createTime,createBy,modifyTime,modifyBy,description) 
+			values
+		(#{tId},#{rmName},#{rmKey},#{createTime},1,#{createTime},1,#{description})
+		]]> 
+		<selectKey resultType="int" keyProperty="id">
+			<![CDATA[
+			SELECT LAST_INSERT_ID() as ID 
+			]]> 
+		</selectKey>
+	</insert>
 	
 </mapper>

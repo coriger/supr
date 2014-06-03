@@ -59,7 +59,7 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
-	 * 获取模型列表
+	 * 获取模型属性列表
 	 * @param adminId
 	 */
 	@RequestMapping(value = "/list_attr")
@@ -97,13 +97,33 @@ public class ModelController extends BaseController{
 		return "admin/model/add_model";
 	}
 	
+	
 	/**
 	 * 新增模型第一步
 	 * @param admin
 	 */
 	@RequestMapping(value = "/add/step1")
 	public String addModelStep1(ModelMap map){
+		// 加载行业
+		List<Trade> tradeList = modelService.getTradeList();
+		map.addAttribute("tradeList", tradeList);
 		return "admin/model/add_model_step1";
+	}
+	
+	/**
+	 * 新增模型第一步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/add/info")
+	public @ResponseBody 
+	Result addModelInfo(Model model){
+		model.setCreateTime(System.currentTimeMillis());
+		int count = modelService.saveModelInfo(model);
+		if(count == 1){
+			return new Result("error", "新增成功！",model.getId());
+		}else{
+			return new Result("success", "新增失败！");
+		}
 	}
 	
 	/**
@@ -115,11 +135,31 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
+	 * 新增模型第二步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/add/attr")
+	public @ResponseBody 
+	Result addModelAttr(ModelMap map){
+		return null;
+	}
+	
+	/**
 	 * 新增模型第三步
 	 */
 	@RequestMapping(value = "/add/step3")
 	public String addModelStep3(ModelMap map){
 		return "admin/model/add_model_step3";
+	}
+	
+	/**
+	 * 新增模型第三步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/add/lat")
+	public @ResponseBody 
+	Result addModelLat(ModelMap map){
+		return null;
 	}
 	
 }

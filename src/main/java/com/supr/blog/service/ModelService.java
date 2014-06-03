@@ -18,4 +18,6 @@ public interface ModelService {
 	Model getModelById(String modelId);
 
 	Pager<ModelAttr> getModelAttrList(Model model, int pageSize, int pageNum);
+
+	int saveModelInfo(Model model);
 }

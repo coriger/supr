@@ -129,6 +129,23 @@
 		var index = $('#add_model_top').tabs('getTabIndex',curTab);
 		if(index == '0'){
 			// 保存模型名称 和 模型key
+			console.info($(window.frames["sb"].document).find("#form").serialize());
+			$.ajax({
+				url : './model/add/info',
+				data: $(window.frames["sb"].document).find("#form").serialize(),
+				method : "post",
+				dataType : "json",
+				success : function(data) {
+					if (data.resultCode == 'error') {
+						alert(data.errorInfo);
+						return;
+					} else if (data.resultCode == 'success') {
+						var modelId = data.object;
+						console.info("模型Id:"+modelId);
+					}
+				}
+			});
+			
 			index = index + 1;
 			$('#add_model_top').tabs('enableTab', 1); 
 			$('#add_model_top').tabs('disableTab', 0); 
@@ -174,7 +191,7 @@
 	
 	// 创建tab页签
 	function createFrame(url) {
-	    var str = '<iframe width=100% height=100% frameborder=0 scrolling=no marginheight=0 marginwidth=0 src="' + url + '"></iframe>';
+	    var str = '<iframe name=sb width=100% height=100% frameborder=0 scrolling=no marginheight=0 marginwidth=0 src="' + url + '"></iframe>';
 	    return str;
 	}
 	
@@ -293,7 +310,7 @@
                <th data-options="field:'rmName',width:fixWidth(0.2),align:'center'">模型名称</th>  
                <th data-options="field:'rtName',width:fixWidth(0.2),align:'center'">所属行业</th>  
                <th data-options="field:'rmKey',width:fixWidth(0.2),align:'center'">模型key</th>
-               <th data-options="field:'desc',width:fixWidth(0.2),align:'center'">简介</th>       
+               <th data-options="field:'description',width:fixWidth(0.2),align:'center'">简介</th>       
            </tr>  
    </thead>  
 </table>

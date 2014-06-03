@@ -23,4 +23,6 @@ public interface ModelMapper {
 
 	List<ModelAttr> getModelAttrList(Map<String, Object> map);
 
+	int saveModelInfo(Model model);
+
 }

@@ -81,4 +81,9 @@ public class ModelServiceImpl implements ModelService {
 		return modelMapper.getModelById(modelId);
 	}
 	
+	@Override
+	public int saveModelInfo(Model model) {
+		return modelMapper.saveModelInfo(model);
+	}
+	
 }

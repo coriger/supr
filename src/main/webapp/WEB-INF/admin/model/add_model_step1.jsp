@@ -26,39 +26,44 @@
 	</style>
 
 	<div id="add_model_step1" class="div1">
-		<div class="div2">
-				<table>
-					<tbody>
-					<tr>
-						<td>所属行业：</td>
-						<td>
-							<select>
-								<option>全部</option>
-							</select>
-						</td>
-					</tr>
-					
-					<tr>
-						<td>模型名称：</td>
-						<td>
-							<input type="text"/>
-						</td>
-					</tr>
-					
-					<tr>
-						<td>模型Key：</td>
-						<td>
-							<input type="text"/>
-						</td>
-					</tr>	
-					
-					<tr>
-						<td>模型描述：</td>
-						<td>
-							<textarea rows="10" cols="60" style="resize: none;"></textarea>
-						</td>
-					</tr>
-					</tbody>	
-				</table>	
-		</div>
+		<form id="form" method="post">
+			<div class="div2">
+					<table>
+						<tbody>
+						<tr>
+							<td>所属行业：</td>
+							<td>
+								<select id="tId" name="tId" class="easyui-combobox" panelHeight="auto">
+									<option value="-1">全部</option>
+									<c:forEach items="${tradeList}" var="trade">
+										<option value="${trade.id}">${trade.rtName}</option>
+									</c:forEach>
+								</select>
+							</td>
+						</tr>
+						
+						<tr>
+							<td>模型名称：</td>
+							<td>
+								<input type="text" id="rmName" name="rmName"/>
+							</td>
+						</tr>
+						
+						<tr>
+							<td>模型Key：</td>
+							<td>
+								<input type="text" id="rmKey" name="rmKey"/>
+							</td>
+						</tr>	
+						
+						<tr>
+							<td>模型描述：</td>
+							<td>
+								<textarea rows="10" cols="60" style="resize: none;" id="desc" name="desc"></textarea>
+							</td>
+						</tr>
+						</tbody>	
+					</table>	
+			</div>
+		</form>
 	</div>
