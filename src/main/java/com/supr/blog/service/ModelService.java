@@ -17,5 +17,7 @@ public interface ModelService {
 
 	Model getModelById(String modelId);
 
-	Pager<ModelAttr> getModelAttrList(Model model, int pageSize, int pageNum);
+	Pager<ModelAttr> getModelAttrList(String modelId, int pageSize, int pageNum);
+
+	int saveModelInfo(Model model);
 }

@@ -59,14 +59,14 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
-	 * 获取模型列表
+	 * 获取模型属性列表
 	 * @param adminId
 	 */
 	@RequestMapping(value = "/list_attr")
 	public @ResponseBody 
-	Map<String, Object> getModelAttrListJson(Model model,@RequestParam(value="rows")int pageSize,@RequestParam(value="page")int pageNum){
+	Map<String, Object> getModelAttrListJson(String modelId,@RequestParam(value="rows")int pageSize,@RequestParam(value="page")int pageNum){
 		Map<String, Object> map = new HashMap<String, Object>();
-		Pager<ModelAttr> pager = modelService.getModelAttrList(model,pageSize,pageNum);
+		Pager<ModelAttr> pager = modelService.getModelAttrList(modelId,pageSize,pageNum);
 		map.put("rows", pager.getList());
 		map.put("total", pager.getTotalCount());
 		return map;
@@ -97,21 +97,54 @@ public class ModelController extends BaseController{
 		return "admin/model/add_model";
 	}
 	
+	
 	/**
 	 * 新增模型第一步
 	 * @param admin
 	 */
 	@RequestMapping(value = "/add/step1")
 	public String addModelStep1(ModelMap map){
+		// 加载行业
+		List<Trade> tradeList = modelService.getTradeList();
+		map.addAttribute("tradeList", tradeList);
 		return "admin/model/add_model_step1";
+	}
+	
+	/**
+	 * 新增模型第一步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/add/info")
+	public @ResponseBody 
+	Result addModelInfo(Model model){
+		model.setCreateTime(System.currentTimeMillis());
+		int count = modelService.saveModelInfo(model);
+		if(count == 1){
+			return new Result("success", "新增成功！",model.getId());
+		}else{
+			return new Result("error", "新增失败！");
+		}
 	}
 	
 	/**
 	 * 新增模型第二步
 	 */
 	@RequestMapping(value = "/add/step2")
-	public String addModelStep2(ModelMap map){
+	public String addModelStep2(String modelId,ModelMap map){
+		// 获取model对象
+		Model model = modelService.getModelById(modelId);
+		map.addAttribute("model",model);
 		return "admin/model/add_model_step2";
+	}
+	
+	/**
+	 * 新增模型第二步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/add/attr")
+	public @ResponseBody 
+	Result addModelAttr(ModelMap map){
+		return null;
 	}
 	
 	/**
@@ -120,6 +153,16 @@ public class ModelController extends BaseController{
 	@RequestMapping(value = "/add/step3")
 	public String addModelStep3(ModelMap map){
 		return "admin/model/add_model_step3";
+	}
+	
+	/**
+	 * 新增模型第三步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/add/lat")
+	public @ResponseBody 
+	Result addModelLat(ModelMap map){
+		return null;
 	}
 	
 }

@@ -44,10 +44,10 @@ public class ModelServiceImpl implements ModelService {
 	}
 	
 	@Override
-	public Pager<ModelAttr> getModelAttrList(Model model, int pageSize,int pageNum) {
+	public Pager<ModelAttr> getModelAttrList(String modelId, int pageSize,int pageNum) {
 		Pager<ModelAttr> pager = new Pager<ModelAttr>();
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("model", model);
+		map.put("modelId", modelId);
 		
 		// 获取数据总量
 		int count = modelMapper.getModelAttrCount(map);
@@ -79,6 +79,11 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	public Model getModelById(String modelId) {
 		return modelMapper.getModelById(modelId);
+	}
+	
+	@Override
+	public int saveModelInfo(Model model) {
+		return modelMapper.saveModelInfo(model);
 	}
 	
 }

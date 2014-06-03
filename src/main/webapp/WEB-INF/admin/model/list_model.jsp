@@ -129,18 +129,38 @@
 		var index = $('#add_model_top').tabs('getTabIndex',curTab);
 		if(index == '0'){
 			// 保存模型名称 和 模型key
-			index = index + 1;
-			$('#add_model_top').tabs('enableTab', 1); 
-			$('#add_model_top').tabs('disableTab', 0); 
-			$('#add_model_top').tabs('disableTab', 2); 
-			// 增加上一步按钮
-			var beforeButton = "<a href='javascript:beforeStep()' class='l-btn l-btn-small' group='' id=''>"+
-						  	"<span class='l-btn-left l-btn-icon-left'>"+
-							"<span class='l-btn-text'>上一步</span>"+
-							"<span class='l-btn-icon icon-save'></span>"+
-						 	"</span>"+
-							"</a>";
-			$(".dialog-button").prepend(beforeButton);
+			console.info($(window.frames["sb"].document).find("#form").serialize());
+			$.ajax({
+				url : './model/add/info',
+				data: $(window.frames["sb"].document).find("#form").serialize(),
+				method : "post",
+				dataType : "json",
+				success : function(data) {
+					if (data.resultCode == 'error') {
+						alert(data.errorInfo);
+						return;
+					} else if (data.resultCode == 'success') {
+						var modelId = data.object;
+						index = index + 1;
+						$('#add_model_top').tabs('enableTab', 1); 
+						$('#add_model_top').tabs('disableTab', 0); 
+						$('#add_model_top').tabs('disableTab', 2); 
+						// 增加上一步按钮
+						var beforeButton = "<a href='javascript:beforeStep()' class='l-btn l-btn-small' group='' id=''>"+
+									  	"<span class='l-btn-left l-btn-icon-left'>"+
+										"<span class='l-btn-text'>上一步</span>"+
+										"<span class='l-btn-icon icon-save'></span>"+
+									 	"</span>"+
+										"</a>";
+						$(".dialog-button").prepend(beforeButton);
+						// 切换到下一个tab
+						$("#add_model_top").tabs('select',index);
+						// 更新tab内容
+						alert(getTagUrl(index,modelId));
+						updateTagContent(getTagUrl(index,modelId));
+					}
+				}
+			});
 		}else if(index == '1'){
 			// 保存模型属性 
 			index = index + 1;
@@ -149,32 +169,37 @@
 			$('#add_model_top').tabs('disableTab', 1); 
 			// 去掉下一步按钮
 			$(".dialog-button a:last-child").remove();
+			
+			// 切换到下一个tab
+			$("#add_model_top").tabs('select',index);
+			// 更新tab内容
+			updateTagContent(getTagUrl(index));
 		}else if(index == '2'){
 			// 保存模型维度
 			$('#add_model_top').tabs('disableTab', 0); 
 			$('#add_model_top').tabs('disableTab', 1); 
 			$('#add_model_top').tabs('enableTab', 2); 
+			
+			// 切换到下一个tab
+			$("#add_model_top").tabs('select',index);
+			// 更新tab内容
+			updateTagContent(getTagUrl(index));
 		}
-		
-		// 切换到下一个tab
-		$("#add_model_top").tabs('select',index);
-		// 更新tab内容
-		updateTagContent(getTagUrl(index));
 	}
 	
-	function getTagUrl(index){
+	function getTagUrl(index,modelId){
 		if(index == '0'){
-			return './model/add/step1?date='+Math.random();
+			return './model/add/step1?date='+Math.random()+"&modelId="+modelId;
 		}else if(index == '1'){
-			return './model/add/step2?date='+Math.random();
+			return './model/add/step2?date='+Math.random()+"&modelId="+modelId;
 		}else if(index == '2'){
-			return './model/add/step3?date='+Math.random();
+			return './model/add/step3?date='+Math.random()+"&modelId="+modelId;
 		}
 	}
 	
 	// 创建tab页签
 	function createFrame(url) {
-	    var str = '<iframe width=100% height=100% frameborder=0 scrolling=no marginheight=0 marginwidth=0 src="' + url + '"></iframe>';
+	    var str = '<iframe name=sb width=100% height=100% frameborder=0 scrolling=no marginheight=0 marginwidth=0 src="' + url + '"></iframe>';
 	    return str;
 	}
 	
@@ -293,7 +318,7 @@
                <th data-options="field:'rmName',width:fixWidth(0.2),align:'center'">模型名称</th>  
                <th data-options="field:'rtName',width:fixWidth(0.2),align:'center'">所属行业</th>  
                <th data-options="field:'rmKey',width:fixWidth(0.2),align:'center'">模型key</th>
-               <th data-options="field:'desc',width:fixWidth(0.2),align:'center'">简介</th>       
+               <th data-options="field:'description',width:fixWidth(0.2),align:'center'">简介</th>       
            </tr>  
    </thead>  
 </table>

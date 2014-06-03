@@ -55,7 +55,7 @@ public class Model {
 	/**
 	 * 描述
 	 */
-	private String desc;
+	private String description;
 
 	public Integer getId() {
 		return id;
@@ -121,14 +121,6 @@ public class Model {
 		this.modifyBy = modifyBy;
 	}
 
-	public String getDesc() {
-		return desc;
-	}
-
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-
 	public String getRtName() {
 		return rtName;
 	}
@@ -136,6 +128,13 @@ public class Model {
 	public void setRtName(String rtName) {
 		this.rtName = rtName;
 	}
-	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	
 }
