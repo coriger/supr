@@ -51,10 +51,10 @@
 		inner join e_res_mould_data_unit du on pro.rmduId = du.Id 
 		inner join e_data_type dt on du.dtId = dt.Id 
 		where model.Id = #{modelId} 
+		where 1 = 1 
 		<include refid="modelAttrList"/>
-		limit #{startIndex},#{pageSize} 
 	</select>
-
+	
 	<!-- 获取行业列表 -->
 	<select id="getTradeList" resultType="com.supr.blog.model.cmge.Trade">
 		select * from e_trade 

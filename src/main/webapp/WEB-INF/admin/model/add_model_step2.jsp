@@ -49,7 +49,11 @@
 
 <table id="main" class="easyui-datagrid" 
 			data-options="fit : true,border:false,rownumbers:false,fitColumns : true,
+<<<<<<< HEAD
 			url:'./model/list_attr?modelId='+${model.id},pagination : true,pageSize:2, pageList:[2,4,6,8],
+=======
+			url:'./model/list_attr',pagination : true,pageSize:2, pageList:[2,4,6,8],
+>>>>>>> refs/remotes/origin/master
 			loadMsg:'正在加载中, 请稍候 …',toolbar:'#searchBut'"> 
 	<thead>  
            <tr>  
@@ -59,7 +63,11 @@
                <th data-options="field:'rmpName',width:fixWidth(0.167),align:'center'">属性名称</th>  
                <th data-options="field:'rmpKey',width:fixWidth(0.167),align:'center'">属性key</th>
                <th data-options="field:'dtName',width:fixWidth(0.167),align:'center'">数据单元</th>       
+<<<<<<< HEAD
                <th data-options="field:'description',width:fixWidth(0.167),align:'center'">简介</th>       
+=======
+               <th data-options="field:'desc',width:fixWidth(0.167),align:'center'">简介</th>       
+>>>>>>> refs/remotes/origin/master
            </tr>  
    </thead>  
 </table>
@@ -73,8 +81,13 @@
         
         <div class="div1">
 	           	<ul>
+<<<<<<< HEAD
 	           		<li>所属行业：${model.rtName}</li>
 					<li>模型名称：${model.rmName}</li>
+=======
+	           		<li>所属行业：饮食行业</li>
+					<li>模型名称：餐厅包房</li>
+>>>>>>> refs/remotes/origin/master
 	           	</ul>
         </div>
 </div>

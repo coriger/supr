@@ -59,7 +59,11 @@
 						<tr>
 							<td>模型描述：</td>
 							<td>
+<<<<<<< HEAD
 								<textarea rows="10" cols="60" style="resize: none;" id="description" name="description"></textarea>
+=======
+								<textarea rows="10" cols="60" style="resize: none;" id="desc" name="desc"></textarea>
+>>>>>>> refs/remotes/origin/master
 							</td>
 						</tr>
 						</tbody>	
