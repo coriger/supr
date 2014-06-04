@@ -128,6 +128,27 @@
 		</selectKey>
 	</insert>
 	
+	<!-- 根据Id获取模型数据单元 -->
+	<select id="getModelDataUnit" resultType="com.supr.blog.model.cmge.ModelDataUnit" parameterType="String">
+		select da.* from e_res_mould model 
+		inner join e_res_mould_data_unit da on model.Id = da.rmId 
+		where model.Id = #{modelId} 
+	</select>
+	
+	<!-- 新增模型属性  第二步  保存属性信息 -->
+	<insert id="saveModelAttr" parameterType="com.supr.blog.model.cmge.ModelAttr" > 
+		<![CDATA[
+		insert into e_res_mould_property(rmId,rmduId,rmpName,rmpKey,rmpFullKey,createTime,createBy,modifyTime,modifyBy,description) 
+			values
+		(#{rmId},#{rmduId},#{rmpName},#{rmpKey},#{rmpFullKey},#{createTime},1,#{createTime},1,#{description})
+		]]> 
+		<selectKey resultType="int" keyProperty="id">
+			<![CDATA[
+			SELECT LAST_INSERT_ID() as ID 
+			]]> 
+		</selectKey>
+	</insert>
+	
 	<!-- 新增模型 第一步  保存基础信息 -->
 	<insert id="saveModelInfo" parameterType="com.supr.blog.model.cmge.Model" > 
 		<![CDATA[
