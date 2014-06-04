@@ -201,8 +201,6 @@
 		updateTagContent(getTagUrl('1',$("#rmId").val()));
 	}
 	
->>>>>>> refs/remotes/origin/master
-	
 	// 初始化新增模型表单
 	function formInit(){
 		console.info("初始化表单...");
