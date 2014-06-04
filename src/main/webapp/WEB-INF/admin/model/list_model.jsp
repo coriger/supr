@@ -38,6 +38,68 @@
 		formInit();
 	}
 	
+	// 新增模型属性
+	function addModelAttr(modelId){
+		console.info("addModelAttr...,modelId="+modelId);
+		$("#addAttrDialog").dialog('open');
+		attrFormInit(modelId);
+	}
+	
+	// 初始化新增模型属性表单
+	function attrFormInit(modelId){
+		console.info("新增模型属性...");
+		// 跳转新增属性页面
+		$('#addAttrDialog').dialog('refresh', './model/forward/add/attr?modelId='+modelId);		
+	}
+	
+	// 保存模型属性
+	function saveModelAttr(){
+		console.info("保存模型属性...");
+		//console.info($(window.frames["sb"].document).find("#form").serialize());
+		console.info("test:"+Math.random());
+		console.info($("#form").serialize());
+		$.ajax({
+			url : './model/add/attr?data='+Math.random(),
+			data: $("#form").serialize(),
+			method : "post",
+			dataType : "json",
+			success : function(data) {
+				if (data.resultCode == 'error') {
+					alert(data.errorInfo);
+					return;
+				} else if (data.resultCode == 'success') {
+					// 弹出新增成功消息框 
+					showMsg("新增成功!");
+					// 输入框清空
+					$(':input','#form')
+					 .not(':button, :submit, :reset, :hidden,:select')
+					 .val('')
+					 .removeAttr('checked');
+					//.removeAttr('selected');
+					$("#rmduId").combobox('select','-1');
+				}
+			}
+		});
+	}
+	
+	// 保存并关闭  
+	function saveAndCloseModelAttr(){
+		// 保存
+		saveModelAttr();
+		// 关闭
+		closeModelAttr();
+	}
+	
+	// 关闭新增属性窗口
+	function closeModelAttr(){
+		console.info("关闭新增属性窗口...");
+		// 关闭属性列表
+		$("#addAttrDialog").dialog('close');
+		// 刷新
+		updateTagContent(getTagUrl('1',$("#rmId").val()));
+	}
+	
+	
 	// 初始化新增模型表单
 	function formInit(){
 		console.info("初始化表单...");
@@ -156,7 +218,6 @@
 						// 切换到下一个tab
 						$("#add_model_top").tabs('select',index);
 						// 更新tab内容
-						alert(getTagUrl(index,modelId));
 						updateTagContent(getTagUrl(index,modelId));
 					}
 				}
@@ -302,7 +363,6 @@
 		});    
 	}
 	
-	
 </script>
 
 </head>
@@ -363,3 +423,20 @@
 	<a href="#" onclick="saveModel()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">完成</a>
 	<a href="#" onclick="nextStep()" class="easyui-linkbutton" data-options="iconCls:'icon-help'">下一步</a>
 </div>
+
+
+<!-- 新增属性弹出框 -->
+<div id="addAttrDialog" class="easyui-dialog" 
+			data-options="title: '新增模型属性',top:20,width: 600, height: 400,
+			maximizable:true,closed: false, modal: true,
+			buttons:'#addAttrBt',closed:true">   
+	
+</div>
+
+<!-- 新增属性按钮 -->
+<div id="addAttrBt">
+	<a href="#" onclick="closeModelAttr()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">关闭</a>
+	<a href="#" onclick="saveModelAttr()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">保存</a>
+	<a href="#" onclick="saveAndCloseModelAttr()" class="easyui-linkbutton" data-options="iconCls:'icon-help'">保存并关闭</a>
+</div>
+

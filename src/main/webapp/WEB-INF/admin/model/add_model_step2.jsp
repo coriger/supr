@@ -26,7 +26,8 @@
 	// 新增模型属性
 	function addModelAttr(){
 		console.info("新增模型..");
-		// 弹一个新框
+		// 父窗口弹一个新框
+		window.parent.addModelAttr($("#modelId").val());
 	}
 	
 	// 编辑模型属性
@@ -37,6 +38,35 @@
 	// 删除模型属性
 	function delModelAttr(){
 		console.info("删除模型..");
+		var rows = $("#main").datagrid('getSelections');
+		if(rows.length >0){
+			$.messager.confirm('确认提示！','您确定要删除选中的所有行？',function(r){
+				if (r){
+					var ids = "";
+					for(var i=0;i<rows.length;i++){
+						ids += rows[i].id + ","; 
+					}
+					console.info(ids);
+					$.ajax({
+						url:'./model/deleteAttrBatch',
+						data:'modelAttrIds='+ids,
+						method : "post",
+						dataType : "json",
+						success:function(data){
+							if (data.resultCode=='success'){
+								$("#main").datagrid('load');
+								showMsg(data.errorInfo);//操作结果提示
+							} else {
+								showMsg(data.errorInfo);//操作结果提示
+							}
+						}
+					})
+				}
+			});
+		}else{
+			showMsg("请选择要操作的对象！");
+		}
+		
 	}
 	
 </script>
@@ -49,8 +79,9 @@
 
 <table id="main" class="easyui-datagrid" 
 			data-options="fit : true,border:false,rownumbers:false,fitColumns : true,
-			url:'./model/list_attr?modelId='+${model.id},pagination : true,pageSize:2, pageList:[2,4,6,8],
+			url:'./model/list_attr?modelId='+${model.id},pagination : false,pageSize:2, pageList:[2,4,6,8],
 			loadMsg:'正在加载中, 请稍候 …',toolbar:'#searchBut'"> 
+	<input type="hidden" id="modelId" value="${model.id}"/>
 	<thead>  
            <tr>  
            	   <th data-options="field:'ck',checkbox:true"></th>

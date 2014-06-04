@@ -17,6 +17,16 @@ public class ModelAttr {
 	private String rmName;
 	
 	/**
+	 * 模型Id
+	 */
+	private Integer rmId;
+	
+	/**
+	 * 数据单元Id
+	 */
+	private Integer rmduId;
+	
+	/**
 	 * 属性名称
 	 */
 	private String rmpName;
@@ -59,7 +69,7 @@ public class ModelAttr {
 	/**
 	 * 描述
 	 */
-	private String desc;
+	private String description;
 
 	public Integer getId() {
 		return Id;
@@ -125,12 +135,12 @@ public class ModelAttr {
 		this.modifyBy = modifyBy;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getDtName() {
@@ -147,5 +157,21 @@ public class ModelAttr {
 
 	public void setRmName(String rmName) {
 		this.rmName = rmName;
+	}
+
+	public Integer getRmId() {
+		return rmId;
+	}
+
+	public void setRmId(Integer rmId) {
+		this.rmId = rmId;
+	}
+
+	public Integer getRmduId() {
+		return rmduId;
+	}
+
+	public void setRmduId(Integer rmduId) {
+		this.rmduId = rmduId;
 	}
 }
