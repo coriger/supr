@@ -141,7 +141,6 @@
 						return;
 					} else if (data.resultCode == 'success') {
 						var modelId = data.object;
-<<<<<<< HEAD
 						index = index + 1;
 						$('#add_model_top').tabs('enableTab', 1); 
 						$('#add_model_top').tabs('disableTab', 0); 
@@ -162,25 +161,6 @@
 					}
 				}
 			});
-=======
-						console.info("模型Id:"+modelId);
-					}
-				}
-			});
-			
-			index = index + 1;
-			$('#add_model_top').tabs('enableTab', 1); 
-			$('#add_model_top').tabs('disableTab', 0); 
-			$('#add_model_top').tabs('disableTab', 2); 
-			// 增加上一步按钮
-			var beforeButton = "<a href='javascript:beforeStep()' class='l-btn l-btn-small' group='' id=''>"+
-						  	"<span class='l-btn-left l-btn-icon-left'>"+
-							"<span class='l-btn-text'>上一步</span>"+
-							"<span class='l-btn-icon icon-save'></span>"+
-						 	"</span>"+
-							"</a>";
-			$(".dialog-button").prepend(beforeButton);
->>>>>>> refs/remotes/origin/master
 		}else if(index == '1'){
 			// 保存模型属性 
 			index = index + 1;
