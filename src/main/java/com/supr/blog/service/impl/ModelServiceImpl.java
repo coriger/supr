@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.supr.blog.mapper.ModelMapper;
 import com.supr.blog.model.cmge.Model;
 import com.supr.blog.model.cmge.ModelAttr;
+import com.supr.blog.model.cmge.ModelDataUnit;
 import com.supr.blog.model.cmge.Trade;
 import com.supr.blog.service.ModelService;
 import com.supr.blog.util.pager.Pager;
@@ -86,4 +87,28 @@ public class ModelServiceImpl implements ModelService {
 		return modelMapper.saveModelInfo(model);
 	}
 	
+	@Override
+	public List<ModelDataUnit> getModelDataUnit(String modelId) {
+		return modelMapper.getModelDataUnit(modelId);
+	}
+	
+	@Override
+	public int saveModelAttr(ModelAttr modelAttr) {
+		return modelMapper.saveModelAttr(modelAttr);
+	}
+	
+	@Override
+	public int deleteAttrBatch(String[] ids) {
+		return modelMapper.deleteAttrBatch(ids);
+	}
+	
+	@Override
+	public ModelAttr getModelAttrById(String attrId) {
+		return modelMapper.getModelAttrById(attrId);
+	}
+	
+	@Override
+	public int updateModelAttr(ModelAttr modelAttr) {
+		return modelMapper.updateModelAttr(modelAttr);
+	}
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.supr.blog.controller.BaseController;
 import com.supr.blog.model.cmge.Model;
 import com.supr.blog.model.cmge.ModelAttr;
+import com.supr.blog.model.cmge.ModelDataUnit;
 import com.supr.blog.model.cmge.Trade;
 import com.supr.blog.model.vo.Result;
 import com.supr.blog.service.ModelService;
@@ -64,7 +65,7 @@ public class ModelController extends BaseController{
 	 */
 	@RequestMapping(value = "/list_attr")
 	public @ResponseBody 
-	Map<String, Object> getModelAttrListJson(String modelId,@RequestParam(value="rows")int pageSize,@RequestParam(value="page")int pageNum){
+	Map<String, Object> getModelAttrListJson(String modelId){
 		Map<String, Object> map = new HashMap<String, Object>();
 		Pager<ModelAttr> pager = modelService.getModelAttrList(modelId,pageSize,pageNum);
 		map.put("rows", pager.getList());
@@ -81,6 +82,22 @@ public class ModelController extends BaseController{
 	Result deleteBatch(@RequestParam String modelIds){
 		String[] ids = modelIds.split(",");
 		int count = modelService.deleteBatch(ids);
+		if(count != ids.length){
+			return new Result("error", "删除失败！");
+		}else{
+			return new Result("success", "删除成功！");
+		}
+	}
+	
+	/**
+	 * 删除模型属性
+	 * @param adminId
+	 */
+	@RequestMapping(value = "/deleteAttrBatch",method = RequestMethod.POST)
+	public @ResponseBody 
+	Result deleteAttrBatch(@RequestParam String modelAttrIds){
+		String[] ids = modelAttrIds.split(",");
+		int count = modelService.deleteAttrBatch(ids);
 		if(count != ids.length){
 			return new Result("error", "删除失败！");
 		}else{
@@ -138,13 +155,70 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
-	 * 新增模型第二步
+	 * 跳转新增模型属性
+	 * @param admin
+	 */
+	@RequestMapping(value = "/forward/add/attr")
+	public String addModelAttrPre(String modelId,ModelMap map){
+		// 获取数据单元
+		List<ModelDataUnit> dataUnitList = modelService.getModelDataUnit(modelId);
+		// 获取模型信息
+		Model model = modelService.getModelById(modelId);
+		
+		map.addAttribute("model",model);
+		map.addAttribute("dataUnitList",dataUnitList);
+		return "admin/model/add_model_attr";
+	}
+	
+	/**
+	 * 跳转编辑模型属性
+	 * @param admin
+	 */
+	@RequestMapping(value = "/forward/update/attr")
+	public String updateModelAttrPre(String attrId,String modelId,ModelMap map){
+		// 获取数据单元
+		List<ModelDataUnit> dataUnitList = modelService.getModelDataUnit(modelId);
+		// 获取模型信息
+		Model model = modelService.getModelById(modelId);
+		// 获取模型属性信息
+		ModelAttr modelAttr = modelService.getModelAttrById(attrId);
+		
+		map.addAttribute("model",model);
+		map.addAttribute("modelAttr",modelAttr);
+		map.addAttribute("dataUnitList",dataUnitList);
+		return "admin/model/update_model_attr";
+	}
+	
+	/**
+	 * 编辑模型属性
+	 * @param admin
+	 */
+	@RequestMapping(value = "/update/attr")
+	public @ResponseBody 
+	Result updateModelAttrPre(ModelAttr modelAttr,ModelMap map){
+		modelAttr.setModifyTime(System.currentTimeMillis());
+		int count = modelService.updateModelAttr(modelAttr);
+		if(count == 1){
+			return new Result("success", "更新成功！");
+		}else{
+			return new Result("error", "更新失败！");
+		}
+	}
+	
+	/**
+	 * 新增模型属性
 	 * @param admin
 	 */
 	@RequestMapping(value = "/add/attr")
 	public @ResponseBody 
-	Result addModelAttr(ModelMap map){
-		return null;
+	Result addModelAttr(ModelAttr modelAttr){
+		modelAttr.setCreateTime(System.currentTimeMillis());
+		int count = modelService.saveModelAttr(modelAttr);
+		if(count == 1){
+			return new Result("success", "新增成功！");
+		}else{
+			return new Result("error", "新增失败！");
+		}
 	}
 	
 	/**

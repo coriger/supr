@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.supr.blog.model.cmge.Model;
 import com.supr.blog.model.cmge.ModelAttr;
+import com.supr.blog.model.cmge.ModelDataUnit;
 import com.supr.blog.model.cmge.Trade;
 
 public interface ModelMapper {
@@ -24,5 +25,15 @@ public interface ModelMapper {
 	List<ModelAttr> getModelAttrList(Map<String, Object> map);
 
 	int saveModelInfo(Model model);
+
+	List<ModelDataUnit> getModelDataUnit(String modelId);
+
+	int saveModelAttr(ModelAttr modelAttr);
+
+	int deleteAttrBatch(String[] ids);
+
+	ModelAttr getModelAttrById(String attrId);
+
+	int updateModelAttr(ModelAttr modelAttr);
 
 }
