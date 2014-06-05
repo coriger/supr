@@ -17,6 +17,18 @@
 		
 	</sql>
 	
+	<sql id="updateModelLat">
+		<if test="rmpName != null and rmpName !=''">
+		 	,rmpName = #{rmpName} 
+		</if>
+		<if test="rmdFullKey != null and rmdFullKey != ''">
+			,rmdFullKey = #{rmdFullKey}
+		</if>
+		<if test="description != null and description != ''">
+			,description = #{description}
+		</if>
+	</sql>
+	
 	<sql id="updateModelAttr">
 		<if test="rmduId != null and rmduId !='-1'">
 		 	,rmduId = #{rmduId} 
@@ -72,6 +84,29 @@
 		<include refid="modelAttrList"/>
 	</select>
 	
+	<!-- 获取模型维度总数 -->
+	<select id="getModelLatCount" resultType="int" parameterType="map">
+		select count(dim.Id) from e_res_mould model 
+		inner join e_res_mould_dim dim on model.Id = dim.rmId 
+		inner join e_dim_algorithm da on dim.daId = da.Id 
+		where model.Id = #{modelId} 
+	</select>
+
+	<!-- 获取模型维度列表 -->
+	<select id="getModelLatList" resultType="com.supr.blog.model.cmge.ModelLat" parameterType="map">
+		select dim.*,da.daName,model.rmName from e_res_mould model 
+		inner join e_res_mould_dim dim on model.Id = dim.rmId 
+		inner join e_dim_algorithm da on dim.daId = da.Id 
+		where model.Id = #{modelId} 
+	</select>
+	
+	<!-- 获取模型维度入参-->
+	<select id="getAlgorithmProvideListById" resultType="com.supr.blog.model.cmge.AlgorithmProvide" parameterType="Integer">
+		select pro.*,t.dtName from e_dim_property_provide pro 
+		inner join e_data_type t on pro.dtId = t.Id 
+		where pro.Id = #{daId} 
+	</select>
+	
 	<!-- 获取行业列表 -->
 	<select id="getTradeList" resultType="com.supr.blog.model.cmge.Trade">
 		select * from e_trade 
@@ -93,6 +128,14 @@
         </foreach>
 	</delete>
 	
+	<!-- 批量删除维度属性 -->
+	<delete id="deleteLatBatch" parameterType="String">
+		delete from e_res_mould_dim where Id in 
+		<foreach collection="array" item="ids" index="index" open="(" close=")" separator=","> 
+            #{ids}
+        </foreach>
+	</delete>
+	
 	<!-- 根据Id获取模型 -->
 	<select id="getModelById" resultType="com.supr.blog.model.cmge.Model" parameterType="String">
 		select model.*,trade.rtName from e_res_mould model 
@@ -107,11 +150,24 @@
 		where pro.Id = #{attrId} 
 	</select>
 	
+	<!-- 根据Id获取模型维度 -->
+	<select id="getModelLatById" resultType="com.supr.blog.model.cmge.ModelLat" parameterType="String">
+		select dim.*,model.rmName,da.daKey from e_res_mould model 
+		inner join e_res_mould_dim dim on model.Id = dim.rmId 
+		inner join e_dim_algorithm da on dim.daId = da.Id 
+		where dim.Id = #{attrId} 
+	</select>
+	
 	<!-- 根据Id获取模型数据单元 -->
 	<select id="getModelDataUnit" resultType="com.supr.blog.model.cmge.ModelDataUnit" parameterType="String">
 		select da.* from e_res_mould model 
 		inner join e_res_mould_data_unit da on model.Id = da.rmId 
 		where model.Id = #{modelId} 
+	</select>
+	
+	<!-- 获取模型维度算法 -->
+	<select id="getLatAlgorithm" resultType="com.supr.blog.model.cmge.Algorithm">
+		select * from e_dim_algorithm 
 	</select>
 	
 	<!-- 新增模型属性  第二步  保存属性信息 -->
@@ -128,19 +184,12 @@
 		</selectKey>
 	</insert>
 	
-	<!-- 根据Id获取模型数据单元 -->
-	<select id="getModelDataUnit" resultType="com.supr.blog.model.cmge.ModelDataUnit" parameterType="String">
-		select da.* from e_res_mould model 
-		inner join e_res_mould_data_unit da on model.Id = da.rmId 
-		where model.Id = #{modelId} 
-	</select>
-	
-	<!-- 新增模型属性  第二步  保存属性信息 -->
-	<insert id="saveModelAttr" parameterType="com.supr.blog.model.cmge.ModelAttr" > 
+	<!-- 新增模型维度  第三步  保存维度信息 -->
+	<insert id="saveModelLat" parameterType="com.supr.blog.model.cmge.ModelLat" > 
 		<![CDATA[
-		insert into e_res_mould_property(rmId,rmduId,rmpName,rmpKey,rmpFullKey,createTime,createBy,modifyTime,modifyBy,description) 
+		insert into e_res_mould_dim(rmId,daId,rmdName,rmdFullKey,createTime,createBy,modifyTime,modifyBy,description) 
 			values
-		(#{rmId},#{rmduId},#{rmpName},#{rmpKey},#{rmpFullKey},#{createTime},1,#{createTime},1,#{description})
+		(#{rmId},#{daId},#{rmdName},#{rmdFullKey},#{createTime},1,#{createTime},1,#{description})
 		]]> 
 		<selectKey resultType="int" keyProperty="id">
 			<![CDATA[
@@ -168,6 +217,13 @@
 		update e_res_mould_property set modifyTime = #{modifyTime} 
 		<include refid="updateModelAttr"/> 
 		where Id = #{Id} 
+	</update>
+	
+	<!-- 更新模型维度基本信息  第一步 -->
+	<update id="updateModelLat" parameterType="com.supr.blog.model.cmge.ModelLat" >
+		update e_res_mould_dim set modifyTime = #{modifyTime} 
+		<include refid="updateModelLat"/> 
+		where Id = #{id} 
 	</update>
 	
 </mapper>

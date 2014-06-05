@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.supr.blog.mapper.ModelMapper;
+import com.supr.blog.model.cmge.Algorithm;
+import com.supr.blog.model.cmge.AlgorithmProvide;
 import com.supr.blog.model.cmge.Model;
 import com.supr.blog.model.cmge.ModelAttr;
 import com.supr.blog.model.cmge.ModelDataUnit;
+import com.supr.blog.model.cmge.ModelLat;
 import com.supr.blog.model.cmge.Trade;
 import com.supr.blog.service.ModelService;
 import com.supr.blog.util.pager.Pager;
@@ -68,6 +71,29 @@ public class ModelServiceImpl implements ModelService {
 	}
 	
 	@Override
+	public Pager<ModelLat> getModelLatList(String modelId, int pageSize,int pageNum) {
+		Pager<ModelLat> pager = new Pager<ModelLat>();
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("modelId", modelId);
+		
+		// 获取数据总量
+		int count = modelMapper.getModelLatCount(map);
+		// 分页信息封装 这一步关键 保证分页信息的合法性
+		pager.setTotalCount(count);
+		pager.setPageSize(pageSize);
+		pager.setPageNum(pageNum);
+		
+		if(count > 0){
+			map.put("startIndex", pager.getStartIndex());
+			map.put("pageSize", pager.getPageSize());
+			List<ModelLat> list = modelMapper.getModelLatList(map);
+			pager.setList(list);
+		}
+		 
+		return pager;
+	}
+	
+	@Override
 	public List<Trade> getTradeList() {
 		return modelMapper.getTradeList();
 	}
@@ -103,6 +129,11 @@ public class ModelServiceImpl implements ModelService {
 	}
 	
 	@Override
+	public int deleteLatBatch(String[] ids) {
+		return modelMapper.deleteLatBatch(ids);
+	}
+	
+	@Override
 	public ModelAttr getModelAttrById(String attrId) {
 		return modelMapper.getModelAttrById(attrId);
 	}
@@ -110,5 +141,30 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	public int updateModelAttr(ModelAttr modelAttr) {
 		return modelMapper.updateModelAttr(modelAttr);
+	}
+	
+	@Override
+	public List<Algorithm> getLatAlgorithm() {
+		return modelMapper.getLatAlgorithm();
+	}
+	
+	@Override
+	public int saveModelLat(ModelLat modelLat) {
+		return modelMapper.saveModelLat(modelLat);
+	}
+	
+	@Override
+	public ModelLat getModelLatById(String latId) {
+		return modelMapper.getModelLatById(latId);
+	}
+	
+	@Override
+	public int updateModelLat(ModelLat modelLat) {
+		return modelMapper.updateModelLat(modelLat);
+	}
+	
+	@Override
+	public List<AlgorithmProvide> getAlgorithmProvideListById(Integer daId) {
+		return modelMapper.getAlgorithmProvideListById(daId);
 	}
 }

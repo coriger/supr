@@ -18,50 +18,97 @@
 <script type="text/javascript" src="<%=basePath%>js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>js/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
-	//列表宽度百分比设置
+	// 列表宽度百分比设置
 	function fixWidth(percent){
 		return document.body.clientWidth * percent ;
 	}
 	
+	// 新增模型维度
+	function addModelLat(){
+		console.info("新增模型维度..");
+		// 父窗口弹一个新框
+		window.parent.addModelLat($("#modelId").val());
+	}
+	
+	// 编辑模型维度
+	function editModelLat(){
+		console.info("编辑模型维度..");
+		// 父窗口弹一个新框
+		var rows = $("#main").datagrid('getSelections');
+		window.parent.editModelLat(rows[0].id);
+	}
+	
+	// 删除模型维度
+	function delModelLat(){
+		console.info("删除模型维度..");
+		var rows = $("#main").datagrid('getSelections');
+		if(rows.length >0){
+			$.messager.confirm('确认提示！','您确定要删除选中的所有行？',function(r){
+				if (r){
+					var ids = "";
+					for(var i=0;i<rows.length;i++){
+						ids += rows[i].id + ","; 
+					}
+					console.info(ids);
+					$.ajax({
+						url:'./model/deleteLatBatch',
+						data:'modelLatIds='+ids,
+						method : "post",
+						dataType : "json",
+						success:function(data){
+							if (data.resultCode=='success'){
+								$("#main").datagrid('load');
+								showMsg(data.errorInfo);//操作结果提示
+							} else {
+								showMsg(data.errorInfo);//操作结果提示
+							}
+						}
+					})
+				}
+			});
+		}else{
+			showMsg("请选择要操作的对象！");
+		}
+		
+	}
+	
 </script>
 
+<style type="text/css">
+	.div1{
+		list-style: none;
+	}
+</style>
+
 <table id="main" class="easyui-datagrid" 
-			data-options="fit : true,border:false,rownumbers:true,fitColumns : true,
-			url:'./model/list_model',pagination : true,pageSize:2, pageList:[2,4,6,8],
+			data-options="fit : true,border:false,rownumbers:false,fitColumns : true,
+			url:'./model/list_lat?modelId='+${model.id},pagination : false,pageSize:2, pageList:[2,4,6,8],
 			loadMsg:'正在加载中, 请稍候 …',toolbar:'#searchBut'"> 
+			<input type="hidden" id="modelId" value="${model.id}"/>
 	<thead>  
            <tr>  
            	   <th data-options="field:'ck',checkbox:true"></th>
-               <th data-options="field:'id',width:fixWidth(0.2),align:'center'">模型Id</th>  
-               <th data-options="field:'rmName',width:fixWidth(0.2),align:'center'">模型名称</th>  
-               <th data-options="field:'rtName',width:fixWidth(0.2),align:'center'">所属行业</th>  
-               <th data-options="field:'rmKey',width:fixWidth(0.2),align:'center'">模型key</th>
-               <th data-options="field:'desc',width:fixWidth(0.2),align:'center'">简介</th>       
+               <th data-options="field:'id',width:fixWidth(0.157),align:'center'">维度Id</th>  
+               <th data-options="field:'rmName',width:fixWidth(0.167),align:'center'">所属模型</th>  
+               <th data-options="field:'rmdName',width:fixWidth(0.167),align:'center'">维度名称</th>  
+               <th data-options="field:'daName',width:fixWidth(0.167),align:'center'">维度算法</th>
+               <th data-options="field:'rmdFullKey',width:fixWidth(0.177),align:'center'">模型维度完整Key</th>       
+               <th data-options="field:'description',width:fixWidth(0.167),align:'center'">简介</th>       
            </tr>  
    </thead>  
 </table>
 
 <div id="searchBut" style="padding:5px;height:auto">
         <div style="margin-bottom:5px">
-            <a href="#" onclick="addModel()" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
-            <a href="#" onclick="editModel()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">编辑</a>
-            <a href=# onclick="delModel()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+            <a href="#" onclick="addModelLat()" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
+            <a href="#" onclick="editModelLat()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">编辑</a>
+            <a href=# onclick="delModelLat()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
         </div>
         
-        <div>
-            <!-- Date From: <input class="easyui-datebox" style="width:80px">
-            To: <input class="easyui-datebox" style="width:80px"> -->
-           	<form id="search_form"> 
-	           	 所属行业：
-	            <select id="tId" name="tId" class="easyui-combobox" panelHeight="auto" style="width:100px">
-									<option value="-1">全部</option>
-									<c:forEach items="${tradeList}" var="trade">
-										<option value="${trade.id}">${trade.rtName}</option>
-									</c:forEach>
-				</select>
-				模型名称：<input type="text" id="rmName" name="rmName" placeholder="请输入模型名称..."/>
-	            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchModel()">查询</a>
-				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearAll()">重置</a>
-        	</form>
+        <div class="div1">
+	           	<ul>
+	           		<li>所属行业：${model.rtName}</li>
+					<li>模型名称：${model.rmName}</li>
+	           	</ul>
         </div>
 </div>

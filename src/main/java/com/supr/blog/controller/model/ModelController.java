@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.supr.blog.controller.BaseController;
+import com.supr.blog.model.cmge.Algorithm;
+import com.supr.blog.model.cmge.AlgorithmProvide;
 import com.supr.blog.model.cmge.Model;
 import com.supr.blog.model.cmge.ModelAttr;
 import com.supr.blog.model.cmge.ModelDataUnit;
+import com.supr.blog.model.cmge.ModelLat;
 import com.supr.blog.model.cmge.Trade;
 import com.supr.blog.model.vo.Result;
 import com.supr.blog.service.ModelService;
@@ -74,6 +77,20 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
+	 * 获取模型维度列表
+	 * @param adminId
+	 */
+	@RequestMapping(value = "/list_lat")
+	public @ResponseBody 
+	Map<String, Object> getModelLatListJson(String modelId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		Pager<ModelLat> pager = modelService.getModelLatList(modelId,pageSize,pageNum);
+		map.put("rows", pager.getList());
+		map.put("total", pager.getTotalCount());
+		return map;
+	}
+	
+	/**
 	 * 删除模型
 	 * @param adminId
 	 */
@@ -98,6 +115,22 @@ public class ModelController extends BaseController{
 	Result deleteAttrBatch(@RequestParam String modelAttrIds){
 		String[] ids = modelAttrIds.split(",");
 		int count = modelService.deleteAttrBatch(ids);
+		if(count != ids.length){
+			return new Result("error", "删除失败！");
+		}else{
+			return new Result("success", "删除成功！");
+		}
+	}
+	
+	/**
+	 * 删除模型维度
+	 * @param adminId
+	 */
+	@RequestMapping(value = "/deleteLatBatch",method = RequestMethod.POST)
+	public @ResponseBody 
+	Result deleteLatBatch(@RequestParam String modelLatIds){
+		String[] ids = modelLatIds.split(",");
+		int count = modelService.deleteLatBatch(ids);
 		if(count != ids.length){
 			return new Result("error", "删除失败！");
 		}else{
@@ -171,6 +204,22 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
+	 * 跳转新增模型维度
+	 * @param admin
+	 */
+	@RequestMapping(value = "/forward/add/lat")
+	public String addModelLatPre(String modelId,ModelMap map){
+		// 获取维度算法
+		List<Algorithm> algorithmList = modelService.getLatAlgorithm();
+		// 获取模型信息
+		Model model = modelService.getModelById(modelId);
+		
+		map.addAttribute("model",model);
+		map.addAttribute("algorithmList",algorithmList);
+		return "admin/model/add_model_lat";
+	}
+	
+	/**
 	 * 跳转编辑模型属性
 	 * @param admin
 	 */
@@ -190,6 +239,44 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
+	 * 跳转编辑模型维度  第一步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/forward/update/lat")
+	public String updateModelLatPre(String latId,String modelId,ModelMap map){
+		// 获取维度算法
+		List<Algorithm> algorithmList = modelService.getLatAlgorithm();
+		// 获取模型信息
+		Model model = modelService.getModelById(modelId);
+		// 获取模型属性信息
+		ModelLat modelLat = modelService.getModelLatById(latId);
+		
+		map.addAttribute("model",model);
+		map.addAttribute("modelLat",modelLat);
+		map.addAttribute("algorithmList",algorithmList);
+		return "admin/model/update_model_lat";
+	}
+	
+	/**
+	 * 跳转编辑模型维度  第二步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/forward/update/lat_algorithm")
+	public String updateModelLatPost(String latId,String modelId,ModelMap map){
+		// 获取模型信息
+		Model model = modelService.getModelById(modelId);
+		// 获取模型属性信息
+		ModelLat modelLat = modelService.getModelLatById(latId);
+		// 算法入参
+		List<AlgorithmProvide> algorithmProvideList = modelService.getAlgorithmProvideListById(modelLat.getDaId());
+		
+		map.addAttribute("model",model);
+		map.addAttribute("modelLat",modelLat);
+		map.addAttribute("algorithmProvideList",algorithmProvideList);
+		return "admin/model/update_model_lat_algorithm";
+	}
+	
+	/**
 	 * 编辑模型属性
 	 * @param admin
 	 */
@@ -198,6 +285,22 @@ public class ModelController extends BaseController{
 	Result updateModelAttrPre(ModelAttr modelAttr,ModelMap map){
 		modelAttr.setModifyTime(System.currentTimeMillis());
 		int count = modelService.updateModelAttr(modelAttr);
+		if(count == 1){
+			return new Result("success", "更新成功！");
+		}else{
+			return new Result("error", "更新失败！");
+		}
+	}
+	
+	/**
+	 * 更新模型维度基本信息
+	 * @param admin
+	 */
+	@RequestMapping(value = "/update/latinfo")
+	public @ResponseBody 
+	Result updateModelLatInfo(ModelLat modelLat,ModelMap map){
+		modelLat.setModifyTime(System.currentTimeMillis());
+		int count = modelService.updateModelLat(modelLat);
 		if(count == 1){
 			return new Result("success", "更新成功！");
 		}else{
@@ -222,21 +325,30 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
-	 * 新增模型第三步
-	 */
-	@RequestMapping(value = "/add/step3")
-	public String addModelStep3(ModelMap map){
-		return "admin/model/add_model_step3";
-	}
-	
-	/**
-	 * 新增模型第三步
+	 * 新增模型维度
 	 * @param admin
 	 */
 	@RequestMapping(value = "/add/lat")
 	public @ResponseBody 
-	Result addModelLat(ModelMap map){
-		return null;
+	Result addModelLat(ModelLat modelLat){
+		modelLat.setCreateTime(System.currentTimeMillis());
+		int count = modelService.saveModelLat(modelLat);
+		if(count == 1){
+			return new Result("success", "新增成功！");
+		}else{
+			return new Result("error", "新增失败！");
+		}
+	}
+	
+	/**
+	 * 新增模型第三步
+	 */
+	@RequestMapping(value = "/add/step3")
+	public String addModelStep3(String modelId,ModelMap map){
+		// 获取model对象
+		Model model = modelService.getModelById(modelId);
+		map.addAttribute("model",model);
+		return "admin/model/add_model_step3";
 	}
 	
 }

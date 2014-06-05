@@ -52,10 +52,11 @@
 			var curTab = $("#center-tab").tabs('getSelected');
 			// 获取frame中的src
 			url = $(curTab.panel('options').content).attr('src');
+			id = $(curTab.panel('options').content).attr('id');
 			$("#center-tab").tabs('update', {
 	            tab:curTab,
 	            options:{
-	                content:createFrame(url)
+	                content:createFrame(id,url)
 	            }
 	        })
 		})
@@ -90,10 +91,11 @@
 		if(curTitle != '首页'){
 			// 获取frame中的src
 			url = $(curTab.panel('options').content).attr('src');
+			id = $(curTab.panel('options').content).attr('id');
 			$("#center-tab").tabs('update', {
 	            tab:curTab,
 	            options:{
-	                content:createFrame(url)
+	                content:createFrame(id,url)
 	            }
 	        })
 		}
@@ -157,17 +159,17 @@
 		// 这块到时候ajax动态加载
 		var acc = [
 		           {"title":"系统管理", "menus":[
-		               {"name":"用户管理", "url":"./admin/list"},
-		               {"name":"资源管理", "url":"./admin/list"},
-		               {"name":"角色管理", "url":"./admin/list"},
-		               {"name":"权限管理", "url":"./admin/list"}
+		               {"id":"user","name":"用户管理", "url":"./admin/list"},
+		               {"id":"user","name":"资源管理", "url":"./admin/list"},
+		               {"id":"user","name":"角色管理", "url":"./admin/list"},
+		               {"id":"user","name":"权限管理", "url":"./admin/list"}
 		           ]},
 		           {"title":"模型管理", "menus":[
-		               {"name":"模型列表", "url":"./model/list"},
-		               {"name":"模型属性列表", "url":"./modelAttr/list"},
-		               {"name":"模型维度列表", "url":"./modelLat/list"},
-		               {"name":"模型维度属性列表", "url":"./modelLatAttr/list"},
-		               {"name":"模型数据单元列表", "url":"./modelDataUnit/list"}
+		               {"id":"model","name":"模型列表", "url":"./model/list"},
+		               {"id":"attr","name":"模型属性列表", "url":"./modelAttr/list"},
+		               {"id":"lat","name":"模型维度列表", "url":"./modelLat/list"},
+		               {"id":"lat_attr","name":"模型维度属性列表", "url":"./modelLatAttr/list"},
+		               {"id":"data_unit","name":"模型数据单元列表", "url":"./modelDataUnit/list"}
 		           ]}
 		       ];
 		
@@ -180,7 +182,7 @@
 	        var acc_index = $("#accordion")
 	            .accordion("getPanel", acc[i].title);
 	        for (var j in cm) {
-	            $a_html = "<div><a onclick=\"javascript:addTab('" + cm[j].url + "','" + cm[j].name +"')\">"+cm[j].name+"</a></div>";
+	            $a_html = "<div><a onclick=\"javascript:addTab('" + cm[j].id + "','" + cm[j].url + "','" + cm[j].name +"')\">"+cm[j].name+"</a></div>";
 	            acc_index.append($a_html);
 	        }
 	    }
@@ -188,7 +190,7 @@
 		$("#accordion").accordion("select","系统管理");
 	}
 	
-	function addTab(htmlUrl,title){
+	function addTab(tabId,htmlUrl,title){
 		//如果当前id的tab不存在则创建一个tab
 		if(title != ""){
 			if($('#center-tab').tabs('exists',title)){
@@ -199,15 +201,15 @@
 					selected:true,
 					closable:true,
 					cache : false,
-					content : createFrame(htmlUrl)
+					content : createFrame(tabId,htmlUrl)
 				});
 			}
 		}
 		return false;
 	}
 	
-	function createFrame(url) {
-	    var s = '<iframe width=100% height=100% frameborder=0 scrolling=no marginheight=0 marginwidth=0 src="' + url + '"></iframe>';
+	function createFrame(tabId,url) {
+	    var s = '<iframe id="' + tabId + '" width=100% height=100% frameborder=0 scrolling=no marginheight=0 marginwidth=0 src="' + url + '"></iframe>';
 	    return s;
 	}
 	

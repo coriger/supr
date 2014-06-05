@@ -2,9 +2,12 @@ package com.supr.blog.service;
 
 import java.util.List;
 
+import com.supr.blog.model.cmge.Algorithm;
+import com.supr.blog.model.cmge.AlgorithmProvide;
 import com.supr.blog.model.cmge.Model;
 import com.supr.blog.model.cmge.ModelAttr;
 import com.supr.blog.model.cmge.ModelDataUnit;
+import com.supr.blog.model.cmge.ModelLat;
 import com.supr.blog.model.cmge.Trade;
 import com.supr.blog.util.pager.Pager;
 
@@ -31,4 +34,18 @@ public interface ModelService {
 	ModelAttr getModelAttrById(String attrId);
 
 	int updateModelAttr(ModelAttr modelAttr);
+
+	Pager<ModelLat> getModelLatList(String modelId, int pageSize, int pageNum);
+
+	int deleteLatBatch(String[] ids);
+
+	List<Algorithm> getLatAlgorithm();
+
+	int saveModelLat(ModelLat modelLat);
+
+	ModelLat getModelLatById(String latId);
+
+	int updateModelLat(ModelLat modelLat);
+
+	List<AlgorithmProvide> getAlgorithmProvideListById(Integer daId);
 }
