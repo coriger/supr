@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.supr.blog.model.cmge.Algorithm;
 import com.supr.blog.model.cmge.AlgorithmProvide;
+import com.supr.blog.model.cmge.DataType;
 import com.supr.blog.model.cmge.Model;
 import com.supr.blog.model.cmge.ModelAttr;
 import com.supr.blog.model.cmge.ModelDataUnit;
@@ -50,4 +51,16 @@ public interface ModelService {
 	List<AlgorithmProvide> getAlgorithmProvideListById(ModelLat modelLat);
 
 	List<ModelDataUnit> getModelLatDataUnit(Integer modelId);
+
+	List<Model> getModelList();
+	
+	Pager<ModelDataUnit> getModelDataUnitList(ModelDataUnit modelDataUnit,int pageSize, int pageNum);
+
+	int deleteModelDataUnitBatch(String[] ids);
+
+	ModelDataUnit getModelDataUnitById(String ids);
+
+	int saveModelDataUnitInfo(ModelDataUnit modelDataUnit);
+	
+	List<DataType> getDataTypeList();
 }

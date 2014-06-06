@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.supr.blog.mapper.ModelMapper;
 import com.supr.blog.model.cmge.Algorithm;
 import com.supr.blog.model.cmge.AlgorithmProvide;
+import com.supr.blog.model.cmge.DataType;
 import com.supr.blog.model.cmge.Model;
 import com.supr.blog.model.cmge.ModelAttr;
 import com.supr.blog.model.cmge.ModelDataUnit;
@@ -172,4 +173,55 @@ public class ModelServiceImpl implements ModelService {
 	public List<ModelDataUnit> getModelLatDataUnit(Integer modelId) {
 		return modelMapper.getModelLatDataUnit(modelId);
 	}
+
+	/**
+	 * 获取分页ModelDataUnit
+	 */
+	@Override
+	public Pager<ModelDataUnit> getModelDataUnitList(ModelDataUnit modelDataUnit,int pageSize, int pageNum){
+		Pager<ModelDataUnit> pager = new Pager<ModelDataUnit>();
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("modelDataUnit", modelDataUnit);
+		
+		// 获取数据总量
+		int count = modelMapper.getModelDataUnitCount(map);
+		// 分页信息封装 这一步关键 保证分页信息的合法性
+		pager.setTotalCount(count);
+		pager.setPageSize(pageSize);
+		pager.setPageNum(pageNum);
+		
+		if(count > 0){
+			map.put("startIndex", pager.getStartIndex());
+			map.put("pageSize", pager.getPageSize());
+			List<ModelDataUnit> list = modelMapper.getModelDataUnitList(map);
+			pager.setList(list);
+		}
+		return pager;
+	}
+	
+	@Override
+	public int deleteModelDataUnitBatch(String[] ids) {
+		return modelMapper.deleteModelDataUnitBatch(ids);
+	}
+	
+	@Override
+	public ModelDataUnit getModelDataUnitById(String modelId) {
+		return modelMapper.getModelDataUnitById(modelId);
+	}
+	
+	@Override
+	public int saveModelDataUnitInfo(ModelDataUnit modelDataUnit) {
+		return modelMapper.saveModelDataUnitInfo(modelDataUnit);
+	}
+
+	@Override
+	public List<Model> getModelList() {
+		return modelMapper.getAllModelList();
+	}
+	
+	@Override
+	public List<DataType> getDataTypeList() {
+		return modelMapper.getDataTypeList();
+	}
+	
 }

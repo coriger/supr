@@ -63,7 +63,7 @@
 		<include refid="modelList"/>
 		limit #{startIndex},#{pageSize} 
 	</select>
-	
+
 	<!-- 获取模型属性总数 -->
 	<select id="getModelAttrCount" resultType="int" parameterType="map">
 		select count(pro.Id) from e_res_mould model 
@@ -83,7 +83,7 @@
 		where model.Id = #{modelId} 
 		<include refid="modelAttrList"/>
 	</select>
-	
+
 	<!-- 获取模型维度总数 -->
 	<select id="getModelLatCount" resultType="int" parameterType="map">
 		select count(dim.Id) from e_res_mould model 
@@ -127,7 +127,7 @@
             #{ids}
         </foreach>
 	</delete>
-	
+
 	<!-- 批量删除维度属性 -->
 	<delete id="deleteLatBatch" parameterType="String">
 		delete from e_res_mould_dim where Id in 
@@ -219,6 +219,7 @@
 		</selectKey>
 	</insert>
 	
+
 	<!-- 更新模型属性 -->
 	<update id="updateModelAttr" parameterType="com.supr.blog.model.cmge.ModelAttr" >
 		update e_res_mould_property set modifyTime = #{modifyTime} 
@@ -232,5 +233,71 @@
 		<include refid="updateModelLat"/> 
 		where Id = #{id} 
 	</update>
+
+	<!-- liliangchun start -->
+	<!-- 获取模型列表 -->
+	<select id="getAllModelList" resultType="com.supr.blog.model.cmge.Model" parameterType="map">
+		select model.* from e_res_mould model 
+	</select>
 	
+	<!-- 获取数据类型列表 -->
+	<select id="getDataTypeList" resultType="com.supr.blog.model.cmge.DataType" parameterType="map">
+		select dateType.* from e_data_type dateType 
+	</select>
+	
+	<sql id="modelDataUnitList">
+		<if test="modelDataUnit.id != null and modelDataUnit.id !='-1'">
+		 	and modelDataUnit.id = #{modelDataUnit.id}
+		</if>
+		<if test="modelDataUnit.dtId != null and modelDataUnit.dtId !='-1'">
+		 	and modelDataUnit.dtId = #{modelDataUnit.dtId}
+		</if>
+		<if test="modelDataUnit.rmId != null and modelDataUnit.rmId !='-1'">
+		 	and modelDataUnit.rmId = #{modelDataUnit.rmId}
+		</if>
+		<if test="modelDataUnit.useType != null and modelDataUnit.useType !='-1'">
+		 	and modelDataUnit.useType = #{modelDataUnit.useType}
+		</if>
+		<if test="modelDataUnit.rmduName != null and modelDataUnit.rmduName != ''">
+			and modelDataUnit.rmduName like CONCAT('%','${modelDataUnit.rmduName}','%' ) 
+		</if>
+	</sql>
+	
+	<!-- 获取模型数据单元 -->
+	<select id="getModelDataUnitCount" resultType="int" parameterType="map">
+		select count(modelDataUnit.Id) from e_res_mould_data_unit modelDataUnit 
+		inner join e_data_type dt on modelDataUnit.dtId = dt.Id 
+		inner join e_res_mould rm on modelDataUnit.rmId = rm.Id
+		where 1 = 1 
+		<include refid="modelDataUnitList"/>
+	</select>
+	<!-- 获取模型数据单元列表 -->
+	<select id="getModelDataUnitList" resultType="com.supr.blog.model.cmge.ModelDataUnit" parameterType="map">
+		select modelDataUnit.*,dt.dtName,rm.rmName from e_res_mould_data_unit modelDataUnit 
+		inner join e_data_type dt on modelDataUnit.dtId = dt.Id 
+		inner join e_res_mould rm on modelDataUnit.rmId = rm.Id
+		where 1 = 1 
+		<include refid="modelDataUnitList"/>
+		limit #{startIndex},#{pageSize} 
+	</select>
+	<!-- 保存模型数据单元信息 -->
+	<insert id="saveModelDataUnitInfo" parameterType="com.supr.blog.model.cmge.ModelDataUnit" > 
+		<![CDATA[
+		INSERT INTO e_res_mould_data_unit (
+				dtId,rmId,rmduName,useType,maxValues,minValue,stepValue,
+				defaultValue1,defaultValue2,defaultValue3,createTime,
+				createBy,modifyTime,modifyBy,description
+			)VALUES(
+				#{dtId},#{rmId},#{rmduName},#{useType},#{maxValue},#{minValue},#{stepValue},
+				#{defaultValue1},#{defaultValue2},#{defaultValue3},#{createTime},
+				1,#{createTime},1,#{description}
+			)
+		]]> 
+		<selectKey resultType="int" keyProperty="id">
+			<![CDATA[
+			SELECT LAST_INSERT_ID() as ID 
+			]]> 
+		</selectKey>
+	</insert>
+	<!-- liliangchun end -->
 </mapper>
