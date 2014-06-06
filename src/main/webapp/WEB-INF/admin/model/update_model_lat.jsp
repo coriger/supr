@@ -38,6 +38,7 @@
 			<div class="div2">
 					<table>
 						<tbody>
+						<input type="hidden" id="latId" name="latId" value="${modelLat.id}"/>
 						<input type="hidden" id="Id" name="Id" value="${modelLat.id}"/>
 						<tr>
 							<td>所属模型：</td>
@@ -66,7 +67,11 @@
 								<select id="daId" name="daId" class="easyui-combobox" panelHeight="auto">
 									<option value="-1">选择维度算法</option>
 									<c:forEach items="${algorithmList}" var="algorithm">
-										<option value="${algorithm.id}">${algorithm.daName}</option>
+											<option value="${algorithm.id}"
+												<c:if test="${algorithm.id == modelLat.daId}">
+													selected
+												</c:if>
+											>${algorithm.daName}</option>
 									</c:forEach>
 								</select>
 							</td>

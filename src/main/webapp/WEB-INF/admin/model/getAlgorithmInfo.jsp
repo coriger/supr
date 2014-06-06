@@ -5,25 +5,16 @@
 			border: 1px;
 			border-color: ccc;	
 			border-style: solid;
-			margin-left: 20px;
-			margin-right: 20px;
-			margin-top:20px;
-			height: 260px;
+			height: auto;
 		}
 		.div2 {
-			margin-left: 14px;
-			margin-top: 10px;
 		}
 		
 		.div2 tr {
 			font-size: 13px;
 		}
 		
-		.div2 td {
-			
-		}
 		.div2 input{
-			width: 80px;
 		}
 		
 		.table1{
@@ -32,32 +23,18 @@
 			margin-bottom: 12px;
 		}
 		
-		.table1 td{
-			/**text-align: center;**/
-			padding-left: 30px;
+		.table1 input{
+			width: 80px;
 		}
 		
-		.demo_line_02{height: 1px;border-top: 1px solid #ddd;margin-left: 10px;margin-right: 10px,margin-top:4px;margin-bottom: 4px;}
+		.demo_line_02{height: 1px;border-top: 1px solid #ddd;padding-bottom: 8px;}
 		
 	</style>
 	
 	<div id="add_model_step1" class="div1">
-		<form id="form" method="post">
+		<form id="add_model_lat_alg_form" method="post">
 			<div class="div2">
-				<table class="table1">
-					<tbody>
-						<tr>
-							<td>所属模型：${model.rmName}</td>
-							<td>所属维度：${modelLat.rmdName}</td>
-						</tr>
-						<tr>
-							<td>维度算法：${modelLat.daName}</td>
-							<td>维度算法Key：${modelLat.daKey}</td>
-						</tr>
-					</table>	
-				</table>
-				
-				<table>
+				<table class=".table1">
 					<tbody>
 						<c:forEach items="${algorithmProvideList}" var="pro">
 								<tr>

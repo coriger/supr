@@ -182,7 +182,7 @@ public class ModelController extends BaseController{
 	@RequestMapping(value = "/add/step2")
 	public String addModelStep2(String modelId,ModelMap map){
 		// 获取model对象
-		Model model = modelService.getModelById(modelId);
+		Model model = modelService.getModelById(Integer.parseInt(modelId));
 		map.addAttribute("model",model);
 		return "admin/model/add_model_step2";
 	}
@@ -194,9 +194,9 @@ public class ModelController extends BaseController{
 	@RequestMapping(value = "/forward/add/attr")
 	public String addModelAttrPre(String modelId,ModelMap map){
 		// 获取数据单元
-		List<ModelDataUnit> dataUnitList = modelService.getModelDataUnit(modelId);
+		List<ModelDataUnit> dataUnitList = modelService.getModelAttrDataUnit(modelId);
 		// 获取模型信息
-		Model model = modelService.getModelById(modelId);
+		Model model = modelService.getModelById(Integer.parseInt(modelId));
 		
 		map.addAttribute("model",model);
 		map.addAttribute("dataUnitList",dataUnitList);
@@ -212,12 +212,28 @@ public class ModelController extends BaseController{
 		// 获取维度算法
 		List<Algorithm> algorithmList = modelService.getLatAlgorithm();
 		// 获取模型信息
-		Model model = modelService.getModelById(modelId);
+		Model model = modelService.getModelById(Integer.parseInt(modelId));
 		
 		map.addAttribute("model",model);
 		map.addAttribute("algorithmList",algorithmList);
 		return "admin/model/add_model_lat";
 	}
+	
+	/**
+	 * 根据算法Id获取维度算法明细
+	 * @param admin
+	 */
+	@RequestMapping(value = "/getAlgorithmInfo")
+	public String getAlgorithmInfo(ModelLat modelLat,ModelMap map){
+		// 获取数据单元
+		List<ModelDataUnit> dataUnitList = modelService.getModelAttrDataUnit(modelLat.getRmId()+"");
+		// 获取维度算法属性
+		List<AlgorithmProvide> algorithmProvideList = modelService.getAlgorithmProvideListById(modelLat);
+		map.addAttribute("dataUnitList",dataUnitList);
+		map.addAttribute("algorithmProvideList",algorithmProvideList);
+		return "admin/model/getAlgorithmInfo";
+	}
+	
 	
 	/**
 	 * 跳转编辑模型属性
@@ -226,9 +242,9 @@ public class ModelController extends BaseController{
 	@RequestMapping(value = "/forward/update/attr")
 	public String updateModelAttrPre(String attrId,String modelId,ModelMap map){
 		// 获取数据单元
-		List<ModelDataUnit> dataUnitList = modelService.getModelDataUnit(modelId);
+		List<ModelDataUnit> dataUnitList = modelService.getModelAttrDataUnit(modelId);
 		// 获取模型信息
-		Model model = modelService.getModelById(modelId);
+		Model model = modelService.getModelById(Integer.parseInt(modelId));
 		// 获取模型属性信息
 		ModelAttr modelAttr = modelService.getModelAttrById(attrId);
 		
@@ -247,7 +263,7 @@ public class ModelController extends BaseController{
 		// 获取维度算法
 		List<Algorithm> algorithmList = modelService.getLatAlgorithm();
 		// 获取模型信息
-		Model model = modelService.getModelById(modelId);
+		Model model = modelService.getModelById(Integer.parseInt(modelId));
 		// 获取模型属性信息
 		ModelLat modelLat = modelService.getModelLatById(latId);
 		
@@ -262,17 +278,20 @@ public class ModelController extends BaseController{
 	 * @param admin
 	 */
 	@RequestMapping(value = "/forward/update/lat_algorithm")
-	public String updateModelLatPost(String latId,String modelId,ModelMap map){
-		// 获取模型信息
-		Model model = modelService.getModelById(modelId);
+	public String updateModelLatPost(String latId,ModelMap map){
 		// 获取模型属性信息
 		ModelLat modelLat = modelService.getModelLatById(latId);
+		// 获取模型信息
+		Model model = modelService.getModelById(modelLat.getRmId());
 		// 算法入参
-		List<AlgorithmProvide> algorithmProvideList = modelService.getAlgorithmProvideListById(modelLat.getDaId());
-		
+		List<AlgorithmProvide> algorithmProvideList = modelService.getAlgorithmProvideListById(modelLat);
+		// 获取维度数据单元
+		List<ModelDataUnit> dataUnitList = modelService.getModelLatDataUnit(modelLat.getRmId());
+				
 		map.addAttribute("model",model);
 		map.addAttribute("modelLat",modelLat);
 		map.addAttribute("algorithmProvideList",algorithmProvideList);
+		map.addAttribute("dataUnitList",dataUnitList);
 		return "admin/model/update_model_lat_algorithm";
 	}
 	
@@ -346,7 +365,7 @@ public class ModelController extends BaseController{
 	@RequestMapping(value = "/add/step3")
 	public String addModelStep3(String modelId,ModelMap map){
 		// 获取model对象
-		Model model = modelService.getModelById(modelId);
+		Model model = modelService.getModelById(Integer.parseInt(modelId));
 		map.addAttribute("model",model);
 		return "admin/model/add_model_step3";
 	}

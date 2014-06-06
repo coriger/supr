@@ -20,7 +20,12 @@ public class ModelLat {
 	/**
 	 * 模型名称
 	 */
-	private String rmName;
+	private String rmName; 
+	
+	/**
+	 * 数据类型
+	 */
+	private Integer dtId;
 	
 	/**
 	 * 维度算法名称
@@ -174,5 +179,13 @@ public class ModelLat {
 
 	public void setDaKey(String daKey) {
 		this.daKey = daKey;
+	}
+
+	public Integer getDtId() {
+		return dtId;
+	}
+
+	public void setDtId(Integer dtId) {
+		this.dtId = dtId;
 	}
 }

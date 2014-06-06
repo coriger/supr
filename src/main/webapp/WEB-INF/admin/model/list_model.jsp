@@ -65,13 +65,35 @@
 		})
 	}
 	
+	// 关闭所有tab
+	function closeAllTab(){
+		$("#update_lat_top li").each(function (i, n) {
+            var title = $(n).text();
+            $("#update_lat_top").tabs('close', title);
+        });
+	}
+	
 	// 维度编辑框初始化
 	function editLatFormInit(latId){
+		// 先清空div中内容
+		//$('#update_lat_top').tabs("");
+		//closeAllTab();
+		
 		// 创建两个tab页  第一步：维度基本信息   第二步：维度算法
 		$('#update_lat_top').tabs({
 			border:false,
 		    fit:true,
 		});
+		
+		// 判断是否已存在tab面板  如果存在  则刷新第一步  否则创建
+		if($('#update_lat_top').tabs('exists',0)){
+			$('#update_lat_top').tabs('select',0);
+			$('#update_lat_top').tabs('disableTab', 1); 
+			$('#update_lat_top').tabs('enableTab', 0); 
+			// 更新tab内容
+			updateTabContent('./model/forward/update/lat?latId='+latId+"&modelId="+$("#rmId").val());
+			return;
+		}
 		
 		$.ajax({
 			url : './model/forward/update/lat?latId='+latId+"&modelId="+$("#rmId").val(),
@@ -91,7 +113,7 @@
 					selected:false,
 					closable:false,
 					cache:false,
-					content : "two"//createFrame(getTagUrl('0')) // 这里动态加载第一步页面信息
+					//content : "two"//createFrame(getTagUrl('0')) // 这里动态加载第一步页面信息
 				});
 				
 				$('#update_lat_top').tabs('disableTab', 1); 
@@ -127,7 +149,7 @@
 	function latFormInit(modelId){
 		console.info("新增模型维度...");
 		// 跳转新增属性页面
-		$('#addLatDialog').dialog('refresh', './model/forward/add/lat?modelId='+modelId);		
+		$('#addLatDialog').dialog('refresh', './model/forward/add/lat?modelId='+modelId);
 	}
 	
 	// 初始化新增模型属性表单
@@ -160,13 +182,12 @@
 	
 	// 保存模型维度
 	function saveModelLat(){
-		console.info("保存模型维度...");
-		//console.info($(window.frames["sb"].document).find("#form").serialize());
-		console.info("test:"+Math.random());
-		console.info($("#form").serialize());
+		console.info($("#add_model_lat_form").serialize());
+		alert($("#add_model_lat_form").serialize());
+		alert($("#add_model_lat_alg_form").serialize());
 		$.ajax({
 			url : './model/add/lat?data='+Math.random(),
-			data: $("#form").serialize(),
+			data: $("#add_model_lat_form").serialize(),
 			method : "post",
 			dataType : "json",
 			success : function(data) {
@@ -426,11 +447,10 @@
 		var index = $('#update_lat_top').tabs('getTabIndex',curTab);
 		if(index == '0'){
 			index = index + 1;
-			alert("进来了...");
 			//alert($(window.frames["sb"].document).find("#add_model_step1"));
 			//alert($(window.frames["sb"].document).find("#updateLatForm"));
-			alert($("#updateLatForm").serialize());
-			console.info($("#updateLatForm").serialize());
+			//alert($("#updateLatForm").serialize());
+			//console.info($("#updateLatForm").serialize());
 			//alert($(window.frames["sb"].document));
 			//console.info($(window.frames["sb"].document).find("#updateLatForm"));
 			$.ajax({
@@ -443,18 +463,23 @@
 						alert(data.errorInfo);
 						return;
 					} else if (data.resultCode == 'success') {
-						// showMsg("新增成功!");
+						showMsg("更新成功!");
+						// 禁用第一步  启用第二步
+						$('#update_lat_top').tabs('disableTab', 0); 
+						$('#update_lat_top').tabs('enableTab', 1); 
 						// 切换到下一个tab
 						$("#update_lat_top").tabs('select',index);
+						//alert('./model/forward/update/lat_algorithm?latId='+$("#latId").val()+"&modelId="+$("#rmId").val());
 						// 更新tab内容
-						updateTabContent('./model/forward/update/lat_algorithm?latId='+latId+"&modelId="+$("#rmId").val());
+						updateTabContent('./model/forward/update/lat_algorithm?latId='+$("#latId").val()+"&modelId="+$("#rmId").val());
+						// 移除下一步按钮
+						
 					}
 				}
 			});
 		}else if(index == '1'){
 			
 		}
-		
 	}
 	
 	// 下一步 切换到下一个tab
@@ -487,7 +512,7 @@
 										"<span class='l-btn-icon icon-save'></span>"+
 									 	"</span>"+
 										"</a>";
-						$(".dialog-button").prepend(beforeButton);
+						$("#addBt").prepend(beforeButton);
 						// 切换到下一个tab
 						$("#add_model_top").tabs('select',index);
 						// 更新tab内容
@@ -736,7 +761,7 @@
 
 <!-- 新增维度弹出框 -->
 <div id="addLatDialog" class="easyui-dialog" 
-			data-options="title: '新增模型维度',top:20,width: 600, height: 400,
+			data-options="title: '新增模型维度',top:20,width: 680, height: 400,
 			maximizable:true,closed: false, modal: true,
 			buttons:'#addLatBt',closed:true">   
 	
@@ -752,7 +777,7 @@
 
 <!-- 编辑维度弹出框 -->
 <div id="updateLatDialog" class="easyui-dialog" 
-			data-options="title: '编辑模型维度',top:20,width: 600, height: 400,
+			data-options="title: '编辑模型维度',top:20,width: 700, height: 400,
 			maximizable:true,closed: false, modal: true,
 			buttons:'#updateLatBt',closed:true">   
 	
