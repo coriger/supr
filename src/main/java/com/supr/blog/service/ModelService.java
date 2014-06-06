@@ -19,13 +19,13 @@ public interface ModelService {
 
 	int deleteBatch(String[] ids);
 
-	Model getModelById(String modelId);
+	Model getModelById(Integer modelId);
 
 	Pager<ModelAttr> getModelAttrList(String modelId, int pageSize, int pageNum);
 
 	int saveModelInfo(Model model);
 
-	List<ModelDataUnit> getModelDataUnit(String modelId);
+	List<ModelDataUnit> getModelAttrDataUnit(String modelId);
 
 	int saveModelAttr(ModelAttr modelAttr);
 
@@ -47,5 +47,7 @@ public interface ModelService {
 
 	int updateModelLat(ModelLat modelLat);
 
-	List<AlgorithmProvide> getAlgorithmProvideListById(Integer daId);
+	List<AlgorithmProvide> getAlgorithmProvideListById(ModelLat modelLat);
+
+	List<ModelDataUnit> getModelLatDataUnit(Integer modelId);
 }

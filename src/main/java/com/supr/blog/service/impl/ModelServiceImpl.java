@@ -104,7 +104,7 @@ public class ModelServiceImpl implements ModelService {
 	}
 	
 	@Override
-	public Model getModelById(String modelId) {
+	public Model getModelById(Integer modelId) {
 		return modelMapper.getModelById(modelId);
 	}
 	
@@ -114,8 +114,8 @@ public class ModelServiceImpl implements ModelService {
 	}
 	
 	@Override
-	public List<ModelDataUnit> getModelDataUnit(String modelId) {
-		return modelMapper.getModelDataUnit(modelId);
+	public List<ModelDataUnit> getModelAttrDataUnit(String modelId) {
+		return modelMapper.getModelAttrDataUnit(modelId);
 	}
 	
 	@Override
@@ -164,7 +164,12 @@ public class ModelServiceImpl implements ModelService {
 	}
 	
 	@Override
-	public List<AlgorithmProvide> getAlgorithmProvideListById(Integer daId) {
-		return modelMapper.getAlgorithmProvideListById(daId);
+	public List<AlgorithmProvide> getAlgorithmProvideListById(ModelLat modelLat) {
+		return modelMapper.getAlgorithmProvideListById(modelLat);
+	}
+	
+	@Override
+	public List<ModelDataUnit> getModelLatDataUnit(Integer modelId) {
+		return modelMapper.getModelLatDataUnit(modelId);
 	}
 }

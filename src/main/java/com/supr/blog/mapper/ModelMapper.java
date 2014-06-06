@@ -21,7 +21,7 @@ public interface ModelMapper {
 
 	int deleteBatch(String[] modelIds);
 
-	Model getModelById(String modelId);
+	Model getModelById(Integer modelId);
 
 	int getModelAttrCount(Map<String, Object> map);
 
@@ -29,7 +29,7 @@ public interface ModelMapper {
 
 	int saveModelInfo(Model model);
 
-	List<ModelDataUnit> getModelDataUnit(String modelId);
+	List<ModelDataUnit> getModelAttrDataUnit(String modelId);
 
 	int saveModelAttr(ModelAttr modelAttr);
 
@@ -53,5 +53,7 @@ public interface ModelMapper {
 
 	int updateModelLat(ModelLat modelLat);
 
-	List<AlgorithmProvide> getAlgorithmProvideListById(Integer daId);
+	List<AlgorithmProvide> getAlgorithmProvideListById(ModelLat modelLat);
+
+	List<ModelDataUnit> getModelLatDataUnit(Integer modelId);
 }
