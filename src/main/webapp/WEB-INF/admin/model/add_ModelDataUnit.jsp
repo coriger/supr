@@ -33,7 +33,7 @@
 				<tbody>
 					<tr>
 						<td>所属模型：</td>
-						<td><select id="tId" name="tId" class="easyui-combobox" style="width: 120px" 
+						<td><select id="rmId" name="rmId" class="easyui-combobox" style="width: 120px" 
 							panelHeight="auto">
 								<option value="-1">全部</option>
 								<c:forEach items="${modelList}" var="model">
@@ -41,7 +41,7 @@
 								</c:forEach>
 						</select></td>
 						<td>数据模型：</td>
-						<td><select id="tId" name="tId" class="easyui-combobox" style="width: 120px"
+						<td><select id="dtId" name="dtId" class="easyui-combobox" style="width: 120px"
 							panelHeight="auto">
 								<option value="-1">全部</option>
 								<c:forEach items="${dataTypeList}" var="dateType">

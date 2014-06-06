@@ -108,7 +108,7 @@
 	function saveModel(){
 		console.info("保存模型数据单元...");
 		$.ajax({
-			url : './model/add/info?data='+Math.random(),
+			url : './modelDataUnit/add/info?data='+Math.random(),
 			data: $("#modleDUForm").serialize(),
 			method : "post",
 			dataType : "json",
@@ -174,9 +174,9 @@
                <th data-options="field:'rmduName',width:fixWidth(0.2),align:'center'">数据单元名称</th>  
                <th data-options="field:'dtName',width:fixWidth(0.1),align:'center'">数据类型</th>  
                <th data-options="field:'rmName',width:fixWidth(0.2),align:'center'">所属模型</th>
-               <th data-options="field:'useType',width:fixWidth(0.2),align:'center'" formatter="useTypeTrans">使用类型</th>
+               <th data-options="field:'useType',width:fixWidth(0.1),align:'center'" formatter="useTypeTrans">使用类型</th>
                <!-- <th data-options="field:'useType',width:fixWidth(0.2),align:'center'">使用类型</th>   -->
-               <th data-options="field:'description',width:fixWidth(0.2),align:'center'">简介</th>       
+               <th data-options="field:'description',width:fixWidth(0.3),align:'center'">简介</th>       
            </tr>  
    </thead>  
 </table>
