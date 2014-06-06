@@ -2,35 +2,40 @@ package com.supr.blog.model.cmge;
 
 /**
  * @desc	模型数据单元
- * @author	ljt
- * @time	2014-6-4 上午11:09:48
+ * @author liliangchun
  */
 public class ModelDataUnit {
-
+	
 	/**
-	 * 主键Id
+	 * 模型数据单元Id
 	 */
 	private Integer id;
 	
 	/**
-	 * 数据类型Id
+	 * 数据类型ID FK e_data_type
 	 */
 	private Integer dtId;
-	
 	/**
-	 * 模型Id
+	 * 数据类型名称
+	 */
+	private String dtName;
+	/**
+	 * 资源模型的ID
 	 */
 	private Integer rmId;
-	
 	/**
-	 * 数据单元名称
+	 * 资源模型的名称
+	 */
+	private String rmName;
+	/**
+	 * 模型的数据单元名称
 	 */
 	private String rmduName;
 	
 	/**
-	 * 用途 1 属性 2 维度属性
+	 * 用途: 1 属性 2 维度属性
 	 */
-	private Integer userType;
+	private Integer useType;
 	
 	/**
 	 * 最大值
@@ -119,12 +124,12 @@ public class ModelDataUnit {
 		this.rmduName = rmduName;
 	}
 
-	public Integer getUserType() {
-		return userType;
+	public Integer getUseType() {
+		return useType;
 	}
 
-	public void setUserType(Integer userType) {
-		this.userType = userType;
+	public void setUseType(Integer useType) {
+		this.useType = useType;
 	}
 
 	public String getMaxValue() {
@@ -214,4 +219,21 @@ public class ModelDataUnit {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getDtName() {
+		return dtName;
+	}
+
+	public void setDtName(String dtName) {
+		this.dtName = dtName;
+	}
+
+	public String getRmName() {
+		return rmName;
+	}
+
+	public void setRmName(String rmName) {
+		this.rmName = rmName;
+	}
+	
 }
