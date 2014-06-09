@@ -18,8 +18,8 @@
 	</sql>
 	
 	<sql id="updateModelLat">
-		<if test="rmpName != null and rmpName !=''">
-		 	,rmpName = #{rmpName} 
+		<if test="rmdName != null and rmdName !=''">
+		 	,rmdName = #{rmdName} 
 		</if>
 		<if test="rmdFullKey != null and rmdFullKey != ''">
 			,rmdFullKey = #{rmdFullKey}
@@ -104,7 +104,7 @@
 	<select id="getAlgorithmProvideListById" resultType="com.supr.blog.model.cmge.AlgorithmProvide" parameterType="Integer">
 		select pro.*,t.dtName from e_dim_property_provide pro 
 		inner join e_data_type t on pro.dtId = t.Id 
-		where pro.Id = #{daId} 
+		where pro.daId = #{daId}
 	</select>
 	
 	<!-- 获取行业列表 -->
@@ -137,7 +137,7 @@
 	</delete>
 	
 	<!-- 根据Id获取模型 -->
-	<select id="getModelById" resultType="com.supr.blog.model.cmge.Model" parameterType="String">
+	<select id="getModelById" resultType="com.supr.blog.model.cmge.Model" parameterType="Integer">
 		select model.*,trade.rtName from e_res_mould model 
 		inner join e_trade trade on model.tId = trade.Id 
 		where model.Id = #{modelId} 
@@ -152,17 +152,24 @@
 	
 	<!-- 根据Id获取模型维度 -->
 	<select id="getModelLatById" resultType="com.supr.blog.model.cmge.ModelLat" parameterType="String">
-		select dim.*,model.rmName,da.daKey from e_res_mould model 
+		select dim.*,model.rmName,da.daKey,da.daName,model.Id as rmId from e_res_mould model 
 		inner join e_res_mould_dim dim on model.Id = dim.rmId 
 		inner join e_dim_algorithm da on dim.daId = da.Id 
 		where dim.Id = #{attrId} 
 	</select>
 	
 	<!-- 根据Id获取模型数据单元 -->
-	<select id="getModelDataUnit" resultType="com.supr.blog.model.cmge.ModelDataUnit" parameterType="String">
+	<select id="getModelAttrDataUnit" resultType="com.supr.blog.model.cmge.ModelDataUnit" parameterType="String">
 		select da.* from e_res_mould model 
 		inner join e_res_mould_data_unit da on model.Id = da.rmId 
-		where model.Id = #{modelId} 
+		where model.Id = #{modelId}  and useType = 1
+	</select>
+	
+	<!-- 根据Id获取模型维度数据单元 -->
+	<select id="getModelLatDataUnit" resultType="com.supr.blog.model.cmge.ModelDataUnit" parameterType="Integer">
+		select da.* from e_res_mould model 
+		inner join e_res_mould_data_unit da on model.Id = da.rmId 
+		where model.Id = #{modelId} and useType = 2
 	</select>
 	
 	<!-- 获取模型维度算法 -->
@@ -281,7 +288,7 @@
 				defaultValue1,defaultValue2,defaultValue3,createTime,
 				createBy,modifyTime,modifyBy,description
 			)VALUES(
-				#{dtId},#{rmId},#{rmduName},#{useType},#{maxValue},#{minValue},#{stepValue},
+				#{dtId},#{rmId},#{rmduName},#{useType},#{maxValues},#{minValue},#{stepValue},
 				#{defaultValue1},#{defaultValue2},#{defaultValue3},#{createTime},
 				1,#{createTime},1,#{description}
 			)
@@ -292,5 +299,64 @@
 			]]> 
 		</selectKey>
 	</insert>
+	
+	<!-- 批量删除模型数据单元 -->
+	<delete id="deleteModelDataUnitBatch" parameterType="String">
+		delete from e_res_mould_data_unit where Id in 
+		<foreach collection="array" item="ids" index="index" open="(" close=")" separator=","> 
+            #{ids}
+        </foreach>
+	</delete>
+	
+	<!-- 根据Id获取模型数据单元 -->
+	<select id="getModelDataUnitById" resultType="com.supr.blog.model.cmge.ModelDataUnit" parameterType="String">
+		select modelDataUnit.*,dt.dtName,rm.rmName from e_res_mould_data_unit modelDataUnit 
+		inner join e_data_type dt on modelDataUnit.dtId = dt.Id 
+		inner join e_res_mould rm on modelDataUnit.rmId = rm.Id
+		where modelDataUnit.Id = #{modelId} 
+	</select>
+	
+	
+	<sql id="updateModelDataUnit">
+		<if test="dtId != null and dtId !=''">
+		 	,dtId = #{dtId} 
+		</if>
+		<if test="rmId != null and rmId != ''">
+			,rmId = #{rmId}
+		</if>
+		<if test="rmduName != null and rmduName !=''">
+		 	,rmduName = #{rmduName} 
+		</if>
+		<if test="useType != null and useType != ''">
+			,useType = #{useType}
+		</if>
+		<if test="maxValues != null and maxValues !=''">
+		 	,maxValues = #{maxValues} 
+		</if>
+		<if test="minValue != null and minValue != ''">
+			,minValue = #{minValue}
+		</if>
+		<if test="stepValue != null and stepValue !=''">
+		 	,stepValue = #{stepValue} 
+		</if>
+		<if test="defaultValue1 != null and defaultValue1 != ''">
+			,defaultValue1 = #{defaultValue1}
+		</if>
+		<if test="defaultValue2 != null and defaultValue2 !=''">
+		 	,defaultValue2 = #{defaultValue2} 
+		</if>
+		<if test="defaultValue3 != null and defaultValue3 !=''">
+		 	,defaultValue3 = #{defaultValue3} 
+		</if>
+		<if test="description != null and description != ''">
+			,description = #{description}
+		</if>
+	</sql>
+	<!-- 更新模型维度基本信息  第一步 -->
+	<update id="updateModelDataUnit" parameterType="com.supr.blog.model.cmge.ModelDataUnit" >
+		update e_res_mould_data_unit set modifyTime = #{modifyTime} 
+		<include refid="updateModelDataUnit"/> 
+		where Id = #{id} 
+	</update>
 	<!-- liliangchun end -->
 </mapper>

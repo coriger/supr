@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,15 +66,15 @@ public class ModelDataUnitController extends BaseController{
 	}
 	
 	/**
-	 * 删除模型
+	 * 删除模型数据单元
 	 * @param adminId
 	 */
 	@RequestMapping(value = "/deleteBatch",method = RequestMethod.POST)
 	public @ResponseBody 
-	Result deleteBatch(@RequestParam String modelIds){
-		String[] ids = modelIds.split(",");
-		int count = modelService.deleteBatch(ids);
-		if(count != ids.length){
+	Result deleteBatch(@RequestParam String ids){
+		String[] rmduIds = ids.split(",");
+		int count = modelService.deleteBatch(rmduIds);
+		if(count != rmduIds.length){
 			return new Result("error", "删除失败！");
 		}else{
 			return new Result("success", "删除成功！");
@@ -85,7 +86,7 @@ public class ModelDataUnitController extends BaseController{
 	 * @param admin
 	 */
 	@RequestMapping(value = "/addModelDataUnit")
-	public String addModelStep1(ModelMap map){
+	public String addModel(ModelMap map){
 		// 加载模型
 		List<Model> modelList = modelService.getModelList();
 		map.addAttribute("modelList", modelList);
@@ -94,6 +95,26 @@ public class ModelDataUnitController extends BaseController{
 		map.addAttribute("dataTypeList", dataTypeList);
 		return "admin/model/add_ModelDataUnit";
 	}
+	
+	/**
+	 * 编辑模型数据单元
+	 * @param admin
+	 */
+	@RequestMapping(value = "/editModelDataUnit")
+	public String editModel(String mduId,ModelMap map){
+		// 加载模型
+		List<Model> modelList = modelService.getModelList();
+		map.addAttribute("modelList", modelList);
+		//加载数据类型
+		List<DataType> dataTypeList = modelService.getDataTypeList();
+		map.addAttribute("dataTypeList", dataTypeList);
+		//获取选择的ModelDataUnit对象
+		ModelDataUnit mdu = modelService.getModelDataUnitById(mduId);
+		map.addAttribute("mdu", mdu);
+		
+		return "admin/model/add_ModelDataUnit";
+	}
+	
 	/**
 	 * 保存模型数据单元
 	 * @param admin
@@ -101,12 +122,25 @@ public class ModelDataUnitController extends BaseController{
 	@RequestMapping(value = "/add/info")
 	public @ResponseBody 
 	Result addModelInfo(ModelDataUnit modelDataUnit){
-		modelDataUnit.setCreateTime(System.currentTimeMillis());
-		int count = modelService.saveModelDataUnitInfo(modelDataUnit);
-		if(count == 1){
-			return new Result("success", "新增成功！",modelDataUnit.getId());
+		ModelDataUnit mdu = modelService.getModelDataUnitById(modelDataUnit.getId()+"");
+		//如果数据不存在就保存,如果存在就更新
+		if(null == mdu){
+			modelDataUnit.setCreateTime(System.currentTimeMillis());
+			int count = modelService.saveModelDataUnitInfo(modelDataUnit);
+			if(count == 1){
+				return new Result("success", "新增成功！",modelDataUnit.getId());
+			}else{
+				return new Result("error", "新增失败！");
+			}
 		}else{
-			return new Result("error", "新增失败！");
+			modelDataUnit.setModifyTime(System.currentTimeMillis());
+			int count = modelService.updateModelDataUnit(modelDataUnit);
+			if(count == 1){
+				return new Result("success", "更新成功！");
+			}else{
+				return new Result("error", "更新失败！");
+			}
 		}
+		
 	}
 }

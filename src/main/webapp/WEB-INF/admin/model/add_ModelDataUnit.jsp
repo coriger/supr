@@ -14,11 +14,9 @@
 			margin-left: 14px;
 			margin-top: 10px;
 		}
-		
 		.div2 tr {
 			font-size: 13px;
 		}
-		
 		.div2 td {
 			
 		}
@@ -28,16 +26,22 @@
 	</style>
 	<div id="div1" class="div1">
 	<form id="modleDUForm" method="post">
+		<input type="hidden" id="id" name="id" value="${mdu.id}" >
 		<div class="div2">
 			<table>
 				<tbody>
 					<tr>
 						<td>所属模型：</td>
 						<td><select id="rmId" name="rmId" class="easyui-combobox" style="width: 120px" 
-							panelHeight="auto">
+							panelHeight="auto" value="2">
 								<option value="-1">全部</option>
 								<c:forEach items="${modelList}" var="model">
-									<option value="${model.id}">${model.rmName}</option>
+									<c:if test="${model.rmName==mdu.rmName}">
+										<option value="${model.id}" selected="selected">${model.rmName}</option>
+								   	</c:if>  
+								   	<c:if test="${model.rmName!=mdu.rmName}">
+										<option value="${model.id}">${model.rmName}</option>
+								   	</c:if>
 								</c:forEach>
 						</select></td>
 						<td>数据模型：</td>
@@ -45,43 +49,55 @@
 							panelHeight="auto">
 								<option value="-1">全部</option>
 								<c:forEach items="${dataTypeList}" var="dateType">
-									<option value="${dateType.id}">${dateType.dtName}</option>
+									<c:if test="${dateType.dtName==mdu.dtName}">
+										<option value="${dateType.id}" selected="selected">${dateType.dtName}</option>
+								   	</c:if>  
+								   	<c:if test="${dateType.dtName!=mdu.dtName}">
+										<option value="${dateType.id}">${dateType.dtName}</option>
+								   	</c:if>
 								</c:forEach>
 						</select></td>
 					</tr>
 					<tr>
 						<td>单元名称：</td>
-						<td><input type="text" id="rmduName" name="rmduName" /></td>
+						<td><input type="text" id="rmduName" name="rmduName" value="${mdu.rmduName}" /></td>
 						<td>使用类型：</td>
 						<td>
 							<select id="useType" name="useType" class="easyui-combobox" panelHeight="auto" style="width:120px">
 									<option value="-1">全部</option>
 									<option value="1">属性</option>
 									<option value="2">维度属性</option>
+									
+									<c:if test="${mdu.useType=='1'}">
+										<option value="1" selected="selected">属性</option>
+								   	</c:if>  
+								   	<c:if test="${mdu.useType=='2'}">
+										<option value="2"  selected="selected">维度属性</option>
+								   	</c:if>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<td>最大值：</td>
-						<td><input type="text" id="maxValue" name="maxValue" /></td>
+						<td><input type="text" id="maxValue" name="maxValues" value="${mdu.maxValues}" /></td>
 						<td>最小值：</td>
-						<td><input type="text" id="minValue" name="minValue" /></td>
+						<td><input type="text" id="minValue" name="minValue" value="${mdu.minValue}" /></td>
 					</tr>
 					<tr>
 						<td>步长：</td>
-						<td><input type="text" id="stepValue" name="stepValue" /></td>
+						<td><input type="text" id="stepValue" name="stepValue" value="${mdu.stepValue}" /></td>
 						<td></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>默认值1：</td>
-						<td><input type="text" id="defaultValue1" name="defaultValue1" /></td>
+						<td><input type="text" id="defaultValue1" name="defaultValue1" value="${mdu.defaultValue1}" /></td>
 						<td>默认值2：</td>
-						<td><input type="text" id="defaultValue2" name="defaultValue2" /></td>
+						<td><input type="text" id="defaultValue2" name="defaultValue2" value="${mdu.defaultValue2}" /></td>
 					</tr>
 					<tr>
 						<td>默认值3：</td>
-						<td><input type="text" id="defaultValue3" name="defaultValue3" /></td>
+						<td><input type="text" id="defaultValue3" name="defaultValue3" value="${mdu.defaultValue2}" /></td>
 						<td></td>
 						<td></td>
 					</tr>
@@ -92,10 +108,10 @@
 					</tr>
 					<tr>
 						<td colspan="4"><textarea rows="5" cols="60" style="resize: none;"
-								id="description" name="description"></textarea></td>
+								id="description" name="description" >${mdu.description}</textarea></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
+		</form>
 	</div>
-	</form>

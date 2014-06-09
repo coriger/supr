@@ -101,7 +101,7 @@ public class ModelServiceImpl implements ModelService {
 	
 	@Override
 	public int deleteBatch(String[] ids) {
-		return modelMapper.deleteBatch(ids);
+		return modelMapper.deleteModelDataUnitBatch(ids);
 	}
 	
 	@Override
@@ -217,5 +217,10 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	public List<DataType> getDataTypeList() {
 		return modelMapper.getDataTypeList();
+	}
+
+	@Override
+	public int updateModelDataUnit(ModelDataUnit modelDataUnit) {
+		return modelMapper.updateModelDataUnit(modelDataUnit);
 	}
 }

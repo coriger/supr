@@ -71,4 +71,5 @@ public interface ModelMapper {
 
 	int saveModelDataUnitInfo(ModelDataUnit modelDataUnit);
 
+	int updateModelDataUnit(ModelDataUnit modelDataUnit);
 }

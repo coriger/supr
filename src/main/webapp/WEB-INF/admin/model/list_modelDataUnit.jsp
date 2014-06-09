@@ -51,8 +51,8 @@
 					}
 					console.info(ids);
 					$.ajax({
-						url:'./model/deleteBatch',
-						data:'modelIds='+ids,
+						url:'./modelDataUnit/deleteBatch',
+						data:'ids='+ids,
 						method : "post",
 						dataType : "json",
 						success:function(data){
@@ -118,9 +118,9 @@
 					return;
 				} else if (data.resultCode == 'success') {
 					// 弹出新增成功消息框 
-					showMsg("新增成功!");
+					showMsg(data.errorInfo);
 					// 输入框清空
-					$(':input','#form')
+					$(':input','#modleDUForm')
 					 .not(':button, :submit, :reset, :hidden')
 					 .val('')
 					 .removeAttr('checked');
@@ -159,6 +159,24 @@
         else  
             return "未知";  
     } 
+    
+    //编辑模型数据单元
+    function editModel(){
+    	console.info("editModel...");
+    	var rows = $("#main").datagrid('getSelections');
+		if(rows.length == 1){
+			$("#addDialog").dialog('open').dialog('setTitle','编辑模型数据单元');
+			editFormInit(rows[0].id);
+	    }else if(rows.length > 1){
+	    	showMsg("只允许选择一个要编辑的对象！");
+	    }else{
+			showMsg("请选择要编辑的对象！");
+		}
+	}
+	function editFormInit(id){
+		console.info("初始化编辑表单...");
+		$("#addDialog").dialog('refresh', './modelDataUnit/editModelDataUnit?mduId='+id);	
+	}
 </script>
 
 </head>
@@ -175,7 +193,6 @@
                <th data-options="field:'dtName',width:fixWidth(0.1),align:'center'">数据类型</th>  
                <th data-options="field:'rmName',width:fixWidth(0.2),align:'center'">所属模型</th>
                <th data-options="field:'useType',width:fixWidth(0.1),align:'center'" formatter="useTypeTrans">使用类型</th>
-               <!-- <th data-options="field:'useType',width:fixWidth(0.2),align:'center'">使用类型</th>   -->
                <th data-options="field:'description',width:fixWidth(0.3),align:'center'">简介</th>       
            </tr>  
    </thead>  
