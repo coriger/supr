@@ -33,16 +33,11 @@
 				<tbody>
 					<tr>
 						<td>所属模型：</td>
-						<td><select id="rmId" name="rmId" class="easyui-combobox" style="width: 120px" 
-							panelHeight="150px" value="2" >
-								<option value="-1">全部</option>
-								<c:forEach items="${modelList}" var="model">
-									<option value="${model.id}">${model.rmName}</option>
-								</c:forEach>
-						</select></td>
+						<td>${model.id}</td>
+						<input type="hidden" name="rmId" value="${model.id}"/>
 						<td>数据模型：</td>
-						<td><select id="dtId" name="dtId" class="easyui-validatebox combobox" style="width: 120px"
-							panelHeight="150px">
+						<td><select id="dtId" name="dtId" class="easyui-combobox" style="width: 120px"
+							panelHeight="auto">
 								<option value="-1">全部</option>
 								<c:forEach items="${dataTypeList}" var="dateType">
 									<option value="${dateType.id}">${dateType.dtName}</option>
@@ -51,7 +46,7 @@
 					</tr>
 					<tr>
 						<td>单元名称：</td>
-						<td><input type="text" id="rmduName" name="rmduName" value="${mdu.rmduName}" class="easyui-validatebox textbox" data-options="required:true,validType:'length[1,25]',missingMessage:'请输入数据单元名称'"/></td>
+						<td><input type="text" id="rmduName" name="rmduName" /></td>
 						<td>使用类型：</td>
 						<td>
 							<select id="useType" name="useType" class="easyui-combobox" panelHeight="auto" style="width:120px">
