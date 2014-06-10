@@ -1,22 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<base href="<%=basePath%>">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<link rel="stylesheet" href="<%=basePath%>js/easyui/themes/icon.css" type="text/css"></link>
-<link rel="stylesheet" href="<%=basePath%>js/easyui/themes/default/easyui.css" type="text/css"></link>
-<script type="text/javascript" src="<%=basePath%>js/easyui/jquery.min.js"></script>
-<script type="text/javascript" src="<%=basePath%>js/easyui/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="<%=basePath%>js/easyui/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
 	// 列表宽度百分比设置
 	function fixWidth(percent){
@@ -24,17 +8,42 @@
 	}
 	
 	// 新增模型属性
-	function addModelAttr(){
-		console.info("新增模型..");
-		// 父窗口弹一个新框
-		window.parent.addModelAttr($("#modelId").val());
+	function addModelAttr(modelId){
+		$("#addAttrDialog").dialog('open');
+		attrFormInit(modelId);
 	}
+	
+	// 初始化新增模型属性表单
+	function attrFormInit(modelId){
+		// 跳转新增属性页面
+		$("#addAttrDialog").dialog('refresh', './model/forward/add/attr?modelId='+modelId);		
+	}
+	
+	// 保存并关闭
+	function saveAndCloseModelAttr(){
+		console.info("保存并关闭");
+	}
+	
+	// 保存模型属性
+	function saveModelAttr(){
+		console.info("保存模型属性");
+	}
+	
+	// 关闭模型属性
+	function closeModelAttr(){
+		console.info("关闭模型属性");
+	}
+	
 	
 	// 编辑模型属性
 	function editModelAttr(){
 		console.info("编辑模型..");
 		// 父窗口弹一个新框
 		var rows = $("#main").datagrid('getSelections');
+		if(rows.length == 0){
+			window.parent.showMsg("请选择需要编辑的数据!");
+			return;
+		}
 		window.parent.editModelAttr(rows[0].id);
 	}
 	
@@ -75,15 +84,13 @@
 </script>
 
 <style type="text/css">
-	.div1{
-		list-style: none;
-	}
+
 </style>
 
-<table id="main" class="easyui-datagrid" 
+<table id="step2_main" class="easyui-datagrid" 
 			data-options="fit : true,border:false,rownumbers:false,fitColumns : true,
-			url:'./model/list_attr?modelId='+${model.id},pagination : false,pageSize:2, pageList:[2,4,6,8],
-			loadMsg:'正在加载中, 请稍候 …',toolbar:'#searchBut'"> 
+			url:'./model/list_attr?modelId='+${model.id},pagination : false,
+			loadMsg:'正在加载中, 请稍候 …',toolbar:'#step2_searchBut'"> 
 			<input type="hidden" id="modelId" value="${model.id}"/>
 	<thead>  
            <tr>  
@@ -98,17 +105,33 @@
    </thead>  
 </table>
 
-<div id="searchBut" style="padding:5px;height:auto">
+<div id="step2_searchBut" style="padding:5px;height:auto">
         <div style="margin-bottom:5px">
-            <a href="#" onclick="addModelAttr()" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
+            <a href="#" onclick="addModelAttr(${model.id})" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
             <a href="#" onclick="editModelAttr()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">编辑</a>
             <a href=# onclick="delModelAttr()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
         </div>
         
-        <div class="div1">
+        <div>
 	           	<ul>
 	           		<li>所属行业：${model.rtName}</li>
 					<li>模型名称：${model.rmName}</li>
 	           	</ul>
         </div>
+</div>
+
+
+<!-- 新增属性弹出框 -->
+<div id="addAttrDialog" class="easyui-dialog" 
+			data-options="title: '新增模型属性',top:20,width: 600, height: 400,
+			maximizable:false,closed: true, modal: true,
+			buttons:'#addAttrBt'">   
+	
+</div>
+
+<!-- 新增属性按钮 -->
+<div id="addAttrBt">
+	<a href="#" onclick="closeModelAttr()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">关闭</a>
+	<a href="#" onclick="saveModelAttr()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">保存</a>
+	<a href="#" onclick="saveAndCloseModelAttr()" class="easyui-linkbutton" data-options="iconCls:'icon-help'">保存并关闭</a>
 </div>

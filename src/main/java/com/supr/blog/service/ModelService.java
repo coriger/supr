@@ -63,4 +63,12 @@ public interface ModelService {
 	int saveModelDataUnitInfo(ModelDataUnit modelDataUnit);
 	
 	List<DataType> getDataTypeList();
+
+	int updateModelInfo(Model model);
+
+	boolean isExistModelName(Model model);
+
+	boolean isExistModelLKey(Model model);
+
+	List<ModelDataUnit> getAttrDataUnitByModelId(String modelId);
 }

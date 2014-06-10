@@ -224,4 +224,24 @@ public class ModelServiceImpl implements ModelService {
 		return modelMapper.getDataTypeList();
 	}
 	
+	@Override
+	public int updateModelInfo(Model model) {
+		return modelMapper.updateModelInfo(model);
+	}
+	
+	@Override
+	public boolean isExistModelLKey(Model model) {
+		return (modelMapper.isExistModelLKey(model) == 0) ? false : true;
+	}
+	
+	@Override
+	public boolean isExistModelName(Model model) {
+		return (modelMapper.isExistModelName(model) == 0) ? false : true;
+	}
+	
+	@Override
+	public List<ModelDataUnit> getAttrDataUnitByModelId(String modelId) {
+		return modelMapper.getAttrDataUnitByModelId(modelId);
+	}
+	
 }

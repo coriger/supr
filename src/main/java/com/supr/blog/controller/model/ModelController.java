@@ -1,5 +1,6 @@
 package com.supr.blog.controller.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.supr.blog.controller.BaseController;
 import com.supr.blog.model.cmge.Algorithm;
 import com.supr.blog.model.cmge.AlgorithmProvide;
+import com.supr.blog.model.cmge.DataType;
 import com.supr.blog.model.cmge.Model;
 import com.supr.blog.model.cmge.ModelAttr;
 import com.supr.blog.model.cmge.ModelDataUnit;
@@ -147,6 +149,20 @@ public class ModelController extends BaseController{
 		return "admin/model/add_model";
 	}
 	
+	/**
+	 * 获取模型第一步保存数据
+	 * @param admin
+	 */
+	@RequestMapping(value = "/load/modelinfo")
+	public String loadModelInfo(String modelId,ModelMap map){
+		Model model = modelService.getModelById(Integer.parseInt(modelId));
+		List<Trade> tradeList = modelService.getTradeList();
+		
+		map.addAttribute("tradeList", tradeList);
+		map.addAttribute("model", model);
+		return "admin/model/add_model_step1";
+	}
+	
 	
 	/**
 	 * 新增模型第一步
@@ -167,14 +183,37 @@ public class ModelController extends BaseController{
 	@RequestMapping(value = "/add/info")
 	public @ResponseBody 
 	Result addModelInfo(Model model){
-		model.setCreateTime(System.currentTimeMillis());
-		int count = modelService.saveModelInfo(model);
-		if(count == 1){
-			return new Result("success", "新增成功！",model.getId());
+		if(modelService.isExistModelName(model)){
+			return new Result("error", "模型名称已存在！");
+		}else if(modelService.isExistModelLKey(model)){
+			return new Result("error", "模型Key存在！");
 		}else{
-			return new Result("error", "新增失败！");
+			model.setCreateTime(System.currentTimeMillis());
+			int count = modelService.saveModelInfo(model);
+			if(count == 1){
+				return new Result("success", "新增成功！",model.getId());
+			}else{
+				return new Result("error", "新增失败！");
+			}
 		}
 	}
+	
+	/**
+	 * 更新模型第一步
+	 * @param admin
+	 */
+	@RequestMapping(value = "/update/info")
+	public @ResponseBody 
+	Result updateModelInfo(Model model){
+		model.setCreateTime(System.currentTimeMillis());
+		int count = modelService.updateModelInfo(model);
+		if(count == 1){
+			return new Result("success", "更新成功！",model.getId());
+		}else{
+			return new Result("error", "更新失败！");
+		}
+	}
+	
 	
 	/**
 	 * 新增模型第二步
@@ -188,18 +227,50 @@ public class ModelController extends BaseController{
 	}
 	
 	/**
+	 * 跳转新增数据单元
+	 */
+	@RequestMapping(value = "/forward/addDataUnit")
+	public String addModelDataUnitPre(String modelId,ModelMap map){
+		// 获取数据类型
+		List<DataType> dataTypeList = modelService.getDataTypeList();
+		map.addAttribute("dataTypeList", dataTypeList);	
+		// 获取model对象
+		Model model = modelService.getModelById(Integer.parseInt(modelId));
+		map.addAttribute("model",model);
+		return "admin/model/add_data_unit";
+	}
+	
+	/**
+	 * 获取模型的属性数据单元
+	 */
+	@RequestMapping(value = "/getDataUnitByModelId")
+	public @ResponseBody 
+	List<ModelDataUnit> getAttrDataUnitByModelId(String modelId,ModelMap map){
+		// 获取模型属性数据单元
+		List<ModelDataUnit> modelDataUnit = modelService.getAttrDataUnitByModelId(modelId);
+		if(null == modelDataUnit || modelDataUnit.size() == 0){
+			modelDataUnit = new ArrayList<ModelDataUnit>();
+			ModelDataUnit dataUnit = new ModelDataUnit();
+			dataUnit.setId(-1);
+			dataUnit.setRmduName("选择数据单元");
+			modelDataUnit.add(dataUnit);
+		}
+		return modelDataUnit;
+	}
+	
+	/**
 	 * 跳转新增模型属性
 	 * @param admin
 	 */
 	@RequestMapping(value = "/forward/add/attr")
 	public String addModelAttrPre(String modelId,ModelMap map){
 		// 获取数据单元
-		List<ModelDataUnit> dataUnitList = modelService.getModelAttrDataUnit(modelId);
+		// List<ModelDataUnit> dataUnitList = modelService.getModelAttrDataUnit(modelId);
 		// 获取模型信息
 		Model model = modelService.getModelById(Integer.parseInt(modelId));
 		
 		map.addAttribute("model",model);
-		map.addAttribute("dataUnitList",dataUnitList);
+		// map.addAttribute("dataUnitList",dataUnitList);
 		return "admin/model/add_model_attr";
 	}
 	

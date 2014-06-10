@@ -11,7 +11,6 @@
 <head>
 <base href="<%=basePath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
 <link rel="stylesheet" href="<%=basePath%>js/easyui/themes/icon.css" type="text/css"></link>
 <link rel="stylesheet" href="<%=basePath%>js/easyui/themes/default/easyui.css" type="text/css"></link>
 <script type="text/javascript" src="<%=basePath%>js/easyui/jquery.min.js"></script>
@@ -33,6 +32,9 @@
             var title = $(n).text();
             $('#add_model_top').tabs('close',title);
         });
+		// 删除上一步按钮
+		$("#addBt a[id=modelId]").remove();
+		//$(".dialog-button a:first-child").remove();
 		
 		$("#addDialog").dialog('open');
 		formInit();
@@ -50,19 +52,6 @@
 		console.info("editModelLat...,latId="+latId);
 		$("#updateLatDialog").dialog('open');
 		editLatFormInit(latId);
-	}
-	
-	// 不用iframe方式  
-	function getContent(url){
-		$.ajax({
-			url : url,
-			data: "",
-			method : "post",
-			success : function(data) {
-				console.info(data);
-				return "hello";
-			}
-		})
 	}
 	
 	// 关闭所有tab
@@ -131,13 +120,6 @@
 		$("#updateAttrDialog").dialog('refresh', './model/forward/update/attr?attrId='+attrId+"&modelId="+$("#rmId").val());		
 	}
 	
-	// 新增模型属性
-	function addModelAttr(modelId){
-		console.info("addModelAttr...,modelId="+modelId);
-		$("#addAttrDialog").dialog('open');
-		attrFormInit(modelId);
-	}
-	
 	// 新增模型维度
 	function addModelLat(modelId){
 		console.info("addModelLat...,modelId="+modelId);
@@ -152,13 +134,6 @@
 		$('#addLatDialog').dialog('refresh', './model/forward/add/lat?modelId='+modelId);
 	}
 	
-	// 初始化新增模型属性表单
-	function attrFormInit(modelId){
-		console.info("新增模型属性...");
-		// 跳转新增属性页面
-		$('#addAttrDialog').dialog('refresh', './model/forward/add/attr?modelId='+modelId);		
-	}
-	
 	// 更新模型属性
 	function updateModelAttr(){
 		console.info($("#updateAttrForm").serialize());
@@ -169,7 +144,7 @@
 			dataType : "json",
 			success : function(data) {
 				if (data.resultCode == 'error') {
-					alert(data.errorInfo);
+					showMsg(data.errorInfo);
 					return;
 				} else if (data.resultCode == 'success') {
 					// 弹出新增成功消息框 
@@ -183,8 +158,8 @@
 	// 保存模型维度
 	function saveModelLat(){
 		console.info($("#add_model_lat_form").serialize());
-		alert($("#add_model_lat_form").serialize());
-		alert($("#add_model_lat_alg_form").serialize());
+		//alert($("#add_model_lat_form").serialize());
+		//alert($("#add_model_lat_alg_form").serialize());
 		$.ajax({
 			url : './model/add/lat?data='+Math.random(),
 			data: $("#add_model_lat_form").serialize(),
@@ -192,7 +167,7 @@
 			dataType : "json",
 			success : function(data) {
 				if (data.resultCode == 'error') {
-					alert(data.errorInfo);
+					showMsg(data.errorInfo);
 					return;
 				} else if (data.resultCode == 'success') {
 					// 弹出新增成功消息框 
@@ -222,7 +197,7 @@
 			dataType : "json",
 			success : function(data) {
 				if (data.resultCode == 'error') {
-					alert(data.errorInfo);
+					showMsg(data.errorInfo);
 					return;
 				} else if (data.resultCode == 'success') {
 					// 弹出新增成功消息框 
@@ -237,14 +212,6 @@
 				}
 			}
 		});
-	}
-	
-	// 保存并关闭  
-	function saveAndCloseModelAttr(){
-		// 保存
-		saveModelAttr();
-		// 关闭
-		closeModelAttr();
 	}
 	
 	// 保存并关闭  
@@ -279,20 +246,6 @@
 		updateTagContent(getTagUrl('1',$("#rmId").val()));
 	}
 
-	// 新增模型属性
-	function addModelAttr(modelId){
-		console.info("addModelAttr...,modelId="+modelId);
-		$("#addAttrDialog").dialog('open');
-		attrFormInit(modelId);
-	}
-	
-	// 初始化新增模型属性表单
-	function attrFormInit(modelId){
-		console.info("新增模型属性...");
-		// 跳转新增属性页面
-		$('#addAttrDialog').dialog('refresh', './model/forward/add/attr?modelId='+modelId);		
-	}
-	
 	// 保存模型属性
 	function saveModelAttr(){
 		console.info("保存模型属性...");
@@ -306,7 +259,7 @@
 			dataType : "json",
 			success : function(data) {
 				if (data.resultCode == 'error') {
-					alert(data.errorInfo);
+					showMsg(data.errorInfo);
 					return;
 				} else if (data.resultCode == 'success') {
 					// 弹出新增成功消息框 
@@ -354,7 +307,7 @@
 			selected:true,
 			closable:false,
 			cache:false,
-			content : createFrame(getTagUrl('0')) // 这里动态加载第一步页面信息
+			content : loadContentToTab('./model/add/step1?date='+Math.random(),null,'add_model_top') // 这里动态加载第一步页面信息
 		});
 		
 		$('#add_model_top').tabs('add',{
@@ -389,8 +342,27 @@
 			$('#add_model_top').tabs('disableTab', 1); 
 			$('#add_model_top').tabs('enableTab', 0); 
 			$('#add_model_top').tabs('disableTab', 2); 
-			// 去掉上一步按钮
-			$(".dialog-button a:first-child").remove();
+			// 加载已经新增的model内容
+			var modelId = $("#modelId").attr("value");
+			console.info(modelId);
+			$.ajax({
+				url : './model/load/modelinfo?data='+Math.random(),
+				data: 'modelId='+modelId,
+				method : "post",
+				success : function(data) {
+					// 切换到上一个tab
+					$("#add_model_top").tabs('select',index);
+					// 去掉上一步按钮
+					$(".dialog-button a:first-child").remove();
+					// 更新当前tab内容
+					$("#add_model_top").tabs('update',{
+						tab:$("#add_model_top").tabs('getSelected'),
+					    options : {
+					         content : data
+					    }
+					});
+				}
+			});
 		}else if(index == '2'){
 			index = index - 1;
 			// 保存模型维度
@@ -407,11 +379,6 @@
 							"</a>";
 			$(".dialog-button").append(beforeButton);
 		}
-		
-		// 切换到上一个tab
-		$("#add_model_top").tabs('select',index);
-		// 更新tab内容
-		updateTagContent(getTagUrl(index));
 	}
 	
 	// 更新tab内容 重新加载  不要缓存
@@ -460,7 +427,7 @@
 				dataType : "json",
 				success : function(data) {
 					if (data.resultCode == 'error') {
-						alert(data.errorInfo);
+						showMsg(data.errorInfo);
 						return;
 					} else if (data.resultCode == 'success') {
 						showMsg("更新成功!");
@@ -482,44 +449,101 @@
 		}
 	}
 	
+	// 更新模型第一步
+	function updateModelInfo(index){
+		console.info($("#add_model_step1_form").serialize());
+		$.ajax({
+			url : './model/update/info',
+			data: $("#add_model_step1_form").serialize(),
+			method : "post",
+			dataType : "json",
+			success : function(data) {
+				if (data.resultCode == 'error') {
+					showMsg(data.errorInfo);
+					return;
+				} else if (data.resultCode == 'success') {
+					var modelId = data.object;
+					index = index + 1;
+					$('#add_model_top').tabs('enableTab', 1); 
+					$('#add_model_top').tabs('disableTab', 0); 
+					$('#add_model_top').tabs('disableTab', 2); 
+					// 增加上一步按钮
+					var beforeButton = "<a href='javascript:void(0)' onclick='beforeStep()' class='easyui-linkbutton l-btn l-btn-small' group='' id='modelId' value='"+modelId+"'>"+
+								  	"<span class='l-btn-left l-btn-icon-left'>"+
+									"<span class='l-btn-text'>上一步</span>"+
+									"<span class='l-btn-icon icon-save'></span>"+
+								 	"</span>"+
+									"</a>";
+					$("#addBt").prepend(beforeButton);
+					// 切换到下一个tab
+					$("#add_model_top").tabs('select',index);
+					// 更新tab内容
+					updateTagContent(getTagUrl(index,modelId));
+				}
+			}
+		});
+	}
+	
+	// 新增模型第一步
+	function addModelInfo(index){
+		console.info($("#add_model_step1_form").serialize());
+		$.ajax({
+			url : './model/add/info',
+			data: $("#add_model_step1_form").serialize(),
+			method : "post",
+			dataType : "json",
+			success : function(data) {
+				if (data.resultCode == 'error') {
+					showMsg(data.errorInfo);
+					return;
+				} else if (data.resultCode == 'success') {
+					var modelId = data.object;
+					index = index + 1;
+					$('#add_model_top').tabs('enableTab', 1); 
+					$('#add_model_top').tabs('disableTab', 0); 
+					$('#add_model_top').tabs('disableTab', 2); 
+					// 增加上一步按钮
+					var beforeButton = "<a href='javascript:void(0)' onclick='beforeStep()' class='easyui-linkbutton l-btn l-btn-small' group='' id='modelId' value='"+modelId+"'>"+
+								  	"<span class='l-btn-left l-btn-icon-left'>"+
+									"<span class='l-btn-text'>上一步</span>"+
+									"<span class='l-btn-icon icon-save'></span>"+
+								 	"</span>"+
+									"</a>";
+					$("#addBt").prepend(beforeButton);
+					// 切换到下一个tab
+					$("#add_model_top").tabs('select',index);
+					// 更新tab内容
+					loadContentToTab('./model/add/step2?date='+Math.random()+"&modelId="+modelId,null,'add_model_top') 
+					//updateTagContent(getTagUrl(index,modelId));
+					
+					// 更改标识
+					$("#flag").attr("value","2");
+				}
+			}
+		});
+	}
+	
 	// 下一步 切换到下一个tab
 	function nextStep(){
 		// 获取当前tab  判断是否是最后一个tab
 		var curTab = $("#add_model_top").tabs('getSelected');
 		var index = $('#add_model_top').tabs('getTabIndex',curTab);
 		if(index == '0'){
-			// 保存模型名称 和 模型key
-			console.info($(window.frames["sb"].document).find("#form").serialize());
-			$.ajax({
-				url : './model/add/info',
-				data: $(window.frames["sb"].document).find("#form").serialize(),
-				method : "post",
-				dataType : "json",
-				success : function(data) {
-					if (data.resultCode == 'error') {
-						alert(data.errorInfo);
-						return;
-					} else if (data.resultCode == 'success') {
-						var modelId = data.object;
-						index = index + 1;
-						$('#add_model_top').tabs('enableTab', 1); 
-						$('#add_model_top').tabs('disableTab', 0); 
-						$('#add_model_top').tabs('disableTab', 2); 
-						// 增加上一步按钮
-						var beforeButton = "<a href='javascript:beforeStep()' class='l-btn l-btn-small' group='' id='modelId' value='"+modelId+"'>"+
-									  	"<span class='l-btn-left l-btn-icon-left'>"+
-										"<span class='l-btn-text'>上一步</span>"+
-										"<span class='l-btn-icon icon-save'></span>"+
-									 	"</span>"+
-										"</a>";
-						$("#addBt").prepend(beforeButton);
-						// 切换到下一个tab
-						$("#add_model_top").tabs('select',index);
-						// 更新tab内容
-						updateTagContent(getTagUrl(index,modelId));
-					}
-				}
-			});
+			// 先进行表单校验
+			if(!$("#add_model_step1_form").form('validate')){
+				return;
+			}
+			
+			// 判断是新增还是更新
+			// 如果已经有hidden值 则表示是更新 否则是新增
+			var flag = $("#flag").val();
+			if(flag == '1'){
+				// 新增
+				addModelInfo(index);
+			}else if(flag == '2'){
+				// 更新
+				updateModelInfo(index);
+			}
 		}else if(index == '1'){
 			// 保存模型属性 
 			var modelId = $("#modelId").attr("value");
@@ -537,9 +561,11 @@
 			
 			// 切换到下一个tab
 			$("#add_model_top").tabs('select',index);
+			//updateTagContent(getTagUrl(index,modelId));
 			// 更新tab内容
-			updateTagContent(getTagUrl(index,modelId));
+			loadContentToTab('./model/add/step2?date='+Math.random()+'&modelId='+modelId,null,'add_model_top');
 		}else if(index == '2'){
+			var modelId = $("#modelId").attr("value");
 			// 保存模型维度
 			$('#add_model_top').tabs('disableTab', 0); 
 			$('#add_model_top').tabs('disableTab', 1); 
@@ -548,7 +574,8 @@
 			// 切换到下一个tab
 			$("#add_model_top").tabs('select',index);
 			// 更新tab内容
-			updateTagContent(getTagUrl(index,1));
+			updateTagContent(getTagUrl(index,modelId));
+			//loadContentToTab('./model/add/step3?date='+Math.random()+"&modelId="+modelId,null,'add_model_top');
 		}
 	}
 	
@@ -588,6 +615,8 @@
 						success:function(data){
 							if (data.resultCode=='success'){
 								$("#main").datagrid('load');
+								// 清除checkbox全选
+								$(".datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
 								showMsg(data.errorInfo);//操作结果提示
 							} else {
 								showMsg(data.errorInfo);//操作结果提示
@@ -643,18 +672,61 @@
 		if(index == '0'){
 			// 如果是第一步  则保存模型基本信息
 			console.info("第一步保存...");
+			// 保存模型名称 和 模型key
+			console.info($("#add_model_step1_form").serialize());
+			
+			// 先校验form表单
+			if($("#add_model_step1_form").form('validate')){
+				$.ajax({
+					url : './model/add/info',
+					data: $("#add_model_step1_form").serialize(),
+					method : "post",
+					dataType : "json",
+					success : function(data) {
+						if (data.resultCode == 'error') {
+							showMsg(data.errorInfo);
+							return;
+						}else{
+							// 关闭dialog
+							$("#addDialog").dialog('close');
+							// 刷新模型列表
+							$("#main").datagrid('load');
+						}
+					}
+				});
+			}
 		}else if(index == '1'){
 			// 如果是第二部  则保存模型属性信息
 			console.info("第二步保存...");
+			// 关闭dialog
+			$("#addDialog").dialog('close');
+			// 刷新模型列表
+			$("#main").datagrid('load');
 		}else if(index == '2'){
 			// 如果是第三部  则保存模型维度信息
 			console.info("第三步保存...");
+			// 关闭dialog
+			$("#addDialog").dialog('close');
+			// 刷新模型列表
+			$("#main").datagrid('load');
 		}
-		
-		// 关闭dialog
-		$("#addDialog").dialog('close');
-		// 刷新模型列表
-		$("#main").datagrid('load');
+	}
+	
+	// 加载tab页面信息
+	function loadContentToTab(url,data,tabName){
+		$.ajax({
+			url : url,
+			data: data,
+			method : "post",
+			success : function(data) {
+				$("#"+tabName).tabs('update',{
+					tab:$("#"+tabName).tabs('getSelected'),
+				    options : {
+				         content : data
+				    }
+				});
+			}
+		});
 	}
 	
 	// 弹出消息框
@@ -662,7 +734,7 @@
 		$.messager.show({    
 		    title: '处理结果',
 		    msg:msg,
-		    timeout:3000,
+		    timeout:1500,
 			showType:'slide'
 		});    
 	}
@@ -673,7 +745,7 @@
 
 <table id="main" class="easyui-datagrid" 
 			data-options="fit : true,border:false,rownumbers:true,fitColumns : true,
-			url:'./model/list_model',pagination : true,pageSize:2, pageList:[2,4,6,8],
+			url:'./model/list_model',pagination : true,pageSize:15, pageList:[15,20,25,30],
 			loadMsg:'正在加载中, 请稍候 …',toolbar:'#searchBut'"> 
 	<thead>  
            <tr>  
@@ -699,7 +771,7 @@
             To: <input class="easyui-datebox" style="width:80px"> -->
            	<form id="search_form"> 
 	           	 所属行业：
-	            <select id="tId" name="tId" class="easyui-combobox" panelHeight="auto" style="width:100px">
+	            <select id="tId" name="tId" class="easyui-combobox" panelHeight="auto">
 									<option value="-1">全部</option>
 									<c:forEach items="${tradeList}" var="trade">
 										<option value="${trade.id}">${trade.rtName}</option>
@@ -716,7 +788,9 @@
 <div id="addDialog" class="easyui-dialog" 
 			data-options="title: '新增模型',top:20,width: 600, height: 400,
 			maximizable:true,closed: false, modal: true,
-			buttons:'#addBt',closed:true">   
+			buttons:'#addBt',closed:true,onMove:function(){$(this).panel('move',{left:280,top:20});},
+			onClose:function(){$('#main').datagrid('load');}" 
+			style="overflow:hidden;">   
 	<div id="add_model_top">
 
 	</div>
@@ -728,21 +802,6 @@
 	<a href="#" onclick="nextStep()" class="easyui-linkbutton" data-options="iconCls:'icon-help'">下一步</a>
 </div>
 
-
-<!-- 新增属性弹出框 -->
-<div id="addAttrDialog" class="easyui-dialog" 
-			data-options="title: '新增模型属性',top:20,width: 600, height: 400,
-			maximizable:true,closed: false, modal: true,
-			buttons:'#addAttrBt',closed:true">   
-	
-</div>
-
-<!-- 新增属性按钮 -->
-<div id="addAttrBt">
-	<a href="#" onclick="closeModelAttr()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">关闭</a>
-	<a href="#" onclick="saveModelAttr()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">保存</a>
-	<a href="#" onclick="saveAndCloseModelAttr()" class="easyui-linkbutton" data-options="iconCls:'icon-help'">保存并关闭</a>
-</div>
 
 <!-- 编辑属性弹出框 -->
 <div id="updateAttrDialog" class="easyui-dialog" 
@@ -780,6 +839,9 @@
 			data-options="title: '编辑模型维度',top:20,width: 700, height: 400,
 			maximizable:true,closed: false, modal: true,
 			buttons:'#updateLatBt',closed:true">   
+	
+	<!-- 1:新增  2:更新 -->
+	<input type="hidden" id="flag" value="1">
 	
 	<div id="update_lat_top">
 		

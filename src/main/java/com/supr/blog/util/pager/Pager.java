@@ -19,7 +19,7 @@ public class Pager<T> {
 	/**
 	 * 默认每页显示数
 	 */
-	public static final int PAGE_SIZE = 2;
+	public static final int PAGE_SIZE = 15;
 	
 	/**
 	 * 默认页数

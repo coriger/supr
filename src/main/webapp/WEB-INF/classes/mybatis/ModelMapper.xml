@@ -29,6 +29,21 @@
 		</if>
 	</sql>
 	
+	<sql id="updateModel">
+		<if test="rmName != null and rmName !=''">
+		 	,rmName = #{rmName} 
+		</if>
+		<if test="rmKey != null and rmKey != ''">
+			,rmKey = #{rmKey}
+		</if>
+		<if test="description != null and description != ''">
+			,description = #{description}
+		</if>
+		<if test="tId != null and tId != ''">
+			,tId = #{tId}
+		</if>
+	</sql>
+	
 	<sql id="updateModelAttr">
 		<if test="rmduId != null and rmduId !='-1'">
 		 	,rmduId = #{rmduId} 
@@ -60,7 +75,8 @@
 		select model.*,trade.rtName from e_res_mould model 
 		inner join e_trade trade on model.tId = trade.Id 
 		where 1 = 1 
-		<include refid="modelList"/>
+		<include refid="modelList"/> 
+		order by model.Id desc 
 		limit #{startIndex},#{pageSize} 
 	</select>
 
@@ -81,7 +97,8 @@
 		inner join e_res_mould_data_unit du on pro.rmduId = du.Id 
 		inner join e_data_type dt on du.dtId = dt.Id 
 		where model.Id = #{modelId} 
-		<include refid="modelAttrList"/>
+		<include refid="modelAttrList"/> 
+		order by pro.Id desc 
 	</select>
 
 	<!-- 获取模型维度总数 -->
@@ -90,6 +107,16 @@
 		inner join e_res_mould_dim dim on model.Id = dim.rmId 
 		inner join e_dim_algorithm da on dim.daId = da.Id 
 		where model.Id = #{modelId} 
+	</select>
+	
+	<!-- 判断模型名称是否存在 -->
+	<select id="isExistModelName" resultType="int" parameterType="com.supr.blog.model.cmge.Model">
+		select count(1) from e_res_mould where rmName = #{rmName}
+	</select>
+	
+	<!-- 判断模型Key是否存在 -->
+	<select id="isExistModelLKey" resultType="int" parameterType="com.supr.blog.model.cmge.Model">
+		select count(1) from e_res_mould where rmKey = #{rmKey}
 	</select>
 
 	<!-- 获取模型维度列表 -->
@@ -107,9 +134,15 @@
 		where pro.daId = #{daId}
 	</select>
 	
+	<!-- 获取模型属性数据单元-->
+	<select id="getAttrDataUnitByModelId" resultType="com.supr.blog.model.cmge.ModelDataUnit" parameterType="String">
+		select * from e_res_mould_data_unit 
+		where rmId = #{modelId} and useType = '1'
+	</select>
+	
 	<!-- 获取行业列表 -->
 	<select id="getTradeList" resultType="com.supr.blog.model.cmge.Trade">
-		select * from e_trade 
+		select * from e_trade order by Id desc
 	</select>
 	
 	<!-- 批量删除模型 -->
@@ -233,7 +266,14 @@
 		<include refid="updateModelLat"/> 
 		where Id = #{id} 
 	</update>
-
+	
+	<!-- 更新模型基本信息  第一步 -->
+	<update id="updateModelInfo" parameterType="com.supr.blog.model.cmge.Model" >
+		update e_res_mould set modifyTime = #{modifyTime} 
+		<include refid="updateModel"/> 
+		where Id = #{id} 
+	</update>
+	
 	<!-- liliangchun start -->
 	<!-- 获取模型列表 -->
 	<select id="getAllModelList" resultType="com.supr.blog.model.cmge.Model" parameterType="map">

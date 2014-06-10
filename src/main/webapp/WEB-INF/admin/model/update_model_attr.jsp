@@ -83,7 +83,7 @@
 						<tr>
 							<td>描述：</td>
 							<td>
-								<textarea rows="8" cols="60" style="resize: none;" id="description" name="description"> ${modelAttr.description}</textarea>
+								<textarea rows="8" cols="60" style="resize: none;" id="description" name="description">${modelAttr.description}</textarea>
 							</td>
 						</tr>
 						</tbody>	

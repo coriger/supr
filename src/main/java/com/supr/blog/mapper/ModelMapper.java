@@ -75,4 +75,12 @@ public interface ModelMapper {
 
 	int saveModelDataUnitInfo(ModelDataUnit modelDataUnit);
 
+	int updateModelInfo(Model model);
+
+	int isExistModelLKey(Model model);
+
+	int isExistModelName(Model model);
+
+	List<ModelDataUnit> getAttrDataUnitByModelId(String modelId);
+
 }
