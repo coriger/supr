@@ -40,7 +40,7 @@ public class ModelDataUnit {
 	/**
 	 * 最大值
 	 */
-	private String maxValue;
+	private String maxValues;
 	
 	/**
 	 * 最小值
@@ -132,12 +132,12 @@ public class ModelDataUnit {
 		this.useType = useType;
 	}
 
-	public String getMaxValue() {
-		return maxValue;
+	public String getMaxValues() {
+		return maxValues;
 	}
 
-	public void setMaxValue(String maxValue) {
-		this.maxValue = maxValue;
+	public void setMaxValues(String maxValues) {
+		this.maxValues = maxValues;
 	}
 
 	public String getMinValue() {

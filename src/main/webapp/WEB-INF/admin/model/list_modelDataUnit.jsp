@@ -51,8 +51,8 @@
 					}
 					console.info(ids);
 					$.ajax({
-						url:'./model/deleteBatch',
-						data:'modelIds='+ids,
+						url:'./modelDataUnit/deleteBatch',
+						data:'ids='+ids,
 						method : "post",
 						dataType : "json",
 						success:function(data){
@@ -91,7 +91,7 @@
 	
 	
 	// 搜索模型列表
-	function searchModel(){
+	function searchModelDataUnit(){
 		console.info($("#search_form").serializeObject());
 		$("#main").datagrid('load',$("#search_form").serializeObject());
 	}
@@ -105,8 +105,12 @@
 	}
 	
 	// 保存模型
-	function saveModel(){
+	function saveModelDataUnit(){
 		console.info("保存模型数据单元...");
+		//校验
+		if(!$("#modleDUForm").form('validate')){
+			return;
+		}
 		$.ajax({
 			url : './modelDataUnit/add/info?data='+Math.random(),
 			data: $("#modleDUForm").serialize(),
@@ -118,9 +122,9 @@
 					return;
 				} else if (data.resultCode == 'success') {
 					// 弹出新增成功消息框 
-					showMsg("新增成功!");
+					showMsg(data.errorInfo);
 					// 输入框清空
-					$(':input','#form')
+					$(':input','#modleDUForm')
 					 .not(':button, :submit, :reset, :hidden')
 					 .val('')
 					 .removeAttr('checked');
@@ -159,6 +163,25 @@
         else  
             return "未知";  
     } 
+    
+    //编辑模型数据单元
+    function editModel(){
+    	console.info("editModel...");
+    	var rows = $("#main").datagrid('getSelections');
+		if(rows.length == 1){
+			$("#addDialog").dialog('open').dialog('setTitle','编辑模型数据单元');
+			editFormInit(rows[0].id);
+	    }else if(rows.length > 1){
+	    	showMsg("只允许选择一个要编辑的对象！");
+	    }else{
+			showMsg("请选择要编辑的对象！");
+		}
+	}
+	function editFormInit(id){
+		console.info("初始化编辑表单...");
+		$("#addDialog").dialog('refresh', './modelDataUnit/editModelDataUnit?mduId='+id);	
+	}
+	
 </script>
 
 </head>
@@ -175,7 +198,6 @@
                <th data-options="field:'dtName',width:fixWidth(0.1),align:'center'">数据类型</th>  
                <th data-options="field:'rmName',width:fixWidth(0.2),align:'center'">所属模型</th>
                <th data-options="field:'useType',width:fixWidth(0.1),align:'center'" formatter="useTypeTrans">使用类型</th>
-               <!-- <th data-options="field:'useType',width:fixWidth(0.2),align:'center'">使用类型</th>   -->
                <th data-options="field:'description',width:fixWidth(0.3),align:'center'">简介</th>       
            </tr>  
    </thead>  
@@ -193,14 +215,14 @@
             To: <input class="easyui-datebox" style="width:80px"> -->
            	<form id="search_form"> 
 	           	 所属模型：
-	            <select id="rmId" name="rmId" class="easyui-combobox" panelHeight="auto" style="width:100px">
+	            <select id="rmId" name="rmId" class="easyui-combobox" panelHeight="150px" style="width:100px">
 									<option value="-1">全部</option>
 									<c:forEach items="${modelList}" var="model">
 										<option value="${model.id}">${model.rmName}</option>
 									</c:forEach>
 				</select>
 				 数据类型：
-	            <select id="dtId" name="dtId" class="easyui-combobox" panelHeight="auto" style="width:100px">
+	            <select id="dtId" name="dtId" class="easyui-combobox" panelHeight="150px" style="width:100px">
 									<option value="-1">全部</option>
 									<c:forEach items="${dataTypeList}" var="dateType">
 										<option value="${dateType.id}">${dateType.dtName}</option>
@@ -213,7 +235,7 @@
 									<option value="2">维度属性</option>
 				</select>		
 				名称：<input type="text" id="rmduName" name="rmduName" placeholder="请输入名称..."/>
-	            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchModel()">查询</a>
+	            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchModelDataUnit()">查询</a>
 				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearAll()">重置</a>
         	</form>
         </div>
@@ -228,6 +250,6 @@
 
 <!-- 新增模型数据单元dialog按钮 -->
 <div id="addBt">
-	<a href="#" onclick="saveModel()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">保存</a>
+	<a href="#" onclick="saveModelDataUnit()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">保存</a>
 	<a href="#" onclick="closeWin()" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">取消</a>
 </div>

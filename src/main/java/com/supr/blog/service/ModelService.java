@@ -63,4 +63,6 @@ public interface ModelService {
 	int saveModelDataUnitInfo(ModelDataUnit modelDataUnit);
 	
 	List<DataType> getDataTypeList();
+	
+	int updateModelDataUnit(ModelDataUnit modelDataUnit);
 }
