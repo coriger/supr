@@ -46,6 +46,7 @@ public class LogManager implements LogListener{
 	
 	private LogManager(){
 		init();
+		checkFile();
 	}
 	
 	public static LogManager getInstance(){
