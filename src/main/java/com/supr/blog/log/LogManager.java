@@ -46,6 +46,7 @@ public class LogManager implements LogListener{
 	
 	private LogManager(){
 		init();
+		checkFile();
 	}
 	
 	public static LogManager getInstance(){
@@ -79,20 +80,20 @@ public class LogManager implements LogListener{
 			@Override
 			public void run() {
 				while(true){
-					// 获取配置文件的修改时间
-					File file = new File(logConfig);
-					long updateTime = file.lastModified();
-					if(updateTime > lastUpdateTime){
-						// 重新加载配置文件
-						reLoad();
-						lastUpdateTime = updateTime;
-					}
-					
 					try {
+						// 获取配置文件的修改时间
+						File file = new File(logConfig);
+						long updateTime = file.lastModified();
+						if(updateTime > lastUpdateTime){
+							// 重新加载配置文件
+							reLoad();
+							lastUpdateTime = updateTime;
+						}
+						
 						// 休眠10秒
 						Thread.sleep(10000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					} catch (Exception e) {
+						continue;
 					}
 				}
 			}
